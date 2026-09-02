@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <!-- PWA Primary Meta Tags -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0a0a0c">
+
+  <!-- iOS Safari Support -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="JIWAS STUDIO">
+  <link rel="apple-touch-icon" href="images/icon-192.png">
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JIWAS STUDIO - Dark Luxury Digital Atelier</title>
+
+  <!-- Google Fonts & FontAwesome Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800;900&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Top Urgency Marquee (Dinamis Real-Time) -->
+  <div class="banner-urgency">
+    <div class="marquee-text" id="liveMarqueeContainer">
+      <span><i class="fa-solid fa-fire" style="color: #f59e0b;"></i> <strong id="salesCounterText">1.250+</strong> PAKET TELAH DIAKTIFKAN PEMBELI</span>
+      <span><i class="fa-solid fa-circle-check" style="color: #22c55e;"></i> Kak Dimas (Jakarta) baru saja aktifkan PIN VIP 25K (Luxury Family)</span>
+      <span><i class="fa-solid fa-bolt" style="color: #eab308;"></i> Kak Linda (Bandung) baru saja membeli Starter 10K (Hijab Studio)</span>
+      <span><i class="fa-solid fa-crown" style="color: #d4af37;"></i> UNLOCK 100 PROMPT AKSES PERMANEN VIA WHATSAPP</span>
+    </div>
+  </div>
+
+  <div class="container">
+    <!-- Header Branding (Pintu Rahasia Admin Terproteksi PIN) -->
+    <header>
+      <div class="brand-badge" onclick="bukaPortalAdmin()" style="cursor: pointer; user-select: none;" title="Akses Internal">
+        <i class="fa-solid fa-gem"></i> DIGITAL ATELIER MEWAH
+      </div>
+      <h1 class="brand-title">JIWAS STUDIO</h1>
+      <p class="brand-tagline">Koleksi Prompt Foto Studio AI, Video Sinematik & Akun AI Premium</p>
+    </header>
+
+    <!-- =================================================================== -->
+    <!-- SECTION HOME: ATELIER (SHOWCASE + PINTEREST FEED) -->
+    <!-- =================================================================== -->
+    <section id="sectionAtelier">
+
+      <!-- 1. SHOWCASE BEFORE/AFTER 4-KARTU AUTO SLIDER (KUNJUNGAN 1-2) -->
+      <div class="showcase-section">
+        <div class="hero-box" style="margin-bottom: 16px;">
+          <span class="hero-badge"><i class="fa-solid fa-arrows-rotate"></i> AUTO TRANSFORMATION SHOWCASE</span>
+          <h2 class="hero-title">STUDIO BEFORE & AFTER</h2>
+          <p class="brand-tagline">Perbandingan real-time foto biasa (Before) vs hasil render prompt studio AI (After).</p>
+        </div>
+
+        <!-- 4 Kartu Bertumpuk (2x2 Grid) -->
+        <div id="gridShowcaseBA" class="showcase-ba-grid"></div>
+
+        <!-- Navigasi Slider Showcase -->
+        <div class="showcase-nav-bar">
+          <button class="btn-slider-arrow" onclick="prevShowcaseSlide()" aria-label="Slide Sebelumnya"><i class="fa-solid fa-chevron-left"></i></button>
+          <div id="showcaseDots" class="slider-dots-container"></div>
+          <button class="btn-slider-arrow" onclick="nextShowcaseSlide()" aria-label="Slide Berikutnya"><i class="fa-solid fa-chevron-right"></i></button>
+        </div>
+      </div>
+
+      <!-- Divider Visual -->
+      <hr class="section-divider">
+
+      <!-- 1.5 SESI KATEGORI UNGGULAN & TEASER PRE-LAUNCH (KUNJUNGAN 1-2) -->
+      <div id="atelierCategoriesSection" class="category-section" style="margin-bottom: 28px;">
+        <div class="hero-box" style="margin-bottom: 14px;">
+          <span class="hero-badge"><i class="fa-solid fa-layer-group"></i> EXPLORE ALL CATEGORIES</span>
+          <h2 class="hero-title" style="font-size: 1.25rem;">SESI KOLEKSI & PRE-LAUNCH</h2>
+          <p class="brand-tagline">Jelajahi paket studio live dan daftar antrean rilis VIP.</p>
+        </div>
+        <div id="gridHomeCategories" class="grid-catalog"></div>
+      </div>
+
+      <!-- Divider Visual -->
+      <hr class="section-divider">
+
+      <!-- 2. PINTEREST DISCOVERY FEED -->
+      <div id="atelierMainHeader" class="hero-box">
+        <span class="hero-badge"><i class="fa-solid fa-compass"></i> DISCOVER & INSPIRATION</span>
+        <h2 class="hero-title">ATELIER VISUAL FEED</h2>
+        <p class="brand-tagline">Jelajahi karya visual studio AI. Klik foto untuk eksplorasi koleksi sejenis.</p>
+      </div>
+
+      <!-- Related Stream Header (Aktif saat foto feed diklik) -->
+      <div id="atelierRelatedHeader" class="related-header hidden">
+        <button class="btn-back-atelier" onclick="tutupRelatedFeed()">
+          <i class="fa-solid fa-arrow-left"></i> Kembali ke Discover
+        </button>
+        <div class="related-info-title">
+          <h2 id="relatedPackTitle" class="detail-title-text">Koleksi Sejenis</h2>
+          <span id="relatedPackTag" class="detail-price-badge">100 Ide Visual</span>
+        </div>
+      </div>
+
+      <!-- Grid Masonry Pinterest Stream Utama -->
+      <div id="gridAtelierFeed" class="pinterest-grid"></div>
+
+      <!-- Grid Masonry Pinterest Stream Khusus Sejenis -->
+      <div id="gridAtelierRelated" class="pinterest-grid hidden"></div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- SECTION 1: FOTO AI (DENGAN COLLAPSIBLE GUIDE LENGKAP) -->
+    <!-- =================================================================== -->
+    <section id="sectionFotoAI" class="hidden">
+      <!-- Collapsible Accordion Panduan & Kompatibilitas -->
+      <div class="guide-accordion-wrapper">
+        <details class="guide-details-box">
+          <summary class="guide-summary-header">
+            <div class="summary-left">
+              <i class="fa-solid fa-circle-question gold-icon"></i>
+              <span>PANDUAN PENGGUNAAN & KOMPATIBILITAS AI</span>
+            </div>
+            <i class="fa-solid fa-chevron-down guide-chevron"></i>
+          </summary>
+
+          <div class="guide-dropdown-body">
+            <!-- Sesi 1: 5 Langkah Cepat -->
+            <div class="guide-step-block">
+              <div class="guide-subtitle">
+                <i class="fa-solid fa-list-ol" style="color:var(--gold-primary);"></i>
+                <span>5 LANGKAH MUDAH GENERATE FOTO STUDIO AI</span>
+              </div>
+              <div class="steps-flow-grid">
+                <div class="step-badge-card">
+                  <div class="step-num">1</div>
+                  <div class="step-desc">
+                    <strong>Pilih & Salin</strong><br>
+                    Klik tombol <span class="badge-tag-inline">📋 SALIN</span> pada formula prompt studio pilihan.
+                  </div>
+                </div>
+                <div class="step-badge-card">
+                  <div class="step-num">2</div>
+                  <div class="step-desc">
+                    <strong>Buka Generator</strong><br>
+                    Buka AI favorit Anda (Bing DALL-E, Gemini, Meta AI, Flux, dll).
+                  </div>
+                </div>
+                <div class="step-badge-card">
+                  <div class="step-num">3</div>
+                  <div class="step-desc">
+                    <strong>Tempel Prompt</strong><br>
+                    <em>Paste</em> teks prompt ke dalam kolom input platform AI.
+                  </div>
+                </div>
+                <div class="step-badge-card">
+                  <div class="step-num">4</div>
+                  <div class="step-desc">
+                    <strong>Upload Wajah</strong><br>
+                    Unggah foto wajah referensi jika menggunakan tool AI berkemampuan multimodal.
+                  </div>
+                </div>
+                <div class="step-badge-card">
+                  <div class="step-num">5</div>
+                  <div class="step-desc">
+                    <strong>Generate & Simpan</strong><br>
+                    Tekan Generate lalu unduh hasil foto resolusi tinggi 8K studio.
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Sesi 2: Daftar Kompatibilitas Engine AI -->
+            <div class="guide-compat-block">
+              <div class="guide-subtitle">
+                <i class="fa-solid fa-shield-halved" style="color:var(--gold-primary);"></i>
+                <span>KOMPATIBILITAS APLIKASI AI (TERUJI 100%)</span>
+              </div>
+              <ul class="ai-compat-list">
+                <li>
+                  <i class="fa-solid fa-circle-check"></i>
+                  <div>
+                    <strong>Google Gemini / Imagen 3:</strong> Mendukung multi-subjek, pemahaman teks Indonesia, dan pencahayaan studio <em>softbox</em>.
+                  </div>
+                </li>
+                <li>
+                  <i class="fa-solid fa-circle-check"></i>
+                  <div>
+                    <strong>Microsoft Bing Image Creator:</strong> 100% Gratis berbasis DALL-E 3. Rasio otomatis disesuaikan dengan <code>--ar 9:16</code>.
+                  </div>
+                </li>
+                <li>
+                  <i class="fa-solid fa-circle-check"></i>
+                  <div>
+                    <strong>Meta AI / WhatsApp Dola:</strong> Langsung paste prompt di ruang chat Meta AI di IG/WhatsApp.
+                  </div>
+                </li>
+                <li>
+                  <i class="fa-solid fa-circle-check"></i>
+                  <div>
+                    <strong>Midjourney v6 & FLUX.1:</strong> Rendering fotorealistik maksimal. Tambahkan parameter <code>--style raw --v 6.0</code>.
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </details>
+      </div>
+
+      <!-- Header Banner Katalog Foto -->
+      <div class="hero-box">
+        <span class="hero-badge"><i class="fa-solid fa-wand-magic-sparkles"></i> 100 ITEMS PER PACK</span>
+        <h2 class="hero-title">KOLEKSI PROMPT FOTO STUDIO</h2>
+        <p class="brand-tagline">Pilih pack tema favorit, coba 3 sample gratis, dan buka akses koleksi penuh.</p>
+      </div>
+
+      <div id="gridFotoKatalog" class="grid-catalog"></div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- SECTION 2: VIDEO AI -->
+    <!-- =================================================================== -->
+    <section id="sectionVideoAI" class="hidden">
+      <div class="hero-box">
+        <span class="hero-badge"><i class="fa-solid fa-film"></i> 8K CINEMATIC MOTION</span>
+        <h2 class="hero-title">KOLEKSI PROMPT VIDEO AI</h2>
+        <p class="brand-tagline">Prompt sinematik siap pakai untuk membuat video promosi dan konten viral.</p>
+      </div>
+
+      <div id="gridVideoKatalog" class="grid-catalog"></div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- SECTION 3: AKUN AI & DIGITAL PRODUCT -->
+    <!-- =================================================================== -->
+    <section id="sectionAkunAI" class="hidden">
+      <div class="hero-box">
+        <span class="hero-badge"><i class="fa-solid fa-robot"></i> OFFICIAL LICENSED SUITE</span>
+        <h2 class="hero-title">AKUN AI & DIGITAL PRODUCT</h2>
+        <p class="brand-tagline">Akses langganan AI tools terpercaya untuk kebutuhan kreatif dan bisnis Anda.</p>
+      </div>
+
+      <div id="gridAkunKatalog" class="grid-catalog"></div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- SECTION 4: DETAIL PACK (100 PROMPT CARDS) -->
+    <!-- =================================================================== -->
+    <section id="sectionDetailPack" class="hidden">
+      <div class="detail-header">
+        <button class="btn-back" onclick="kembaliKeKatalog()"><i class="fa-solid fa-arrow-left"></i> Kembali</button>
+        <div>
+          <h2 id="detailTitle" class="detail-title-text">Detail Pack</h2>
+          <span id="detailPriceTag" class="detail-price-badge">100 Items</span>
+        </div>
+      </div>
+
+      <!-- Pack Action Sticky Bar -->
+      <div class="pack-action-box">
+        <div class="pab-info">
+          <h4 id="packSummaryTitle">Paket 100 Prompt Premium</h4>
+          <p>Item 1–3 Gratis, Item 4–23 Starter (10K), Item 24–100 VIP (25K).</p>
+        </div>
+        <div class="pab-buttons"></div>
+      </div>
+
+      <div id="itemsGrid" class="items-grid"></div>
+    </section>
+
+    <footer>
+      <div class="footer-brand">JIWAS STUDIO</div>
+      <p class="footer-desc">AI Cash Flow Storefront & Digital Atelier.</p>
+      <div class="footer-copy">© 2026 JIWAS STUDIO. All Rights Reserved.</div>
+    </footer>
+  </div>
+
+  <!-- FLOATING BOTTOM NAV BAR -->
+  <nav class="pinterest-bottom-nav">
+    <div class="bottom-nav-container">
+      <button class="b-nav-item active" id="tabBtnAtelier" onclick="switchMainTab('atelier', this)">
+        <i class="fa-solid fa-house"></i>
+        <span>Home</span>
+      </button>
+
+      <button class="b-nav-item" id="tabBtnFoto" onclick="switchMainTab('foto', this)">
+        <i class="fa-solid fa-camera"></i>
+        <span>Foto AI</span>
+      </button>
+
+      <button class="b-nav-item" id="tabBtnVideo" onclick="switchMainTab('video', this)">
+        <i class="fa-solid fa-clapperboard"></i>
+        <span>Video AI</span>
+      </button>
+
+      <button class="b-nav-item" id="tabBtnAkun" onclick="switchMainTab('akun', this)">
+        <i class="fa-solid fa-layer-group"></i>
+        <span>Digital AI</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- MODAL: PIN VERIFIER -->
+  <div id="pinModal" class="modal-overlay hidden">
+    <div class="modal-content">
+      <h3 class="modal-header-title">Buka Akses Pack</h3>
+      <p class="modal-subtext">Masukkan Kode PIN yang diberikan Admin WA:</p>
+      <input type="text" id="pinInput" class="pin-input" placeholder="KODE PIN" maxlength="15">
+      <div class="modal-btn-group">
+        <button class="btn-copy btn-cancel" onclick="tutupModalPIN()">Batal</button>
+        <button class="btn-copy" onclick="verifikasiPIN()">Aktivasi</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: GEMINI ENGINE -->
+  <div id="geminiModal" class="modal-overlay hidden">
+    <div class="modal-content" style="max-width: 480px;">
+      <h3 class="modal-header-title"><i class="fa-solid fa-bolt" style="color:#60a5fa;"></i> JIWAS GEMINI ENGINE</h3>
+      <p class="modal-subtext" id="geminiEngineStatus">Memproses optimasi prompt via Gemini API...</p>
+      
+      <div id="geminiOutput" class="gemini-result-box">Menghubungkan ke API...</div>
+      
+      <div class="modal-btn-group" style="margin-top: 14px;">
+        <button class="btn-copy btn-cancel" onclick="tutupModalGemini()">Tutup</button>
+        <button class="btn-copy" onclick="copasPrompt(document.getElementById('geminiOutput').innerText)">Salin Hasil</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION -->
+  <div id="toast" class="toast hidden">
+    <i class="fa-solid fa-check-circle"></i> <span id="toastMsg">PROMPT DISALIN!</span>
+  </div>
+
+  <!-- FLOATING WA BUTTON -->
+  <a id="waFloatingBtn" href="javascript:void(0)" onclick="hubungiAdminWaLangsung()" class="wa-floating-btn" aria-label="Bantuan WhatsApp">
+    <i class="fa-brands fa-whatsapp"></i>
+  </a>
+
+  <!-- SCRIPT DECLARATIONS -->
+  <script src="config-pin.js"></script>
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

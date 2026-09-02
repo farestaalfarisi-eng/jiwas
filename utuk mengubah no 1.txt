@@ -1,0 +1,15 @@
+(untuk rename : menjadi 1.jpg, 2.jpg...(dan setrusnya)
+klik + shif +klik kanan di dalam folder di bagian kosong dan pilih open powershell
+
+Get-ChildItem -Filter *.jpg | ForEach-Object -Begin {$i=1} -Process { Rename-Item $_ -NewName ("{0}.jpg" -f $i++) }
+
+
+
+Checklist Katalog Siap Tempur:
+[x] Folder Gambar: images/hijab/1.jpg s/d 100.jpg & images/couple/1.jpg s/d 100.jpg
+
+[x] Cover Gambar: images/hijab/cover.jpg & images/couple/cover.jpg
+
+[x] Database Prompt: prompts/hijab.js & prompts/couple.js
+
+[x] Pengaturan PIN: config-pin.js (HIJAB10K, HIJABVIP25, COUPLE10K, COUPLEVIP25)
