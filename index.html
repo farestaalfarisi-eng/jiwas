@@ -26,41 +26,38 @@
 </head>
 <body>
 
-  <!-- ================= LIVE FOMO PULSE STRIP (TOP LEFT / ABOVE HEADER) ================= -->
+  <!-- ================= LIVE FOMO PULSE STRIP (2 BARIS RAPI DI KIRI ATAS) ================= -->
   <aside class="atelier-pulse-bar" aria-label="Aktivitas Studio Langsung">
     <div class="pulse-container">
-      <div class="pulse-track">
-        <!-- Item 1: Pengguna Aktif (Fluktuatif) -->
+      <div class="pulse-grid-2row">
+        <!-- Baris 1 - Kiri -->
         <div class="pulse-item" id="fomoActiveItem">
           <span class="live-dot green"></span>
           <span class="pulse-text"><strong id="fomoActiveUsers">534</strong> Kreator Aktif</span>
         </div>
-        <span class="pulse-divider">•</span>
 
-        <!-- Item 2: Transaksi Berjalan (Fluktuatif + Akumulatif) -->
+        <!-- Baris 1 - Kanan -->
         <div class="pulse-item" id="fomoTransItem">
           <span class="live-dot gold"></span>
           <span class="pulse-text"><strong id="fomoTransUsers">152</strong> Sedang Transaksi</span>
         </div>
-        <span class="pulse-divider">•</span>
 
-        <!-- Item 3: Total Impresi Eksklusif (Akumulatif Permanen) -->
+        <!-- Baris 2 - Kiri -->
         <div class="pulse-item" id="fomoViewsItem">
           <span class="pulse-icon">👁️</span>
           <span class="pulse-text"><strong id="fomoViewsCount">13.4k+</strong> Dilihat</span>
         </div>
-        <span class="pulse-divider">•</span>
 
-        <!-- Item 4: Urgensi Slot Terbatas -->
+        <!-- Baris 2 - Kanan -->
         <div class="pulse-item" id="fomoSlotItem">
           <span class="badge-fomo">Sisa <span id="fomoSlotCount">7</span> Slot VIP</span>
-          <span class="pulse-text">Formula Hari Ini</span>
+          <span class="pulse-text">Hari Ini</span>
         </div>
       </div>
     </div>
   </aside>
 
-  <!-- Top Urgency Marquee (Dinamis Real-Time) -->
+  <!-- Top Urgency Marquee -->
   <div class="banner-urgency">
     <div class="marquee-text" id="liveMarqueeContainer">
       <span><i class="fa-solid fa-fire" style="color: #f59e0b;"></i> <strong id="salesCounterText">1.250+</strong> PAKET TELAH DIAKTIFKAN PEMBELI</span>
@@ -71,9 +68,8 @@
   </div>
 
   <div class="container">
-    <!-- Header Branding (Pintu Rahasia Admin Terproteksi PIN) -->
+    <!-- Header Branding -->
     <header class="atelier-hero-compact">
-      <!-- Pintu Rahasia Admin Terproteksi -->
       <div class="brand-badge-pill" onclick="bukaPortalAdmin()" style="cursor: pointer;">
         <i class="fa-solid fa-gem"></i> DIGITAL ATELIER • EST. 2026
       </div>
@@ -84,7 +80,6 @@
         "Mengubah foto biasa menjadi potret bernilai seni tinggi sekelas studio bangsawan."
       </p>
 
-      <!-- 3 Pilar Visual Nilai JIWAS -->
       <div class="hero-feature-chips">
         <span><i class="fa-solid fa-sparkles"></i> 100 Formula Siap Pakai</span>
         <span><i class="fa-solid fa-camera"></i> Kualitas Lensa 8K</span>
@@ -92,12 +87,8 @@
       </div>
     </header>
 
-    <!-- =================================================================== -->
-    <!-- SECTION HOME: ATELIER (SHOWCASE + PINTEREST FEED) -->
-    <!-- =================================================================== -->
+    <!-- SECTION 0: ATELIER (SHOWCASE + PINTEREST FEED) -->
     <section id="sectionAtelier">
-
-      <!-- 1. SHOWCASE BEFORE/AFTER 4-KARTU AUTO SLIDER (KUNJUNGAN 1-2) -->
       <div class="showcase-section">
         <div class="hero-box" style="margin-bottom: 16px;">
           <span class="hero-badge"><i class="fa-solid fa-arrows-rotate"></i> AUTO TRANSFORMATION SHOWCASE</span>
@@ -105,10 +96,8 @@
           <p class="brand-tagline">Perbandingan real-time foto biasa (Before) vs hasil render prompt studio AI (After).</p>
         </div>
 
-        <!-- 4 Kartu Bertumpuk (2x2 Grid) -->
         <div id="gridShowcaseBA" class="showcase-ba-grid"></div>
 
-        <!-- Navigasi Slider Showcase -->
         <div class="showcase-nav-bar">
           <button class="btn-slider-arrow" onclick="prevShowcaseSlide()" aria-label="Slide Sebelumnya"><i class="fa-solid fa-chevron-left"></i></button>
           <div id="showcaseDots" class="slider-dots-container"></div>
@@ -116,10 +105,8 @@
         </div>
       </div>
 
-      <!-- Divider Visual -->
       <hr class="section-divider">
 
-      <!-- 1.5 SESI KATEGORI UNGGULAN & TEASER PRE-LAUNCH (KUNJUNGAN 1-2) -->
       <div id="atelierCategoriesSection" class="category-section" style="margin-bottom: 28px;">
         <div class="hero-box" style="margin-bottom: 14px;">
           <span class="hero-badge"><i class="fa-solid fa-layer-group"></i> EXPLORE ALL CATEGORIES</span>
@@ -129,17 +116,14 @@
         <div id="gridHomeCategories" class="grid-catalog"></div>
       </div>
 
-      <!-- Divider Visual -->
       <hr class="section-divider">
 
-      <!-- 2. PINTEREST DISCOVERY FEED -->
       <div id="atelierMainHeader" class="hero-box">
         <span class="hero-badge"><i class="fa-solid fa-compass"></i> DISCOVER & INSPIRATION</span>
         <h2 class="hero-title">ATELIER VISUAL FEED</h2>
         <p class="brand-tagline">Jelajahi karya visual studio AI. Klik foto untuk eksplorasi koleksi sejenis.</p>
       </div>
 
-      <!-- Related Stream Header (Aktif saat foto feed diklik) -->
       <div id="atelierRelatedHeader" class="related-header hidden">
         <button class="btn-back-atelier" onclick="tutupRelatedFeed()">
           <i class="fa-solid fa-arrow-left"></i> Kembali ke Discover
@@ -150,18 +134,12 @@
         </div>
       </div>
 
-      <!-- Grid Masonry Pinterest Stream Utama -->
       <div id="gridAtelierFeed" class="pinterest-grid"></div>
-
-      <!-- Grid Masonry Pinterest Stream Khusus Sejenis -->
       <div id="gridAtelierRelated" class="pinterest-grid hidden"></div>
     </section>
 
-    <!-- =================================================================== -->
-    <!-- SECTION 1: FOTO AI (DENGAN COLLAPSIBLE GUIDE LENGKAP) -->
-    <!-- =================================================================== -->
+    <!-- SECTION 1: FOTO AI -->
     <section id="sectionFotoAI" class="hidden">
-      <!-- Collapsible Accordion Panduan & Kompatibilitas -->
       <div class="guide-accordion-wrapper">
         <details class="guide-details-box">
           <summary class="guide-summary-header">
@@ -173,7 +151,6 @@
           </summary>
 
           <div class="guide-dropdown-body">
-            <!-- Sesi 1: 5 Langkah Cepat -->
             <div class="guide-step-block">
               <div class="guide-subtitle">
                 <i class="fa-solid fa-list-ol" style="color:var(--gold-primary);"></i>
@@ -182,80 +159,43 @@
               <div class="steps-flow-grid">
                 <div class="step-badge-card">
                   <div class="step-num">1</div>
-                  <div class="step-desc">
-                    <strong>Pilih & Salin</strong><br>
-                    Klik tombol <span class="badge-tag-inline">📋 SALIN</span> pada formula prompt studio pilihan.
-                  </div>
+                  <div class="step-desc"><strong>Pilih & Salin</strong><br>Klik tombol 📋 SALIN pada formula prompt.</div>
                 </div>
                 <div class="step-badge-card">
                   <div class="step-num">2</div>
-                  <div class="step-desc">
-                    <strong>Buka Generator</strong><br>
-                    Buka AI favorit Anda (Bing DALL-E, Gemini, Meta AI, Flux, dll).
-                  </div>
+                  <div class="step-desc"><strong>Buka AI</strong><br>Buka Bing DALL-E, Gemini, Meta AI, dll.</div>
                 </div>
                 <div class="step-badge-card">
                   <div class="step-num">3</div>
-                  <div class="step-desc">
-                    <strong>Tempel Prompt</strong><br>
-                    <em>Paste</em> teks prompt ke dalam kolom input platform AI.
-                  </div>
+                  <div class="step-desc"><strong>Tempel</strong><br>Paste teks prompt ke kolom input platform AI.</div>
                 </div>
                 <div class="step-badge-card">
                   <div class="step-num">4</div>
-                  <div class="step-desc">
-                    <strong>Upload Wajah</strong><br>
-                    Unggah foto wajah referensi jika menggunakan tool AI berkemampuan multimodal.
-                  </div>
+                  <div class="step-desc"><strong>Foto Wajah</strong><br>Unggah foto wajah jika fitur AI mendukung.</div>
                 </div>
                 <div class="step-badge-card">
                   <div class="step-num">5</div>
-                  <div class="step-desc">
-                    <strong>Generate & Simpan</strong><br>
-                    Tekan Generate lalu unduh hasil foto resolusi tinggi 8K studio.
-                  </div>
+                  <div class="step-desc"><strong>Generate</strong><br>Unduh hasil foto resolusi tinggi 8K studio.</div>
                 </div>
               </div>
             </div>
 
-            <!-- Sesi 2: Daftar Kompatibilitas Engine AI -->
             <div class="guide-compat-block">
               <div class="guide-subtitle">
                 <i class="fa-solid fa-shield-halved" style="color:var(--gold-primary);"></i>
                 <span>KOMPATIBILITAS APLIKASI AI (TERUJI 100%)</span>
               </div>
               <ul class="ai-compat-list">
-                <li>
-                  <i class="fa-solid fa-circle-check"></i>
-                  <div>
-                    <strong>Google Gemini / Imagen 3:</strong> Mendukung multi-subjek, pemahaman teks Indonesia, dan pencahayaan studio <em>softbox</em>.
-                  </div>
-                </li>
-                <li>
-                  <i class="fa-solid fa-circle-check"></i>
-                  <div>
-                    <strong>Microsoft Bing Image Creator:</strong> 100% Gratis berbasis DALL-E 3. Rasio otomatis disesuaikan dengan <code>--ar 9:16</code>.
-                  </div>
-                </li>
-                <li>
-                  <i class="fa-solid fa-circle-check"></i>
-                  <div>
-                    <strong>Meta AI / WhatsApp Dola:</strong> Langsung paste prompt di ruang chat Meta AI di IG/WhatsApp.
-                  </div>
-                </li>
-                <li>
-                  <i class="fa-solid fa-circle-check"></i>
-                  <div>
-                    <strong>Midjourney v6 & FLUX.1:</strong> Rendering fotorealistik maksimal. Tambahkan parameter <code>--style raw --v 6.0</code>.
-                  </div>
-                </li>
+                <li><i class="fa-solid fa-circle-check"></i> <div><strong>Google Gemini / Imagen 3:</strong> Multi-subjek, bahasa Indonesia, rim light studio.</div></li>
+                <li><i class="fa-solid fa-circle-check"></i> <div><strong>Microsoft Bing Image Creator:</strong> Gratis DALL-E 3, auto rasio <code>--ar 9:16</code>.</div></li>
+                <li><i class="fa-solid fa-circle-check"></i> <div><strong>Meta AI / WhatsApp Dola:</strong> Langsung paste prompt di chat Meta AI.</div></li>
+                <li><i class="fa-solid fa-circle-check"></i> <div><strong>Midjourney v6 & FLUX.1:</strong> Rendering fotorealistik maksimal <code>--style raw --v 6.0</code>.</div></li>
               </ul>
             </div>
           </div>
         </details>
       </div>
 
-      <!-- Header Banner Katalog Foto -->
       <div class="hero-box">
         <span class="hero-badge"><i class="fa-solid fa-wand-magic-sparkles"></i> 100 ITEMS PER PACK</span>
         <h2 class="hero-title">KOLEKSI PROMPT FOTO STUDIO</h2>
@@ -265,9 +205,7 @@
       <div id="gridFotoKatalog" class="grid-catalog"></div>
     </section>
 
-    <!-- =================================================================== -->
     <!-- SECTION 2: VIDEO AI -->
-    <!-- =================================================================== -->
     <section id="sectionVideoAI" class="hidden">
       <div class="hero-box">
         <span class="hero-badge"><i class="fa-solid fa-film"></i> 8K CINEMATIC MOTION</span>
@@ -278,9 +216,7 @@
       <div id="gridVideoKatalog" class="grid-catalog"></div>
     </section>
 
-    <!-- =================================================================== -->
-    <!-- SECTION 3: AKUN AI & DIGITAL PRODUCT -->
-    <!-- =================================================================== -->
+    <!-- SECTION 3: DIGITAL PRODUCT -->
     <section id="sectionAkunAI" class="hidden">
       <div class="hero-box">
         <span class="hero-badge"><i class="fa-solid fa-robot"></i> OFFICIAL LICENSED SUITE</span>
@@ -291,9 +227,7 @@
       <div id="gridAkunKatalog" class="grid-catalog"></div>
     </section>
 
-    <!-- =================================================================== -->
-    <!-- SECTION 4: DETAIL PACK (100 PROMPT CARDS) -->
-    <!-- =================================================================== -->
+    <!-- SECTION 4: DETAIL PACK -->
     <section id="sectionDetailPack" class="hidden">
       <div class="detail-header">
         <button class="btn-back" onclick="kembaliKeKatalog()"><i class="fa-solid fa-arrow-left"></i> Kembali</button>
@@ -303,7 +237,6 @@
         </div>
       </div>
 
-      <!-- Pack Action Sticky Bar -->
       <div class="pack-action-box">
         <div class="pab-info">
           <h4 id="packSummaryTitle">Paket 100 Prompt Premium</h4>
@@ -365,9 +298,7 @@
     <div class="modal-content" style="max-width: 480px;">
       <h3 class="modal-header-title"><i class="fa-solid fa-bolt" style="color:#60a5fa;"></i> JIWAS GEMINI ENGINE</h3>
       <p class="modal-subtext" id="geminiEngineStatus">Memproses optimasi prompt via Gemini API...</p>
-      
       <div id="geminiOutput" class="gemini-result-box">Menghubungkan ke API...</div>
-      
       <div class="modal-btn-group" style="margin-top: 14px;">
         <button class="btn-copy btn-cancel" onclick="tutupModalGemini()">Tutup</button>
         <button class="btn-copy" onclick="copasPrompt(document.getElementById('geminiOutput').innerText)">Salin Hasil</button>
@@ -385,7 +316,7 @@
     <i class="fa-brands fa-whatsapp"></i>
   </a>
 
-  <!-- SCRIPT DECLARATIONS -->
+  <!-- SCRIPTS -->
   <script src="config-pin.js"></script>
   <script src="data.js"></script>
   <script src="app.js"></script>
