@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TIGAJIWA STUDIO — AI Account Atelier</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="stylesheet" href="css/ai-account.css">
+</head>
+<body>
+  <div class="container">
+    <header style="text-align:center; padding:20px 0 10px;">
+      <a href="../index.html" class="btn-back" style="display:inline-flex; align-items:center; gap:6px; margin-bottom:12px; text-decoration:none;">
+        <i class="fa-solid fa-arrow-left"></i> Kembali ke TIGAJIWA
+      </a>
+      <div class="brand-badge"><i class="fa-solid fa-robot"></i> OFFICIAL AI STORE</div>
+      <h1 class="brand-title">AI AKUN</h1>
+      <p class="brand-tagline">Temukan berbagai AI Premium untuk kebutuhan belajar, bisnis, dan konten.</p>
+    </header>
+
+    <div class="ai-account-wrapper">
+      <div class="ai-search-box">
+        <i class="fa-solid fa-magnifying-glass ai-search-icon"></i>
+        <input type="text" class="ai-search-input" placeholder="Cari produk AI..." oninput="AiAccountEngine.handleSearch(this.value)">
+      </div>
+
+      <div class="ai-categories-scroll" id="aiCategoriesContainer"></div>
+
+      <div class="ai-grid-catalog" id="aiAccountCatalogGrid"></div>
+    </div>
+  </div>
+
+  <script src="../config-pin.js"></script>
+  <script src="js/database.js"></script>
+  <script src="js/supplier-connector.js"></script>
+  <script src="js/components.js"></script>
+  <script src="js/ai-account-app.js"></script>
+</body>
+</html>
