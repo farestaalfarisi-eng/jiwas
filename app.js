@@ -1,6 +1,6 @@
 // =========================================================================
-// JIWAS STUDIO - MASTER CONTROLLER ENGINE (app.js V9.5 Pure Build)
-// 1-Click WA, Infinite Feed, Dynamic Marquee, PIN Sync, Radar Activity, PWA
+// JIWAS STUDIO - MASTER CONTROLLER ENGINE (app.js V9.6 Pure Refined)
+// 1-Click WA, Infinite Feed, Marquee, PIN Sync, Radar Activity, PWA
 // =========================================================================
 
 let activePack = null;
@@ -12,9 +12,8 @@ const PAIRS_PER_VIEW = 4;
 let currentShowcaseIndex = 0;
 let showcaseTimer = null;
 
-// Konfigurasi Kuota Generate Gratis & Gemini API Engine
+// Konfigurasi Kuota Generate Gratis
 const MAX_FREE_DAILY_QUOTA = 3;
-const GEMINI_API_KEY = ""; // Masukkan Gemini API Key jika ingin direct REST call
 
 // =========================================================================
 // 0. AUDIT & RADAR ACTIVITY LOGGER (INTEGRASI ANALYTICS.HTML)
@@ -115,25 +114,17 @@ function applyProgressiveFunnelLayout() {
   const showcaseSec = document.querySelector(".showcase-section");
   const homeCategorySec = document.getElementById("atelierCategoriesSection");
   const mainHeader = document.getElementById("atelierMainHeader");
-  const dominantCat = getDominantUserCategory();
 
+  // Pada kunjungan ke-3 ke atas: bersihkan sesi edukasi agar fokus ke penjelajahan langsung
   if (userVisitCount <= 2) {
     if (showcaseSec) showcaseSec.classList.remove("hidden");
     if (homeCategorySec) homeCategorySec.classList.remove("hidden");
+    if (mainHeader) mainHeader.classList.remove("hidden");
   } else {
-    // Kunjungan 3+: Sembunyikan sesi showcase & kartu harga depan agar 100% fokus eksplorasi tak terbatas
     if (showcaseSec) showcaseSec.classList.add("hidden");
     if (homeCategorySec) homeCategorySec.classList.add("hidden");
-
-    if (mainHeader) {
-      const badge = mainHeader.querySelector(".hero-badge");
-      const title = mainHeader.querySelector(".hero-title");
-      const tagline = mainHeader.querySelector(".brand-tagline");
-
-      if (badge) badge.innerHTML = `<i class="fa-solid fa-compass"></i> EKSPLORASI FORMULA VISUAL`;
-      if (title) title.innerText = dominantCat ? `ATELIER: ${dominantCat.toUpperCase()}` : `ATELIER DISCOVERY FEED`;
-      if (tagline) tagline.innerText = "Jelajahi karya visual tanpa batas. Klik gambar untuk melihat 100 formula sejenis.";
-    }
+    // Sembunyikan dobel judul agar foto langsung menempel rapi di bawah header utama
+    if (mainHeader) mainHeader.classList.add("hidden");
   }
 }
 
@@ -617,7 +608,6 @@ function bukaRelatedFeed(pack) {
 }
 
 function tutupRelatedFeed() {
-  const mainHeader = document.getElementById("atelierMainHeader");
   const relatedHeader = document.getElementById("atelierRelatedHeader");
   const mainFeed = document.getElementById("gridAtelierFeed");
   const relatedFeed = document.getElementById("gridAtelierRelated");
@@ -626,7 +616,6 @@ function tutupRelatedFeed() {
 
   if (relatedHeader) relatedHeader.classList.add("hidden");
   if (relatedFeed) relatedFeed.classList.add("hidden");
-  if (mainHeader) mainHeader.classList.remove("hidden");
   if (mainFeed) mainFeed.classList.remove("hidden");
 
   window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -828,7 +817,7 @@ function bukaDetailPack(pack) {
     `;
   }
 
-  // Tombol 1-Click Direct WA (Murni JIWAS tanpa formulir)
+  // Tombol 1-Click Direct WA (Murni tanpa formulir)
   const pabContainer = document.querySelector(".pack-action-box .pab-buttons");
   if (pabContainer) {
     pabContainer.innerHTML = `
@@ -1162,7 +1151,7 @@ function renderHomeCategories() {
         <div class="card-info">
           <h3 class="card-title">${item.title}</h3>
           <p style="font-size:0.7rem; color:var(--text-muted); margin:4px 0 8px; line-height:1.3;">${item.description || 'Sedang dalam proses kurasi prompt 8K studio.'}</p>
-          <button onclick="kirimPesananLangsungWA('${item.title}', 'Pre-Order VIP', 'Coming Soon')" class="btn-copy" style="background:#1e1e24; color:var(--gold-light); border:1px solid var(--border-color); width:100%; box-sizing:border-box; font-size:0.72rem; padding:8px 6px;">
+          <button onclick="kirimPesananLangsungWA('${item.title}', 'Pre-Order VIP', 'Coming Soon')" class="btn-copy" style="background:#1e1e24; color:var(--gold-light); border:1px solid var(--card-border); width:100%; box-sizing:border-box; font-size:0.72rem; padding:8px 6px;">
             🔔 Ingatkan Saya di WA
           </button>
         </div>
@@ -1193,11 +1182,10 @@ function renderHomeCategories() {
 // 13. PINTU RAHASIA ADMIN KE ANALYTICS.HTML (TERPROTEKSI SANDI PIN)
 // =========================================================================
 function bukaPortalAdmin() {
-  // Ganti "JIWAS99" dengan kode PIN khusus admin yang Anda kehendaki
   const MASTER_ADMIN_PIN = "JIWAS99";
 
   const inputPin = prompt("Masukkan PIN Akses Admin JIWAS Studio:");
-  if (inputPin === null) return; // Pengguna klik Cancel/Batal
+  if (inputPin === null) return;
 
   if (inputPin.trim().toUpperCase() === MASTER_ADMIN_PIN) {
     window.location.href = "analytics.html";
