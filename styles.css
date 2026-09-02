@@ -1,6 +1,6 @@
 /* =========================================================================
-   JIWAS STUDIO - MASTER DARK LUXURY STYLESHEET (V9.6 Pure Refined)
-   Cinzel & Plus Jakarta Sans • 9:16 Visual Ratio • Anti-Clutter Layout
+   JIWAS STUDIO - MASTER DARK LUXURY STYLESHEET (V10.0 Pure Gold Edition)
+   Cinzel & Plus Jakarta Sans • 9:16 Visual Ratio • Live FOMO Pulse Bar
    ========================================================================= */
 
 :root {
@@ -52,6 +52,112 @@ body {
 
 .hidden {
   display: none !important;
+}
+
+/* -------------------------------------------------------------------------
+   0. LIVE FOMO PULSE STRIP (TOP LEFT / ABOVE HEADER)
+   ------------------------------------------------------------------------- */
+.atelier-pulse-bar {
+  width: 100%;
+  background: rgba(10, 10, 12, 0.96);
+  border-bottom: 1px solid rgba(212, 175, 55, 0.18);
+  backdrop-filter: blur(10px);
+  padding: 6px 14px;
+  font-size: 0.7rem;
+  color: #94a3b8;
+  letter-spacing: 0.3px;
+  position: relative;
+  z-index: 95;
+}
+
+.pulse-container {
+  width: 100%;
+  max-width: 580px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.pulse-track {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.pulse-track::-webkit-scrollbar {
+  display: none;
+}
+
+.pulse-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+  font-size: 0.68rem;
+}
+
+.pulse-text strong {
+  color: var(--gold-light);
+  font-weight: 700;
+}
+
+.pulse-divider {
+  color: rgba(212, 175, 55, 0.3);
+  font-size: 0.55rem;
+}
+
+.pulse-icon {
+  font-size: 0.72rem;
+}
+
+/* Pulsing Dots Indicator */
+.live-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  display: inline-block;
+  position: relative;
+}
+
+.live-dot.green {
+  background-color: #10b981;
+  box-shadow: 0 0 8px #10b981;
+  animation: radar-pulse-green 2s infinite ease-out;
+}
+
+.live-dot.gold {
+  background-color: #d4af37;
+  box-shadow: 0 0 8px #d4af37;
+  animation: radar-pulse-gold 2s infinite ease-out 1s;
+}
+
+.badge-fomo {
+  background: rgba(212, 175, 55, 0.12);
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  color: var(--gold-light);
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-size: 0.62rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+@keyframes radar-pulse-green {
+  0% { transform: scale(0.9); opacity: 0.7; }
+  50% { transform: scale(1.35); opacity: 1; }
+  100% { transform: scale(0.9); opacity: 0.7; }
+}
+
+@keyframes radar-pulse-gold {
+  0% { transform: scale(0.9); opacity: 0.7; }
+  50% { transform: scale(1.35); opacity: 1; }
+  100% { transform: scale(0.9); opacity: 0.7; }
 }
 
 /* -------------------------------------------------------------------------
