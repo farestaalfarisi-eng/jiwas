@@ -19,12 +19,46 @@
   <!-- Google Fonts & FontAwesome Icons -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800;900&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+
+  <!-- ================= LIVE FOMO PULSE STRIP (TOP LEFT / ABOVE HEADER) ================= -->
+  <aside class="atelier-pulse-bar" aria-label="Aktivitas Studio Langsung">
+    <div class="pulse-container">
+      <div class="pulse-track">
+        <!-- Item 1: Pengguna Aktif (Fluktuatif) -->
+        <div class="pulse-item" id="fomoActiveItem">
+          <span class="live-dot green"></span>
+          <span class="pulse-text"><strong id="fomoActiveUsers">534</strong> Kreator Aktif</span>
+        </div>
+        <span class="pulse-divider">•</span>
+
+        <!-- Item 2: Transaksi Berjalan (Fluktuatif + Akumulatif) -->
+        <div class="pulse-item" id="fomoTransItem">
+          <span class="live-dot gold"></span>
+          <span class="pulse-text"><strong id="fomoTransUsers">152</strong> Sedang Transaksi</span>
+        </div>
+        <span class="pulse-divider">•</span>
+
+        <!-- Item 3: Total Impresi Eksklusif (Akumulatif Permanen) -->
+        <div class="pulse-item" id="fomoViewsItem">
+          <span class="pulse-icon">👁️</span>
+          <span class="pulse-text"><strong id="fomoViewsCount">13.4k+</strong> Dilihat</span>
+        </div>
+        <span class="pulse-divider">•</span>
+
+        <!-- Item 4: Urgensi Slot Terbatas -->
+        <div class="pulse-item" id="fomoSlotItem">
+          <span class="badge-fomo">Sisa <span id="fomoSlotCount">7</span> Slot VIP</span>
+          <span class="pulse-text">Formula Hari Ini</span>
+        </div>
+      </div>
+    </div>
+  </aside>
 
   <!-- Top Urgency Marquee (Dinamis Real-Time) -->
   <div class="banner-urgency">
@@ -38,26 +72,25 @@
 
   <div class="container">
     <!-- Header Branding (Pintu Rahasia Admin Terproteksi PIN) -->
-    <!-- Ganti elemen <header> di index.html dengan struktur elegan ini -->
-<header class="atelier-hero-compact">
-  <!-- Pintu Rahasia Admin Terproteksi -->
-  <div class="brand-badge-pill" onclick="bukaPortalAdmin()" style="cursor: pointer;">
-    <i class="fa-solid fa-gem"></i> DIGITAL ATELIER • EST. 2026
-  </div>
+    <header class="atelier-hero-compact">
+      <!-- Pintu Rahasia Admin Terproteksi -->
+      <div class="brand-badge-pill" onclick="bukaPortalAdmin()" style="cursor: pointer;">
+        <i class="fa-solid fa-gem"></i> DIGITAL ATELIER • EST. 2026
+      </div>
 
-  <h1 class="brand-title-gold">JIWAS STUDIO</h1>
-  
-  <p class="brand-statement">
-    "Mengubah foto biasa menjadi potret bernilai seni tinggi sekelas studio bangsawan."
-  </p>
+      <h1 class="brand-title-gold">JIWAS STUDIO</h1>
+      
+      <p class="brand-statement">
+        "Mengubah foto biasa menjadi potret bernilai seni tinggi sekelas studio bangsawan."
+      </p>
 
-  <!-- 3 Pilar Visual Nilai JIWAS -->
-  <div class="hero-feature-chips">
-    <span><i class="fa-solid fa-sparkles"></i> 100 Formula Siap Pakai</span>
-    <span><i class="fa-solid fa-camera"></i> Kualitas Lensa 8K</span>
-    <span><i class="fa-solid fa-bolt"></i> Salin 1 Detik</span>
-  </div>
-</header>
+      <!-- 3 Pilar Visual Nilai JIWAS -->
+      <div class="hero-feature-chips">
+        <span><i class="fa-solid fa-sparkles"></i> 100 Formula Siap Pakai</span>
+        <span><i class="fa-solid fa-camera"></i> Kualitas Lensa 8K</span>
+        <span><i class="fa-solid fa-bolt"></i> Salin 1 Detik</span>
+      </div>
+    </header>
 
     <!-- =================================================================== -->
     <!-- SECTION HOME: ATELIER (SHOWCASE + PINTEREST FEED) -->
@@ -289,12 +322,12 @@
     </footer>
   </div>
 
-  <!-- FLOATING BOTTOM NAV BAR -->
+  <!-- FLOATING BOTTOM NAV BAR (HOME GANTI KE ATELIER) -->
   <nav class="pinterest-bottom-nav">
     <div class="bottom-nav-container">
       <button class="b-nav-item active" id="tabBtnAtelier" onclick="switchMainTab('atelier', this)">
-        <i class="fa-solid fa-house"></i>
-        <span>Home</span>
+        <i class="fa-solid fa-palette"></i>
+        <span>Atelier</span>
       </button>
 
       <button class="b-nav-item" id="tabBtnFoto" onclick="switchMainTab('foto', this)">
