@@ -27,7 +27,10 @@ function initFomoPulseEngine() {
   localStorage.setItem("JIWAS_ACC_VIEWS", baseViews.toString());
 
   function formatK(num) {
-    return num >= 1000 ? (num / 1000).toFixed(1).replace(".", ",") + "k+" : num.toString();
+    if (num >= 1000) {
+      return (num / 1000).toFixed(1).replace(".", ",") + "k+";
+    }
+    return num.toString();
   }
 
   if (viewsEl) viewsEl.innerText = formatK(baseViews);
@@ -98,12 +101,13 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function initApp() {
-  initServiceWorker();
-  initVisitorAndAffinity();
-  initFomoPulseEngine();
-  applyProgressiveFunnelLayout();
-  initShowcaseAutoSlider();
-  initLiveMarqueeTransactions();
+  try { initServiceWorker(); } catch (e) {}
+  try { initVisitorAndAffinity(); } catch (e) {}
+  try { initFomoPulseEngine(); } catch (e) {}
+  try { applyProgressiveFunnelLayout(); } catch (e) {}
+  try { initShowcaseAutoSlider(); } catch (e) {}
+  try { initLiveMarqueeTransactions(); } catch (e) {}
+  
   renderHomeCategories();
   renderAtelierFeed();
   renderKatalogFoto();
