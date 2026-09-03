@@ -1,5 +1,5 @@
 // =========================================================================
-// JIWAS - MASTER CONTROLLER ENGINE (app.js V10.0 Pure Clean Edition)
+// JIWAS - MASTER CONTROLLER & GROWTH ENGINE (app.js V11.0 Platinum Edition)
 // =========================================================================
 
 let activePack = null;
@@ -179,7 +179,7 @@ function initGlobalClickListener() {
 }
 
 // -------------------------------------------------------------------------
-// 2. MARQUEE & DIRECT WA (MURNI JIWAS)
+// 2. MARQUEE & DIRECT WA (1-CLICK CLIENT-SIDE)
 // -------------------------------------------------------------------------
 function initLiveMarqueeTransactions() {
   const counterEl = document.getElementById("salesCounterText");
@@ -239,8 +239,19 @@ function kirimPesananLangsungWA(packTitle, tierName, hargaTeks) {
 
 function hubungiAdminWaLangsung() {
   const waNumber = getAdminWhatsAppNumber();
-  const pesan = "Halo Admin JIWAS, saya ingin bertanya tentang produk dan layanan AI.";
+  const pesan = "Halo Admin JIWAS, saya tertarik untuk bertanya tentang kemitraan reseller atau produk AI di JIWAS.";
   window.open("https://wa.me/" + waNumber + "?text=" + encodeURIComponent(pesan), "_blank");
+}
+
+// -------------------------------------------------------------------------
+// 2.1 VIRAL MARKETING: 1-CLICK SHARE KE TEMAN WHATSAPP
+// -------------------------------------------------------------------------
+function bagikanKoleksiKeWA(packTitle) {
+  const domainUrl = "https://jiwas.com";
+  const teksPesan = "Halo! Coba cek formula foto studio bangsawan *" + packTitle + "* di JIWAS Atelier ini: " + domainUrl + "%0A%0ABagus banget buat naikin kualitas foto profil tanpa sewa studio mahal! ✨";
+  
+  catatLogAktivitas("SHARE_WA_VIRAL", packTitle, "Membagikan ke WhatsApp");
+  window.open("https://api.whatsapp.com/send?text=" + teksPesan, "_blank");
 }
 
 // -------------------------------------------------------------------------
@@ -336,14 +347,14 @@ function simpanBookmarkItem(pack, itemIndex) {
 function bagikanItem(pack, itemIndex) {
   const shareData = {
     title: pack.title + " - JIWAS",
-    text: "Lihat hasil formula AI " + pack.title + " item #" + itemIndex + " di JIWAS!",
-    url: window.location.href
+    text: "Lihat hasil formula AI " + pack.title + " item #" + itemIndex + " di JIWAS Atelier!",
+    url: "https://jiwas.com"
   };
   if (navigator.share) {
     navigator.share(shareData).catch(() => {});
   } else if (navigator.clipboard) {
-    navigator.clipboard.writeText(window.location.href).then(() => {
-      tampilkanToast("🔗 LINK BERHASIL DISALIN!");
+    navigator.clipboard.writeText("https://jiwas.com").then(() => {
+      tampilkanToast("🔗 LINK JIWAS BERHASIL DISALIN!");
     });
   }
 }
@@ -823,7 +834,12 @@ function renderDetailItemCards() {
       : '<div class="prompt-text-box prompt-locked-text">Prompt dikunci. Buka akses paket ' + (tier === 'starter' ? '10K' : '25K') + ' untuk menyalin.</div>';
 
     let actionButtons = !isLocked 
-      ? '<div class="action-buttons"><button class="btn-copy" onclick="copasPromptFromElement(\'promptText_' + i + '\', \'' + activePack.title + '\', ' + i + ')">📋 SALIN</button><button class="btn-copy" style="background:#2563eb; color:#fff;" onclick="eksekusiGenerateUjiCoba(\'' + encodeURIComponent(promptText) + '\', \'' + activePack.title + '\', false)">⚡ ENGINE</button><a href="https://www.bing.com/images/create" target="_blank" class="btn-direct-ai">🚀 Bing</a></div>'
+      ? '<div class="action-buttons">' +
+          '<button class="btn-copy" onclick="copasPromptFromElement(\'promptText_' + i + '\', \'' + activePack.title + '\', ' + i + ')">📋 SALIN</button>' +
+          '<button class="btn-copy" style="background:#2563eb; color:#fff;" onclick="eksekusiGenerateUjiCoba(\'' + encodeURIComponent(promptText) + '\', \'' + activePack.title + '\', false)">⚡ ENGINE</button>' +
+          '<button class="btn-share-promo" onclick="bagikanKoleksiKeWA(\'' + activePack.title + '\')"><i class="fa-brands fa-whatsapp"></i> Pamer</button>' +
+          '<a href="https://www.bing.com/images/create" target="_blank" class="btn-direct-ai">🚀 Bing</a>' +
+        '</div>'
       : '<div class="action-buttons"><button onclick="kirimPesananLangsungWA(\'' + activePack.title + '\', \'Paket ' + tier.toUpperCase() + '\', \'Rp' + (tier === 'starter' ? '10.000' : '25.000') + '\')" class="btn-unlock-wa">Buka Akses via WA (' + (tier === 'starter' ? '10K' : '25K') + ')</button></div>';
 
     card.innerHTML = '<div class="item-image-wrapper"><img src="' + imgSrc + '" class="' + imgClass + '" loading="lazy" alt="Item ' + i + '" onerror="this.onerror=null; this.src=\'images/velvet/1.jpg\';">' + overlayLock + '</div><div class="item-content"><div><div class="item-number">ITEM #' + i + ' ' + (tier === 'free' ? '• [GRATIS SAMPLE]' : '• [PAKET ' + tier.toUpperCase() + ']') + '</div>' + promptBoxHTML + '</div>' + actionButtons + '</div>';
@@ -832,7 +848,7 @@ function renderDetailItemCards() {
 }
 
 // -------------------------------------------------------------------------
-// 9. MODAL PIN & UTILITAS
+// 9. MODAL PIN & UTILITAS (DILENGKAPI WATERMARK PROMOSI)
 // -------------------------------------------------------------------------
 function bukaModalPIN(tier) {
   targetTierModal = tier || 'starter';
@@ -889,14 +905,17 @@ function copasPromptFromElement(elementId, packTitle, itemIdx) {
 }
 
 function copasPrompt(text) {
+  const watermarkPromo = "\n\n(Dibuat via formula JIWAS Atelier: https://jiwas.com — Akses 100 formula hanya 10K)";
+  const fullText = text + watermarkPromo;
+
   if (navigator.clipboard) {
-    navigator.clipboard.writeText(text).then(() => {
+    navigator.clipboard.writeText(fullText).then(() => {
       tampilkanToast("✅ PROMPT BERHASIL DISALIN!");
     }).catch(() => {
-      fallbackCopyText(text);
+      fallbackCopyText(fullText);
     });
   } else {
-    fallbackCopyText(text);
+    fallbackCopyText(fullText);
   }
 }
 
