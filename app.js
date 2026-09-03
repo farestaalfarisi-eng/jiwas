@@ -1,5 +1,5 @@
 // =========================================================================
-// JIWAS - MASTER CONTROLLER & AUTO-UNLOCK ENGINE (app.js V11.0 Platinum)
+// JIWAS - MASTER CONTROLLER & GROWTH ENGINE (app.js V11.0 Platinum)
 // =========================================================================
 
 let activePack = null;
@@ -145,7 +145,7 @@ function initApp() {
   renderKatalogAkun();
   initGlobalClickListener();
 
-  // MAGIC LINK ACTIVATION SCANNER
+  // Deteksi Magic Link Aktivasi Otomatis
   cekAutoUnlockURL();
 }
 
@@ -281,7 +281,7 @@ function hubungiAdminWaLangsung() {
 // -------------------------------------------------------------------------
 function bagikanKoleksiKeWA(packTitle) {
   const currentDomain = window.location.origin + window.location.pathname;
-  const teksPesan = "Halo! Coba cek formula foto studio bangsawan *" + packTitle + "* di JIWAS Atelier ini: " + currentDomain + "%0A%0ABagus banget buat naikin kualitas foto profil tanpa sewa studio mahal! ✨";
+  const teksPesan = "Halo! Coba cek formula foto studio bangsawan *" + packTitle + "* di JIWAS Atelier: " + currentDomain + "%0A%0ABagus banget buat naikin kualitas foto profil tanpa sewa studio mahal! ✨";
   
   catatLogAktivitas("SHARE_WA_VIRAL", packTitle, "Membagikan ke WhatsApp");
   window.open("https://api.whatsapp.com/send?text=" + teksPesan, "_blank");
@@ -994,7 +994,7 @@ function cekAutoUnlockURL() {
   try {
     const urlParams = new URLSearchParams(window.location.search);
     const packId = urlParams.get('pack');
-    const unlockTier = urlParams.get('unlock'); // 'starter' atau 'vip'
+    const unlockTier = urlParams.get('unlock');
     const pinCode = urlParams.get('pin');
 
     if (!packId || !unlockTier || !pinCode) return;
@@ -1025,4 +1025,45 @@ function cekAutoUnlockURL() {
   } catch (e) {
     console.warn("Auto unlock scan:", e);
   }
+}
+
+// -------------------------------------------------------------------------
+// 11. PWA INSTALL TO HOMESCREEN PROMPT
+// -------------------------------------------------------------------------
+let deferredPrompt = null;
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+
+  const dismissed = sessionStorage.getItem("JIWAS_PWA_DISMISSED");
+  if (!dismissed) {
+    const banner = document.getElementById("pwaInstallBanner");
+    if (banner) banner.classList.remove("hidden");
+  }
+});
+
+function picuInstallPWA() {
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then((choiceResult) => {
+      if (choiceResult.outcome === 'accepted') {
+        tampilkanToast("🎉 JIWAS BERHASIL DIINSTALL DI LAYAR HP!");
+      }
+      deferredPrompt = null;
+      tutupBannerPWA();
+    });
+  } else if (isIOS) {
+    alert("📱 Untuk Pengguna iPhone / Safari:\n\n1. Tekan tombol Bagikan (ikon kotak panah ke atas di bawah layar).\n2. Gulir ke bawah lalu pilih 'Add to Home Screen' (Tambah ke Layar Utama).");
+  } else {
+    alert("Aplikasi JIWAS siap dipasang melalui menu browser (Titik 3 di kanan atas -> Tambahkan ke Layar Utama).");
+  }
+}
+
+function tutupBannerPWA() {
+  const banner = document.getElementById("pwaInstallBanner");
+  if (banner) banner.classList.add("hidden");
+  sessionStorage.setItem("JIWAS_PWA_DISMISSED", "true");
 }
