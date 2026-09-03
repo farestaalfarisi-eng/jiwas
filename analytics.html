@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>JIWAS - Master Radar, WA Dispatcher & Engine Monitor</title>
+  <title>JIWAS - Master Radar, Command Center & Growth OS</title>
 
   <!-- Google Fonts & Font Awesome -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -19,13 +19,15 @@
       --gold-primary: #d4af37;
       --gold-light: #f3e5ab;
       --accent-cyan: #38bdf8;
+      --accent-green: #22c55e;
+      --accent-red: #ef4444;
       --text-main: #f8fafc;
       --text-muted: #94a3b8;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
     body { background: var(--bg-dark); color: var(--text-main); padding: 24px 16px; display: flex; justify-content: center; }
-    .container { width: 100%; max-width: 1100px; }
+    .container { width: 100%; max-width: 1150px; }
     
     header {
       position: relative;
@@ -86,9 +88,9 @@
       background: #181822;
       border: 1px solid var(--card-border);
       color: var(--text-muted);
-      padding: 10px 18px;
+      padding: 10px 16px;
       border-radius: 8px;
-      font-size: 0.82rem;
+      font-size: 0.8rem;
       font-weight: 700;
       cursor: pointer;
       display: flex;
@@ -102,11 +104,11 @@
       border-color: #ffe082;
       box-shadow: 0 4px 16px rgba(212, 175, 55, 0.3);
     }
-    .btn-sheet-tab.engine-active.active {
-      background: linear-gradient(135deg, #0284c7, #0369a1);
+    .btn-sheet-tab.growth-active.active {
+      background: linear-gradient(135deg, #22c55e, #15803d);
       color: #fff;
-      border-color: #38bdf8;
-      box-shadow: 0 4px 16px rgba(56, 189, 248, 0.3);
+      border-color: #86efac;
+      box-shadow: 0 4px 16px rgba(34, 197, 94, 0.3);
     }
 
     .sheet-content { display: none; }
@@ -118,24 +120,23 @@
     .metric-value { font-size: 1.6rem; font-weight: 800; color: var(--gold-primary); }
 
     .panel-box { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 14px; padding: 20px; margin-bottom: 20px; }
-    .panel-title { font-size: 0.95rem; font-weight: 800; color: var(--gold-light); display: flex; align-items: center; gap: 8px; }
+    .panel-title { font-size: 0.95rem; font-weight: 800; color: var(--gold-light); display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
     
     .data-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; text-align: left; }
     .data-table th, .data-table td { padding: 10px 12px; border-bottom: 1px solid rgba(255,255,255,0.06); }
     .data-table th { color: var(--text-muted); font-weight: 700; text-transform: uppercase; font-size: 0.68rem; }
     
-    .input-pin {
+    .input-pin, .input-growth {
       background: #1a1a24;
       border: 1px solid var(--card-border);
       color: var(--gold-light);
-      padding: 6px 8px;
+      padding: 8px 10px;
       border-radius: 6px;
       font-size: 0.8rem;
       font-weight: 700;
-      width: 105px;
-      text-transform: uppercase;
+      outline: none;
     }
-    .input-pin:focus { border-color: var(--gold-primary); outline: none; }
+    .input-pin:focus, .input-growth:focus { border-color: var(--gold-primary); }
 
     .search-filter-box {
       display: flex;
@@ -211,6 +212,24 @@
       z-index: 9999;
     }
     .toast-radar.hidden { display: none; }
+
+    /* STYLES KHUSUS LEMBAR 4: GROWTH OS */
+    .growth-layout-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media(max-width: 800px) { .growth-layout-2 { grid-template-columns: 1fr; } }
+    .creative-box {
+      background: #09090c;
+      border: 1px dashed var(--gold-primary);
+      border-radius: 8px;
+      padding: 14px;
+      font-size: 0.8rem;
+      line-height: 1.5;
+      color: #e2e8f0;
+      white-space: pre-wrap;
+      word-break: break-word;
+      min-height: 160px;
+    }
+    .tag-leak { background: rgba(239, 68, 68, 0.2); color: var(--accent-red); padding: 2px 6px; border-radius: 4px; font-weight: 700; font-size: 0.68rem; }
+    .tag-pass { background: rgba(34, 197, 94, 0.2); color: var(--accent-green); padding: 2px 6px; border-radius: 4px; font-weight: 700; font-size: 0.68rem; }
   </style>
 </head>
 <body>
@@ -223,20 +242,23 @@
 
       <div>
         <h1 class="brand-title">JIWAS COMMAND CENTER</h1>
-        <p style="color:var(--text-muted); font-size:0.8rem; margin-top:4px;">Pusat Pemantau Trafik, Generator Respon Balasan WA & Monitoring Engine AI</p>
+        <p style="color:var(--text-muted); font-size:0.8rem; margin-top:4px;">Pusat Radar Trafik, Balasan WhatsApp & Growth OS Intelligence</p>
       </div>
     </header>
 
-    <!-- NAVIGASI 3 LEMBAR -->
+    <!-- NAVIGASI 4 LEMBAR -->
     <div class="tab-nav-wrapper">
       <button class="btn-sheet-tab active" onclick="switchSheet('radarTab', this)">
         <i class="fa-solid fa-chart-pie"></i> LEMBAR 1: Radar & Aktivitas
       </button>
       <button class="btn-sheet-tab" onclick="switchSheet('pinTab', this)">
-        <i class="fa-solid fa-key"></i> LEMBAR 2: PIN & Balasan Cepat WA
+        <i class="fa-solid fa-key"></i> LEMBAR 2: PIN & Balasan WA
       </button>
-      <button class="btn-sheet-tab engine-active" onclick="switchSheet('engineTab', this)">
-        <i class="fa-solid fa-microchip"></i> LEMBAR 3: Produksi Engine ATM
+      <button class="btn-sheet-tab" onclick="switchSheet('engineTab', this)">
+        <i class="fa-solid fa-microchip"></i> LEMBAR 3: Produksi ATM
+      </button>
+      <button class="btn-sheet-tab growth-active" onclick="switchSheet('growthTab', this)">
+        <i class="fa-solid fa-bolt" style="color:#4ade80;"></i> LEMBAR 4: JIWAS GROWTH OS
       </button>
     </div>
 
@@ -337,7 +359,7 @@
         <div class="metric-card">
           <div class="metric-title">Status Koneksi Studio</div>
           <div class="metric-value" id="engineStatusIndicator" style="font-size:1rem; padding-top:6px; color:#10b981;">
-            <i class="fa-solid fa-circle-dot"></i> TERHUBUNG
+            <i class="fa-solid fa-circle-dot"></i> STANDBY
           </div>
         </div>
       </div>
@@ -360,11 +382,206 @@
               </tr>
             </thead>
             <tbody id="engineActivityTableBody">
-              <tr><td colspan="4" style="text-align:center; color:var(--text-muted);">Menghubungkan ke http://localhost:3000...</td></tr>
+              <tr><td colspan="4" style="text-align:center; color:var(--text-muted);">Tekan sinkronkan untuk memeriksa aktivitas engine lokal...</td></tr>
             </tbody>
           </table>
         </div>
       </div>
+    </div>
+
+    <!-- ===================================================================
+         LEMBAR 4: JIWAS GROWTH OS (Pusat Kendali Penjualan & Promosi Instan)
+         =================================================================== -->
+    <div id="growthTab" class="sheet-content">
+      
+      <!-- PRIORITAS TINDAKAN HARI INI (AI STRATEGIST) -->
+      <div class="panel-box" style="border: 1px solid var(--gold-primary); background: linear-gradient(135deg, rgba(212,175,55,0.08), rgba(18,18,24,0.95));">
+        <div class="panel-title" style="margin-bottom:10px;">
+          <span><i class="fa-solid fa-fire" style="color:#f59e0b;"></i> PRIORITAS TINDAKAN HARI INI (AI STRATEGIST)</span>
+          <span style="font-size:0.7rem; color:var(--gold-light);" id="growthTodayDate">Live Radar Update</span>
+        </div>
+        <div id="growthActionPriorities" style="display:flex; flex-direction:column; gap:8px;">
+          <!-- Item Aksi Otomatis Masuk di Sini -->
+        </div>
+      </div>
+
+      <!-- AI CONTENT MATRIX (3-ANGLE SWITCHER & UTM BINDER) -->
+      <div class="panel-box">
+        <div class="panel-title">
+          <span><i class="fa-solid fa-layer-group" style="color:var(--accent-cyan);"></i> AI CONTENT MATRIX (3-ANGLE SWITCHER & UTM BINDER)</span>
+          <span style="font-size:0.75rem; color:var(--text-muted);">Racik materi konten berdasarkan psikologi pembeli</span>
+        </div>
+
+        <div class="growth-layout-2">
+          <div>
+            <div style="margin-bottom:10px;">
+              <label style="font-size:0.75rem; font-weight:700; color:var(--gold-light); display:block; margin-bottom:4px;">Pilih Katalog:</label>
+              <select id="creativePackSelect" class="input-growth" style="width:100%;"></select>
+            </div>
+
+            <div style="margin-bottom:10px;">
+              <label style="font-size:0.75rem; font-weight:700; color:var(--gold-light); display:block; margin-bottom:4px;">Format Distribusi:</label>
+              <select id="creativePlatformSelect" class="input-growth" style="width:100%;">
+                <option value="tiktok">Video Pendek 9:16 (TikTok / Reels / Shorts)</option>
+                <option value="wa">WhatsApp Status & Broadcast Grup</option>
+                <option value="meta">Copywriting Meta Ads / Facebook Pro</option>
+              </select>
+            </div>
+
+            <div style="margin-bottom:14px;">
+              <label style="font-size:0.75rem; font-weight:700; color:var(--gold-light); display:block; margin-bottom:4px;">Sudut Pandang Psikologi (Angle):</label>
+              <select id="creativeAngleSelect" class="input-growth" style="width:100%;">
+                <option value="cost">Angle A: Biaya & Solusi Hemat (Stop Sewa Studio)</option>
+                <option value="ease">Angle B: Kemudahan & Efisiensi Waktu (Salin-Tempel 10 Detik)</option>
+                <option value="prestige">Angle C: Wibawa, Persona & Gaya Hidup Mewah</option>
+              </select>
+            </div>
+
+            <button class="btn-action" style="width:100%; background:linear-gradient(135deg, #38bdf8, #0284c7); color:#000;" onclick="generateCreativeMatrix()">
+              <i class="fa-solid fa-wand-magic-sparkles"></i> Racik Formula Konten & Ikat Link UTM
+            </button>
+          </div>
+
+          <div>
+            <div class="creative-box" id="creativeOutputBox">Pilih katalog dan sudut pandang promosi di sebelah kiri, lalu tekan tombol untuk meracik materi iklan lengkap dengan link promosi terikat...</div>
+            <button class="btn-quick-copy" style="margin-top:8px; width:100%; justify-content:center; padding:8px;" onclick="salinCreativeBox()">
+              <i class="fa-solid fa-copy"></i> Salin Seluruh Teks Iklan
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- SMART UTM LINK GENERATOR -->
+      <div class="panel-box">
+        <div class="panel-title">
+          <span><i class="fa-solid fa-link" style="color:var(--accent-cyan);"></i> GENERATOR LINK PROMOSI BERLABEL (SMART UTM)</span>
+          <span style="font-size:0.75rem; color:var(--text-muted);">Buat link siap sebar agar trafik terdata rapi</span>
+        </div>
+        <div class="growth-layout-2">
+          <div>
+            <div style="margin-bottom:10px;">
+              <label style="font-size:0.75rem; font-weight:700; color:var(--gold-light); display:block; margin-bottom:4px;">Target Kanal Promosi:</label>
+              <select id="utmChannelSelect" class="input-growth" style="width:100%;">
+                <option value="tiktok">TikTok (Bio / Komentar Video)</option>
+                <option value="whatsapp">WhatsApp (Status / Broadcast Grup)</option>
+                <option value="instagram">Instagram (Reels / Story Link)</option>
+                <option value="facebook">Facebook (Postingan / Grup UMKM)</option>
+              </select>
+            </div>
+            <div style="margin-bottom:14px;">
+              <label style="font-size:0.75rem; font-weight:700; color:var(--gold-light); display:block; margin-bottom:4px;">Nama Kampanye (Opsional):</label>
+              <input type="text" id="utmCampaignInput" class="input-growth" style="width:100%;" placeholder="contoh: promo_gajian / vt_velvet_1">
+            </div>
+            <button class="btn-action" style="width:100%;" onclick="buatLinkPromosiUTM()">
+              <i class="fa-solid fa-paper-plane"></i> Buat Link Siap Sebar
+            </button>
+          </div>
+          <div>
+            <label style="font-size:0.75rem; font-weight:700; color:var(--gold-light); display:block; margin-bottom:4px;">Hasil Link Khusus Anda:</label>
+            <input type="text" id="utmResultBox" class="input-growth" style="width:100%; background:#000; color:var(--accent-cyan);" readonly placeholder="Link akan muncul di sini...">
+            <button class="btn-quick-copy" style="margin-top:8px; width:100%; justify-content:center; padding:8px;" onclick="salinLinkUTM()">
+              <i class="fa-solid fa-copy"></i> Salin Tautan Promosi
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Top Growth Metrics -->
+      <div class="metric-grid">
+        <div class="metric-card">
+          <div class="metric-title">Omzet Terkunci (Riil)</div>
+          <div class="metric-value" style="color:#22c55e;" id="growthRevenue">Rp 0</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-title">Rasio Konversi Toko</div>
+          <div class="metric-value" style="color:var(--accent-cyan);" id="growthConvRate">0%</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-title">Kanal Paling Banyak Uang</div>
+          <div class="metric-value" style="font-size:1.1rem; padding-top:6px;" id="growthTopChannel">-</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-title">Produk Paling Banyak Beli</div>
+          <div class="metric-value" style="font-size:1.0rem; padding-top:6px; color:var(--gold-light);" id="growthBestSeller">-</div>
+        </div>
+      </div>
+
+      <!-- Conversion Diagnostic & Funnel Leakage -->
+      <div class="panel-box">
+        <div class="panel-title">
+          <span><i class="fa-solid fa-stethoscope" style="color:#ef4444;"></i> CONVERSION DIAGNOSTIC ("MENGAPA BELUM MEMBELI?")</span>
+          <span style="font-size:0.75rem; color:var(--text-muted);">Deteksi kebocoran pengunjung pada setiap katalog</span>
+        </div>
+
+        <div style="overflow-x:auto;">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Katalog</th>
+                <th>Dilihat (Views)</th>
+                <th>Klik Beli (WA)</th>
+                <th>Status</th>
+                <th>Analisis Celah & Solusi Cepat</th>
+              </tr>
+            </thead>
+            <tbody id="growthDiagnosticTableBody">
+              <tr><td colspan="5" style="text-align:center; color:var(--text-muted);">Menganalisis data interaksi...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Funnel Step & Channel Attribution -->
+      <div class="growth-layout-2">
+        <div class="panel-box">
+          <div class="panel-title">
+            <span><i class="fa-solid fa-filter"></i> CONVERSION FUNNEL</span>
+          </div>
+          <table class="data-table">
+            <thead>
+              <tr><th>Tahap</th><th>Jumlah</th><th>Konversi</th></tr>
+            </thead>
+            <tbody id="growthFunnelTableBody"></tbody>
+          </table>
+        </div>
+
+        <div class="panel-box">
+          <div class="panel-title">
+            <span><i class="fa-solid fa-money-bill-trend-up"></i> OMZET PER CHANNEL (UTM)</span>
+          </div>
+          <table class="data-table">
+            <thead>
+              <tr><th>Sumber Trafik</th><th>Omzet Dihasilkan</th></tr>
+            </thead>
+            <tbody id="growthChannelTableBody">
+              <tr><td colspan="2" style="text-align:center; color:var(--text-muted);">Belum ada data atribusi.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- REKAMAN CUSTOMER VOICE (SURVEY KENDALA PENGUNJUNG) -->
+      <div class="panel-box">
+        <div class="panel-title">
+          <span><i class="fa-solid fa-comment-dots" style="color:#38bdf8;"></i> SUARA PENGUNJUNG (CUSTOMER VOICE EXIT-SURVEY)</span>
+          <span style="font-size:0.75rem; color:var(--text-muted);">Alasan pengunjung belum memutuskan checkout</span>
+        </div>
+        <div style="overflow-x:auto;">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Waktu</th>
+                <th>Katalog Dituju</th>
+                <th>Kendala yang Dipilih Pengunjung</th>
+              </tr>
+            </thead>
+            <tbody id="customerVoiceTableBody">
+              <tr><td colspan="3" style="text-align:center; color:var(--text-muted);">Belum ada survei yang terekam.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
     </div>
 
   </div>
@@ -383,8 +600,9 @@
     document.addEventListener("DOMContentLoaded", () => {
       renderDashboardAnalytics();
       renderPinManager();
+      renderGrowthOS();
       sinkronkanEngineManual();
-      setInterval(sinkronkanEngineManual, 5000);
+      setInterval(sinkronkanEngineManual, 8000);
     });
 
     function switchSheet(sheetId, btnEl) {
@@ -394,6 +612,10 @@
       const target = document.getElementById(sheetId);
       if (target) target.classList.add("active");
       if (btnEl) btnEl.classList.add("active");
+
+      if (sheetId === 'growthTab') {
+        renderGrowthOS();
+      }
     }
 
     function filterTabelPIN() {
@@ -529,7 +751,7 @@ Selamat berkreasi di JIWAS! 🚀`;
           });
         }
       } catch (err) {
-        document.getElementById("engineStatusIndicator").innerHTML = '<i class="fa-solid fa-circle-xmark" style="color:#ef4444;"></i> OFFLINE';
+        document.getElementById("engineStatusIndicator").innerHTML = '<i class="fa-solid fa-circle-dot" style="color:#94a3b8;"></i> STANDBY';
       }
     }
 
@@ -586,6 +808,302 @@ Selamat berkreasi di JIWAS! 🚀`;
         localStorage.removeItem("JIWAS_USER_LOGS");
         location.reload();
       }
+    }
+
+    // =========================================================================
+    // ENGINE KHUSUS LEMBAR 4: JIWAS GROWTH OS
+    // =========================================================================
+    function renderGrowthOS() {
+      const logs = JSON.parse(localStorage.getItem("JIWAS_USER_LOGS") || "[]");
+      const visits = parseInt(localStorage.getItem("JIWAS_VISIT_COUNT") || "1", 10);
+      const unlockedStarter = JSON.parse(localStorage.getItem("TIGAJIWA_UNLOCKED_STARTER") || "[]");
+      const unlockedVIP = JSON.parse(localStorage.getItem("TIGAJIWA_UNLOCKED_VIP") || "[]");
+
+      const packSelect = document.getElementById("creativePackSelect");
+      if (packSelect && packSelect.children.length === 0) {
+        const packs = (typeof KATALOG_REGISTRY !== "undefined" && Array.isArray(KATALOG_REGISTRY)) ? KATALOG_REGISTRY : [];
+        packs.forEach(p => {
+          if (p.type !== "digital") {
+            const opt = document.createElement("option");
+            opt.value = p.title;
+            opt.innerText = p.title;
+            packSelect.appendChild(opt);
+          }
+        });
+      }
+
+      let totalRevenue = (unlockedStarter.length * 10000) + (unlockedVIP.length * 25000);
+      document.getElementById("growthRevenue").innerText = 'Rp ' + totalRevenue.toLocaleString('id-ID');
+
+      let packViews = {};
+      let packClicks = {};
+      let totalLanding = visits;
+      let totalDetailViews = 0;
+      let totalWaClicks = 0;
+
+      logs.forEach(l => {
+        if (l.type === 'VIEW_PACK') {
+          totalDetailViews++;
+          packViews[l.target] = (packViews[l.target] || 0) + 1;
+        }
+        if (l.type === 'CLICK_WA') {
+          totalWaClicks++;
+          packClicks[l.target] = (packClicks[l.target] || 0) + 1;
+        }
+      });
+
+      let totalPurchases = unlockedStarter.length + unlockedVIP.length;
+      let convRate = totalLanding > 0 ? ((totalPurchases / totalLanding) * 100).toFixed(1) : 0;
+      document.getElementById("growthConvRate").innerText = convRate + "%";
+
+      const lastSalesTitle = localStorage.getItem("JIWAS_LAST_SALES_TITLE");
+      document.getElementById("growthBestSeller").innerText = lastSalesTitle || (unlockedVIP[0] || unlockedStarter[0] || "Belum Ada");
+
+      // AI Strategist
+      const actionBox = document.getElementById("growthActionPriorities");
+      if (actionBox) {
+        actionBox.innerHTML = "";
+        let actions = [];
+
+        Object.entries(packViews).forEach(([title, v]) => {
+          const c = packClicks[title] || 0;
+          if (v >= 3 && c === 0) {
+            actions.push(`🔥 <strong>${title}</strong> memiliki ${v} views tapi belum ada klik beli WA. <em>Tindakan:</em> Buat video TikTok dengan angle Solusi Hemat.`);
+          }
+        });
+
+        if (totalDetailViews > 0 && totalWaClicks === 0) {
+          actions.push(`⚡ Pengunjung aktif melihat katalog, namun belum menekan tombol WA. <em>Tindakan:</em> Sebarkan broadcast WA berisi tawaran uji coba 3 prompt gratis.`);
+        }
+
+        if (actions.length === 0) {
+          actions.push(`🚀 <strong>Koleksi Toko Berjalan Sehat</strong>. <em>Tindakan:</em> Sebarkan link ber-UTM ke 2 grup WhatsApp hari ini.`);
+          actions.push(`📸 Buat 1 video pendek vertikal 9:16 untuk katalog <strong>Luxury Royal Velvet Studio</strong> menggunakan generator di bawah.`);
+        }
+
+        actions.slice(0, 3).forEach((act, idx) => {
+          const item = document.createElement("div");
+          item.style.cssText = "font-size:0.8rem; line-height:1.4; background:#161622; padding:8px 12px; border-radius:6px; border-left:3px solid var(--gold-primary);";
+          item.innerHTML = `<span style="color:var(--gold-light); font-weight:800;">#${idx+1}</span> ${act}`;
+          actionBox.appendChild(item);
+        });
+      }
+
+      // Funnel Table
+      const fBody = document.getElementById("growthFunnelTableBody");
+      if (fBody) {
+        fBody.innerHTML = `
+          <tr><td><strong>1. Pengunjung Masuk</strong></td><td>${totalLanding}</td><td style="color:#38bdf8;">100%</td></tr>
+          <tr><td><strong>2. Buka Detail Katalog</strong></td><td>${totalDetailViews}</td><td style="color:#38bdf8;">${totalLanding > 0 ? ((totalDetailViews/totalLanding)*100).toFixed(1) : 0}%</td></tr>
+          <tr><td><strong>3. Klik Beli WhatsApp</strong></td><td>${totalWaClicks}</td><td style="color:#22c55e;">${totalDetailViews > 0 ? ((totalWaClicks/totalDetailViews)*100).toFixed(1) : 0}%</td></tr>
+          <tr><td><strong>4. Beli & Aktifkan PIN</strong></td><td>${totalPurchases}</td><td style="color:var(--gold-light); font-weight:800;">${totalWaClicks > 0 ? ((totalPurchases/totalWaClicks)*100).toFixed(1) : 0}%</td></tr>
+        `;
+      }
+
+      // Diagnostics Table
+      const diagBody = document.getElementById("growthDiagnosticTableBody");
+      if (diagBody) {
+        const packs = (typeof KATALOG_REGISTRY !== "undefined" && Array.isArray(KATALOG_REGISTRY)) ? KATALOG_REGISTRY : [];
+        diagBody.innerHTML = "";
+
+        let hasData = false;
+        packs.forEach(p => {
+          if (p.type === "digital") return;
+          const v = packViews[p.title] || 0;
+          const c = packClicks[p.title] || 0;
+
+          if (v > 0 || c > 0) {
+            hasData = true;
+            let statusBadge = '<span class="tag-pass">SEHAT</span>';
+            let diagText = "Alur konversi normal.";
+            let solText = "Teruskan promosi.";
+
+            if (v > 2 && c === 0) {
+              statusBadge = '<span class="tag-leak">DROP TINGGI</span>';
+              diagText = "Banyak yang lihat foto, tapi ragu klik tombol beli.";
+              solText = "Ganti hook promosi atau tekankan garansi 100 prompt.";
+            } else if (c > 2 && totalPurchases === 0) {
+              statusBadge = '<span class="tag-leak">CHECKOUT LEAK</span>';
+              diagText = "Sudah klik tombol WA tapi batal aktivasi PIN.";
+              solText = "Cek balasan WA: pastikan nomor rekening/QRIS jelas.";
+            }
+
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+              <td><strong>${p.title}</strong></td>
+              <td>${v}</td>
+              <td style="color:#22c55e; font-weight:700;">${c}</td>
+              <td>${statusBadge}</td>
+              <td>
+                <div style="font-size:0.75rem; color:#cbd5e1;">${diagText}</div>
+                <div style="color:var(--gold-light); font-size:0.72rem; margin-top:2px;">👉 <em>${solText}</em></div>
+              </td>
+            `;
+            diagBody.appendChild(tr);
+          }
+        });
+
+        if (!hasData) {
+          diagBody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:var(--text-muted);">Belum ada riwayat klik katalog. Buka etalase toko untuk menghasilkan data.</td></tr>';
+        }
+      }
+
+      // UTM Channel Attribution Table
+      const utmObj = JSON.parse(sessionStorage.getItem("JIWAS_ACTIVE_UTM") || "{}");
+      const chBody = document.getElementById("growthChannelTableBody");
+      if (chBody) {
+        const channelName = utmObj.utm_source || "Direct (Organik)";
+        document.getElementById("growthTopChannel").innerText = channelName.toUpperCase();
+        chBody.innerHTML = `
+          <tr>
+            <td><strong>${channelName.toUpperCase()}</strong></td>
+            <td style="color:#22c55e; font-weight:700;">Rp ${totalRevenue.toLocaleString('id-ID')}</td>
+          </tr>
+        `;
+      }
+
+      // Customer Voice Table
+      const voiceBody = document.getElementById("customerVoiceTableBody");
+      if (voiceBody) {
+        const voices = JSON.parse(localStorage.getItem("JIWAS_CUSTOMER_VOICE") || "[]");
+        if (voices.length === 0) {
+          voiceBody.innerHTML = '<tr><td colspan="3" style="text-align:center; color:var(--text-muted);">Belum ada kendala yang disampaikan pengunjung.</td></tr>';
+        } else {
+          voiceBody.innerHTML = "";
+          voices.slice(-20).reverse().forEach(vc => {
+            let label = vc.reason;
+            if (label === 'HARGA_BELUM_PAS') label = '💰 Harganya belum pas (Disolusi: Diskon 5K)';
+            if (label === 'BINGUNG_CARA_PAKAI') label = '❓ Bingung pakai (Disolusi: Edukasi 3 Step)';
+            if (label === 'MAU_METODE_BAYAR') label = '💳 Butuh QRIS (Disolusi: Link WA QRIS)';
+            if (label === 'TEMA_LAIN') label = '🎨 Cari tema lain (Disolusi: Search Focus)';
+
+            const d = new Date(vc.time);
+            const timeStr = `${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')} WIB`;
+
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+              <td>${timeStr}</td>
+              <td><strong>${vc.pack}</strong></td>
+              <td style="color:var(--gold-light);">${label}</td>
+            `;
+            voiceBody.appendChild(tr);
+          });
+        }
+      }
+    }
+
+    // AI Content Matrix Generator
+    function generateCreativeMatrix() {
+      const title = document.getElementById("creativePackSelect").value || "Luxury Royal Velvet Studio";
+      const platform = document.getElementById("creativePlatformSelect").value;
+      const angle = document.getElementById("creativeAngleSelect").value;
+      const out = document.getElementById("creativeOutputBox");
+
+      const currentOrigin = window.location.origin;
+      let pathRoot = window.location.pathname.replace("analytics.html", "index.html");
+      const boundLink = `${currentOrigin}${pathRoot}?utm_source=${platform}&utm_campaign=matrix_${angle}`;
+
+      let content = "";
+
+      if (platform === "tiktok") {
+        if (angle === "cost") {
+          content = `🎬 FORMAT: Video TikTok / Reels (9:16 - 15 Detik)\n` +
+            `🎯 ANGLE: Solusi Hemat (Anti Biaya Mahal)\n\n` +
+            `🔥 HOOK AWAL (0–3s):\n` +
+            `"Ngapain buang 500 ribu cuma buat foto studio sekali pakai? Foto kamar gelap lo bisa berubah sekelas atelier mewah dalam 10 detik!"\n\n` +
+            `📹 ARAHAN VISUAL:\n` +
+            `• 0–3s: Selfie HP biasa di kamar yang pencahayaannya seadanya.\n` +
+            `• 4–10s: Transisi tajam ke hasil formula ${title} dengan tone emas dan pencahayaan rim-light 8K.\n` +
+            `• 11–15s: Tangkapan layar web JIWAS saat menyalin formula 1-klik.\n\n` +
+            `📢 TEKS CAPTION & CTA:\n` +
+            `Hemat jutaan rupiah, hasil tetap kelas atas. Uji coba 3 formula gratis sekarang 👉 ${boundLink}\n#FotoStudioAI #PromptAI #JIWAS`;
+        } else if (angle === "ease") {
+          content = `🎬 FORMAT: Video TikTok / Reels (9:16 - 15 Detik)\n` +
+            `🎯 ANGLE: Kemudahan & Tanpa Ribet\n\n` +
+            `🔥 HOOK AWAL (0–3s):\n` +
+            `"Masih jaman mikir prompt bahasa Inggris ribet berjam-jam? Cukup salin satu baris ini, langsung jadi!"\n\n` +
+            `📹 ARAHAN VISUAL:\n` +
+            `• 0–4s: Rekam layar jempol menekan tombol 'Salin Prompt' di katalog ${title}.\n` +
+            `• 5–10s: Tempel ke Bing/Gemini dan klik render. Hasil portrait sinematik langsung keluar.\n` +
+            `• 11–15s: Tampilkan hasil render resolusi tinggi.\n\n` +
+            `📢 TEKS CAPTION & CTA:\n` +
+            `Tinggal tempel, tanpa repot belajar rumus AI. Akses katalognya di sini 👉 ${boundLink}\n#AITricks #FotografiAI #JIWAS`;
+        } else {
+          content = `🎬 FORMAT: Video TikTok / Reels (9:16 - 15 Detik)\n` +
+            `🎯 ANGLE: Persona, Wibawa & Gaya Hidup\n\n` +
+            `🔥 HOOK AWAL (0–3s):\n` +
+            `"Foto profil lo menentukan seberapa dihargainya persona profesional lo di internet. Upgrade ke standar bangsawan sekarang."\n\n` +
+            `📹 ARAHAN VISUAL:\n` +
+            `• 0–3s: Foto profil media sosial biasa yang terlihat datar.\n` +
+            `• 4–10s: Transformasi menjadi potret editorial bangsawan dengan formula ${title}.\n` +
+            `• 11–15s: Tampilan branding atelier mewah JIWAS.\n\n` +
+            `📢 TEKS CAPTION & CTA:\n` +
+            `Tingkatkan impresi pertama foto profil Anda dalam hitungan detik. Lihat 100 koleksinya 👉 ${boundLink}\n#PersonalBranding #StudioFotoMewah #JIWAS`;
+        }
+      } else if (platform === "wa") {
+        if (angle === "cost") {
+          content = `📢 BROADCAST / STATUS WA (Angle: Solusi Hemat Biaya)\n\n` +
+            `Sewa studio foto: Rp350.000 - Rp750.000 ❌\n` +
+            `Sewa MUA & Kostum: Rp200.000 ❌\n\n` +
+            `Bikin sendiri dari HP dengan hasil sama persis: Cuma Rp10.000 ✅\n\n` +
+            `Koleksi formula *${title}* dari JIWAS Atelier memungkinkan Kakak menghasilkan foto studio bangsawan tanpa kamera mahal.\n\n` +
+            `🎁 Coba 3 formula sampelnya secara GRATIS di sini:\n` +
+            `👉 ${boundLink}\n\n` +
+            `*(Akses langsung tanpa instalasi aplikasi apa pun)*`;
+        } else if (angle === "ease") {
+          content = `📢 BROADCAST / STATUS WA (Angle: Praktis Salin-Tempel)\n\n` +
+            `Kak, mau bikin foto studio mewah tapi bingung cara nyusun kalimat prompt AI-nya?\n\n` +
+            `Koleksi *${title}* sudah diracik matang dengan parameter lensa 8K Hasselblad. Kakak tinggal:\n` +
+            `1. Salin teks prompt di etalase\n` +
+            `2. Tempel di Bing Image Creator atau Gemini gratis\n` +
+            `3. Foto atelier langsung jadi dalam 10 detik!\n\n` +
+            `👉 Coba langsung tanpa bayar di sini: ${boundLink}`;
+        } else {
+          content = `📢 BROADCAST / STATUS WA (Angle: Upgrade Persona & Wibawa)\n\n` +
+            `Impresi pertama di WhatsApp dan media sosial dimulai dari foto profil yang Kakak gunakan.\n\n` +
+            `Hadirkan wibawa, ketegasan, dan keanggunan sekelas atelier potret bangsawan melalui seri *${title}*.\n\n` +
+            `Akses 100 formula pencahayaan profesional kami sekarang:\n` +
+            `👉 ${boundLink}\n\n` +
+            `*(Tersedia opsi aktivasi instan 10K / VIP 25K)*`;
+        }
+      } else {
+        content = `📢 META ADS / FB PRO COPY (Angle: ${angle.toUpperCase()})\n\n` +
+          `Headline: Transformasi Foto HP Biasa Jadi Potret Studio Kelas Atas\n\n` +
+          `Primary Text: Formula pencahayaan atelier seni "${title}" telah disesuaikan agar siapa saja bisa menghasilkan foto potret dramatis tanpa peralatan fotografi mahal. Akses 100 formula siap pakai mulai Rp10.000.\n\n` +
+          `Tautan Promosi: ${boundLink}`;
+      }
+
+      out.innerText = content;
+      tampilkanToastRadar("⚡ Formula konten & link UTM berhasil diracik!");
+    }
+
+    // Smart UTM Generator Handler
+    function buatLinkPromosiUTM() {
+      const channel = document.getElementById("utmChannelSelect").value;
+      const rawCamp = document.getElementById("utmCampaignInput").value.trim();
+      const campaign = rawCamp ? encodeURIComponent(rawCamp.replace(/\s+/g, '_')) : "promo_organik";
+      
+      const currentOrigin = window.location.origin;
+      let pathRoot = window.location.pathname.replace("analytics.html", "index.html");
+      const finalLink = `${currentOrigin}${pathRoot}?utm_source=${channel}&utm_campaign=${campaign}`;
+      
+      document.getElementById("utmResultBox").value = finalLink;
+      tampilkanToastRadar("🔗 Link promosi berlabel berhasil dibuat!");
+    }
+
+    function salinLinkUTM() {
+      const box = document.getElementById("utmResultBox");
+      if (!box.value) return;
+      navigator.clipboard.writeText(box.value).then(() => {
+        tampilkanToastRadar("📋 Link promosi tersalin! Siap dipasang di bio/status.");
+      });
+    }
+
+    function salinCreativeBox() {
+      const text = document.getElementById("creativeOutputBox").innerText;
+      navigator.clipboard.writeText(text).then(() => {
+        tampilkanToastRadar("📋 Seluruh teks iklan berhasil disalin ke clipboard!");
+      });
     }
   </script>
 </body>
