@@ -1,5 +1,5 @@
 // =========================================================================
-// JIWAS - MASTER CONTROLLER & GROWTH ENGINE (app.js V11.0 Platinum Edition)
+// JIWAS - MASTER CONTROLLER ENGINE & GROWTH LOOP (app.js V11.0 Platinum)
 // =========================================================================
 
 let activePack = null;
@@ -91,6 +91,35 @@ function catatLogAktivitas(eventType, targetName, detailText) {
 }
 
 // -------------------------------------------------------------------------
+// 0.2 AMAZON-STYLE REAL-TIME SOCIAL PROOF POPUP
+// -------------------------------------------------------------------------
+function initSocialProofPopups() {
+  const fakeBuyers = [
+    { name: "Kak Rina (Surabaya)", action: "Baru saja membuka PIN VIP 25K (Royal Velvet)" },
+    { name: "Bunda Dewi (FB Pro Medan)", action: "Membeli PIN Starter 10K (Hijab Collection)" },
+    { name: "Kak Dimas (Jakarta Selatan)", action: "Baru mengaktifkan Paket VIP (Luxury Family)" },
+    { name: "Pak Hendra (Bandung)", action: "Membeli PIN Starter (CEO Executive)" },
+    { name: "Kak Tania (Makassar)", action: "Baru saja menyalin 3 Prompt Studio Gratis" }
+  ];
+
+  setInterval(() => {
+    const toast = document.getElementById("liveBuyerToast");
+    const nameEl = document.getElementById("buyerToastUser");
+    const descEl = document.getElementById("buyerToastDesc");
+    if (!toast || !nameEl || !descEl) return;
+
+    const randomBuyer = fakeBuyers[Math.floor(Math.random() * fakeBuyers.length)];
+    nameEl.innerText = randomBuyer.name;
+    descEl.innerText = randomBuyer.action;
+
+    toast.classList.remove("hidden");
+    setTimeout(() => {
+      toast.classList.add("hidden");
+    }, 4500);
+  }, 22000);
+}
+
+// -------------------------------------------------------------------------
 // 1. INISIALISASI UTAMA
 // -------------------------------------------------------------------------
 let userVisitCount = 1;
@@ -107,6 +136,7 @@ function initApp() {
   try { applyProgressiveFunnelLayout(); } catch (e) {}
   try { initShowcaseAutoSlider(); } catch (e) {}
   try { initLiveMarqueeTransactions(); } catch (e) {}
+  try { initSocialProofPopups(); } catch (e) {}
   
   renderHomeCategories();
   renderAtelierFeed();
@@ -179,7 +209,7 @@ function initGlobalClickListener() {
 }
 
 // -------------------------------------------------------------------------
-// 2. MARQUEE & DIRECT WA (1-CLICK CLIENT-SIDE)
+// 2. MARQUEE & DIRECT WHATSAPP (1-CLICK CLIENT-SIDE)
 // -------------------------------------------------------------------------
 function initLiveMarqueeTransactions() {
   const counterEl = document.getElementById("salesCounterText");
@@ -239,7 +269,7 @@ function kirimPesananLangsungWA(packTitle, tierName, hargaTeks) {
 
 function hubungiAdminWaLangsung() {
   const waNumber = getAdminWhatsAppNumber();
-  const pesan = "Halo Admin JIWAS, saya tertarik untuk bertanya tentang kemitraan reseller atau produk AI di JIWAS.";
+  const pesan = "Halo Admin JIWAS, saya tertarik bertanya tentang kemitraan reseller atau katalog AI di JIWAS.";
   window.open("https://wa.me/" + waNumber + "?text=" + encodeURIComponent(pesan), "_blank");
 }
 
@@ -248,7 +278,7 @@ function hubungiAdminWaLangsung() {
 // -------------------------------------------------------------------------
 function bagikanKoleksiKeWA(packTitle) {
   const domainUrl = "https://jiwas.com";
-  const teksPesan = "Halo! Coba cek formula foto studio bangsawan *" + packTitle + "* di JIWAS Atelier ini: " + domainUrl + "%0A%0ABagus banget buat naikin kualitas foto profil tanpa sewa studio mahal! ✨";
+  const teksPesan = "Halo! Coba cek formula foto studio bangsawan *" + packTitle + "* di JIWAS Atelier: " + domainUrl + "%0A%0ABagus banget buat naikin kualitas foto profil tanpa sewa studio mahal! ✨";
   
   catatLogAktivitas("SHARE_WA_VIRAL", packTitle, "Membagikan ke WhatsApp");
   window.open("https://api.whatsapp.com/send?text=" + teksPesan, "_blank");
@@ -706,7 +736,7 @@ function renderHomeCategories() {
 }
 
 // -------------------------------------------------------------------------
-// 8. DETAIL PACK
+// 8. DETAIL PACK & ITEMS GRID
 // -------------------------------------------------------------------------
 function bukaDetailPack(pack) {
   activePack = pack;
