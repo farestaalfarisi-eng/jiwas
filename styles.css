@@ -1,6 +1,6 @@
 /* =========================================================================
-   JIWAS STUDIO - MASTER DARK LUXURY STYLESHEET (V10.0 Pure Gold Edition)
-   Cinzel & Plus Jakarta Sans • 9:16 Visual Ratio • Live FOMO Pulse Bar
+   JIWAS - MASTER DARK LUXURY STYLESHEET (V11.0 Platinum Edition)
+   Cinzel & Plus Jakarta Sans • 9:16 Visual Ratio • Dual-Row Grid Pulse Bar
    ========================================================================= */
 
 :root {
@@ -55,14 +55,14 @@ body {
 }
 
 /* -------------------------------------------------------------------------
-   0. LIVE FOMO PULSE STRIP (TOP LEFT / ABOVE HEADER)
+   0. LIVE FOMO PULSE STRIP (2 BARIS RAPI COMPACT GRID)
    ------------------------------------------------------------------------- */
 .atelier-pulse-bar {
   width: 100%;
   background: rgba(10, 10, 12, 0.96);
   border-bottom: 1px solid rgba(212, 175, 55, 0.18);
   backdrop-filter: blur(10px);
-  padding: 6px 14px;
+  padding: 8px 14px;
   font-size: 0.7rem;
   color: #94a3b8;
   letter-spacing: 0.3px;
@@ -74,29 +74,21 @@ body {
   width: 100%;
   max-width: 580px;
   margin: 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
 }
 
-.pulse-track {
-  display: flex;
+.pulse-grid-2row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto auto;
+  gap: 4px 12px;
+  width: 100%;
   align-items: center;
-  gap: 10px;
-  flex-wrap: nowrap;
-  overflow-x: auto;
-  scrollbar-width: none;
-  -webkit-overflow-scrolling: touch;
-}
-
-.pulse-track::-webkit-scrollbar {
-  display: none;
 }
 
 .pulse-item {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
+  gap: 6px;
   white-space: nowrap;
   font-size: 0.68rem;
 }
@@ -106,16 +98,10 @@ body {
   font-weight: 700;
 }
 
-.pulse-divider {
-  color: rgba(212, 175, 55, 0.3);
-  font-size: 0.55rem;
-}
-
 .pulse-icon {
   font-size: 0.72rem;
 }
 
-/* Pulsing Dots Indicator */
 .live-dot {
   width: 6px;
   height: 6px;
@@ -195,7 +181,7 @@ body {
 }
 
 /* -------------------------------------------------------------------------
-   HEADER STATEMENT
+   HEADER STATEMENT & MONONYM BRAND
    ------------------------------------------------------------------------- */
 .atelier-hero-compact {
   text-align: center;
@@ -501,7 +487,7 @@ body {
 }
 
 /* -------------------------------------------------------------------------
-   THREE-DOTS MENU & POPUP PADA KARTU
+   THREE-DOTS MENU & DROPDOWN
    ------------------------------------------------------------------------- */
 .card-menu-container {
   position: absolute;
@@ -690,7 +676,7 @@ body {
   color: #67e8f9;
 }
 
-/* BLUR FILTER */
+/* BLUR FILTERS */
 .img-blur-teaser {
   filter: blur(7px);
   transform: scale(1.04);
@@ -796,6 +782,28 @@ body {
   margin-top: 3px;
 }
 
+/* REFERRAL BANNER */
+.referral-banner-box {
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.12), rgba(34, 197, 94, 0.08));
+  border: 1px dashed var(--gold-primary);
+  border-radius: var(--radius-md);
+  padding: 10px 14px;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.referral-banner-text {
+  font-size: 0.72rem;
+  color: #e2e8f0;
+}
+
+.referral-banner-text strong {
+  color: var(--gold-light);
+}
+
 .items-grid {
   display: flex;
   flex-direction: column;
@@ -883,6 +891,7 @@ body {
 .action-buttons {
   display: flex;
   gap: 6px;
+  flex-wrap: wrap;
 }
 
 .btn-copy {
@@ -898,6 +907,27 @@ body {
   align-items: center;
   justify-content: center;
   gap: 4px;
+}
+
+.btn-share-promo {
+  background: #1e1e28;
+  border: 1px solid #25d366;
+  color: #25d366;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.btn-share-promo:hover {
+  background: #25d366;
+  color: #000;
 }
 
 .btn-unlock-wa {
@@ -924,38 +954,6 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-}
-
-/* CUSTOM ACCORDION PROMPT */
-.custom-guide-accordion {
-  background: #14141d;
-  border: 1px solid rgba(212, 175, 55, 0.18);
-  border-radius: 6px;
-  margin-bottom: 8px;
-  padding: 6px 10px;
-}
-
-.custom-guide-summary {
-  font-size: 0.7rem;
-  font-weight: 700;
-  color: var(--gold-light);
-  cursor: pointer;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.custom-guide-content {
-  font-size: 0.68rem;
-  color: var(--text-muted);
-  margin-top: 6px;
-  padding-top: 6px;
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
-}
-
-.guide-list {
-  padding-left: 16px;
-  margin: 4px 0;
 }
 
 /* -------------------------------------------------------------------------
