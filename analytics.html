@@ -435,13 +435,13 @@
           <td>
             <input type="text" class="input-pin" id="pin10k_${pack.id}" value="${val10k}"><br>
             <button class="btn-quick-copy" onclick="salinTemplateBalasan('${pack.title}', 'Starter (10K)', '${pack.id}', 'pin10k')">
-              <i class="fa-solid fa-copy"></i> Salin Teks WA 10K
+              <i class="fa-solid fa-copy"></i> Salin Link Buka 10K
             </button>
           </td>
           <td>
             <input type="text" class="input-pin" id="pin25k_${pack.id}" value="${val25k}"><br>
             <button class="btn-quick-copy btn-quick-copy-vip" onclick="salinTemplateBalasan('${pack.title}', 'VIP (25K)', '${pack.id}', 'pin25k')">
-              <i class="fa-solid fa-copy"></i> Salin Teks WA 25K
+              <i class="fa-solid fa-copy"></i> Salin Link Buka 25K
             </button>
           </td>
         `;
@@ -451,20 +451,24 @@
 
     function salinTemplateBalasan(packTitle, tierName, packId, inputKey) {
       const pinVal = document.getElementById(`${inputKey}_${packId}`)?.value.trim().toUpperCase() || "TERKONFIRMASI";
+      const tierParam = inputKey === 'pin25k' ? 'vip' : 'starter';
+
+      const currentOrigin = window.location.origin;
+      let pathRoot = window.location.pathname.replace("analytics.html", "index.html");
+      const magicLink = `${currentOrigin}${pathRoot}?pack=${packId}&unlock=${tierParam}&pin=${pinVal}`;
+
       const template = `Terima kasih banyak Kak! Pembayaran untuk *${packTitle}* (${tierName}) telah kami terima.
 
-🔑 *KODE PIN ANDA:* *${pinVal}*
+✨ *KLIK LINK INI UNTUK LANGSUNG MEMBUKA 100 PROMPT:*
+👉 ${magicLink}
 
-*Cara Aktivasi:*
-1. Buka kembali halaman katalog *${packTitle}* di web JIWAS (https://jiwas.com).
-2. Klik tombol *[Masukkan PIN]*.
-3. Masukkan kode: *${pinVal}*
-4. Seluruh prompt studio otomatis terbuka dan siap disalin.
+*(Cukup klik link di atas, seluruh prompt otomatis terbuka tanpa repot ketik PIN)*
 
-Selamat berkreasi! ✨`;
+Kode PIN Cadangan: *${pinVal}*
+Selamat berkreasi di JIWAS! 🚀`;
 
       navigator.clipboard.writeText(template).then(() => {
-        tampilkanToastRadar(`✅ Teks Balasan PIN ${tierName} Berhasil Disalin!`);
+        tampilkanToastRadar(`✅ Teks Balasan + Link Ajaib ${tierName} Berhasil Disalin!`);
       });
     }
 
