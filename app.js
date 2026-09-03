@@ -1,5 +1,5 @@
 // =========================================================================
-// JIWAS - MASTER CONTROLLER ENGINE & GROWTH LOOP (app.js V11.0 Platinum)
+// JIWAS - MASTER CONTROLLER & AUTO-UNLOCK ENGINE (app.js V11.0 Platinum)
 // =========================================================================
 
 let activePack = null;
@@ -91,7 +91,7 @@ function catatLogAktivitas(eventType, targetName, detailText) {
 }
 
 // -------------------------------------------------------------------------
-// 0.2 AMAZON-STYLE REAL-TIME SOCIAL PROOF POPUP
+// 0.2 AMAZON SOCIAL PROOF POP-UP
 // -------------------------------------------------------------------------
 function initSocialProofPopups() {
   const fakeBuyers = [
@@ -144,6 +144,9 @@ function initApp() {
   renderKatalogVideo();
   renderKatalogAkun();
   initGlobalClickListener();
+
+  // MAGIC LINK ACTIVATION SCANNER
+  cekAutoUnlockURL();
 }
 
 function initServiceWorker() {
@@ -277,8 +280,8 @@ function hubungiAdminWaLangsung() {
 // 2.1 VIRAL MARKETING: 1-CLICK SHARE KE TEMAN WHATSAPP
 // -------------------------------------------------------------------------
 function bagikanKoleksiKeWA(packTitle) {
-  const domainUrl = "https://jiwas.com";
-  const teksPesan = "Halo! Coba cek formula foto studio bangsawan *" + packTitle + "* di JIWAS Atelier: " + domainUrl + "%0A%0ABagus banget buat naikin kualitas foto profil tanpa sewa studio mahal! ✨";
+  const currentDomain = window.location.origin + window.location.pathname;
+  const teksPesan = "Halo! Coba cek formula foto studio bangsawan *" + packTitle + "* di JIWAS Atelier ini: " + currentDomain + "%0A%0ABagus banget buat naikin kualitas foto profil tanpa sewa studio mahal! ✨";
   
   catatLogAktivitas("SHARE_WA_VIRAL", packTitle, "Membagikan ke WhatsApp");
   window.open("https://api.whatsapp.com/send?text=" + teksPesan, "_blank");
@@ -375,15 +378,16 @@ function simpanBookmarkItem(pack, itemIndex) {
 }
 
 function bagikanItem(pack, itemIndex) {
+  const currentDomain = window.location.origin + window.location.pathname;
   const shareData = {
     title: pack.title + " - JIWAS",
     text: "Lihat hasil formula AI " + pack.title + " item #" + itemIndex + " di JIWAS Atelier!",
-    url: "https://jiwas.com"
+    url: currentDomain
   };
   if (navigator.share) {
     navigator.share(shareData).catch(() => {});
   } else if (navigator.clipboard) {
-    navigator.clipboard.writeText("https://jiwas.com").then(() => {
+    navigator.clipboard.writeText(currentDomain).then(() => {
       tampilkanToast("🔗 LINK JIWAS BERHASIL DISALIN!");
     });
   }
@@ -935,7 +939,8 @@ function copasPromptFromElement(elementId, packTitle, itemIdx) {
 }
 
 function copasPrompt(text) {
-  const watermarkPromo = "\n\n(Dibuat via formula JIWAS Atelier: https://jiwas.com — Akses 100 formula hanya 10K)";
+  const currentDomain = window.location.origin + window.location.pathname;
+  const watermarkPromo = "\n\n(Dibuat via formula JIWAS Atelier: " + currentDomain + " — Akses 100 formula hanya 10K)";
   const fullText = text + watermarkPromo;
 
   if (navigator.clipboard) {
@@ -979,5 +984,45 @@ function bukaPortalAdmin() {
     window.location.href = "analytics.html";
   } else {
     alert("Akses ditolak: PIN salah!");
+  }
+}
+
+// -------------------------------------------------------------------------
+// 10. AUTO-UNLOCK MAGIC LINK ENGINE (ZERO-CLICK ACTIVATION)
+// -------------------------------------------------------------------------
+function cekAutoUnlockURL() {
+  try {
+    const urlParams = new URLSearchParams(window.location.search);
+    const packId = urlParams.get('pack');
+    const unlockTier = urlParams.get('unlock'); // 'starter' atau 'vip'
+    const pinCode = urlParams.get('pin');
+
+    if (!packId || !unlockTier || !pinCode) return;
+
+    const allPacks = (typeof KATALOG_REGISTRY !== "undefined" && Array.isArray(KATALOG_REGISTRY)) ? KATALOG_REGISTRY : [];
+    const targetPack = allPacks.find(p => p.id === packId);
+    if (!targetPack) return;
+
+    const customPins = JSON.parse(localStorage.getItem("JIWAS_CUSTOM_PINS") || "{}");
+    let validStarter = customPins[packId] ? customPins[packId].pin10k : (targetPack.pin10k || (packId.toUpperCase() + "10K"));
+    let validVIP = customPins[packId] ? customPins[packId].pin25k : (targetPack.pin25k || (packId.toUpperCase() + "VIP25"));
+
+    const inputPinClean = pinCode.trim().toUpperCase();
+
+    if ((unlockTier === 'starter' && inputPinClean === validStarter.toUpperCase()) ||
+        (unlockTier === 'vip' && inputPinClean === validVIP.toUpperCase())) {
+      
+      simpanAksesKatalog(packId, unlockTier);
+      rekamTransaksiNyata(targetPack.title, unlockTier === 'vip' ? 'VIP (25K)' : 'Starter (10K)');
+      bukaDetailPack(targetPack);
+
+      setTimeout(() => {
+        tampilkanToast("🎉 SELAMAT! AKSES " + unlockTier.toUpperCase() + " OTOMATIS TERBUKA!");
+      }, 500);
+
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+  } catch (e) {
+    console.warn("Auto unlock scan:", e);
   }
 }
