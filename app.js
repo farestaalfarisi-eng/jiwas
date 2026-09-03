@@ -1,5 +1,5 @@
 // =========================================================================
-// JIWAS STUDIO - MASTER CONTROLLER ENGINE (app.js V10.0 Clean Edition)
+// JIWAS - MASTER CONTROLLER ENGINE (app.js V10.0 Pure Clean Edition)
 // =========================================================================
 
 let activePack = null;
@@ -130,7 +130,7 @@ function initVisitorAndAffinity() {
     localStorage.setItem("JIWAS_VISIT_COUNT", visits.toString());
     userVisitCount = visits;
     userAffinity = JSON.parse(localStorage.getItem("JIWAS_USER_AFFINITY") || "{}");
-    catatLogAktivitas("VISIT_PAGE", "Atelier Studio", "Kunjungan ke-" + visits);
+    catatLogAktivitas("VISIT_PAGE", "JIWAS Atelier", "Kunjungan ke-" + visits);
   } catch (e) {
     userVisitCount = 1;
     userAffinity = {};
@@ -179,7 +179,7 @@ function initGlobalClickListener() {
 }
 
 // -------------------------------------------------------------------------
-// 2. MARQUEE & DIRECT WA
+// 2. MARQUEE & DIRECT WA (MURNI JIWAS)
 // -------------------------------------------------------------------------
 function initLiveMarqueeTransactions() {
   const counterEl = document.getElementById("salesCounterText");
@@ -233,13 +233,13 @@ function kirimPesananLangsungWA(packTitle, tierName, hargaTeks) {
   catatLogAktivitas("CLICK_WA", packTitle, "Klik Beli " + tierName + " (" + hargaTeks + ")");
   catatTransaksiFomoBar();
 
-  const pesan = "Halo Admin JIWAS Studio,%0A%0ASaya ingin membeli *PIN Akses " + tierName + " (" + hargaTeks + ")* untuk katalog *" + packTitle + "*.%0A%0AMohon info rekening / QRIS pembayarannya ya. Terima kasih!";
+  const pesan = "Halo Admin JIWAS,%0A%0ASaya ingin membeli *PIN Akses " + tierName + " (" + hargaTeks + ")* untuk katalog *" + packTitle + "*.%0A%0AMohon info rekening / QRIS pembayarannya ya. Terima kasih!";
   window.open("https://wa.me/" + waNumber + "?text=" + pesan, "_blank");
 }
 
 function hubungiAdminWaLangsung() {
   const waNumber = getAdminWhatsAppNumber();
-  const pesan = "Halo Admin JIWAS Studio, saya ingin bertanya tentang produk dan layanan AI Studio.";
+  const pesan = "Halo Admin JIWAS, saya ingin bertanya tentang produk dan layanan AI.";
   window.open("https://wa.me/" + waNumber + "?text=" + encodeURIComponent(pesan), "_blank");
 }
 
@@ -335,8 +335,8 @@ function simpanBookmarkItem(pack, itemIndex) {
 
 function bagikanItem(pack, itemIndex) {
   const shareData = {
-    title: pack.title + " - JIWAS Studio",
-    text: "Lihat hasil prompt foto AI " + pack.title + " item #" + itemIndex + " di JIWAS Studio!",
+    title: pack.title + " - JIWAS",
+    text: "Lihat hasil formula AI " + pack.title + " item #" + itemIndex + " di JIWAS!",
     url: window.location.href
   };
   if (navigator.share) {
@@ -349,7 +349,7 @@ function bagikanItem(pack, itemIndex) {
 }
 
 // -------------------------------------------------------------------------
-// 4. GEMINI ENGINE TEST
+// 4. JIWAS GEMINI ENGINE
 // -------------------------------------------------------------------------
 function eksekusiGenerateUjiCoba(promptText, title, isFree) {
   const quota = getDailyQuotaStatus();
@@ -368,7 +368,7 @@ function eksekusiGenerateUjiCoba(promptText, title, isFree) {
   if (modal) modal.classList.remove("hidden");
   if (statusEl) statusEl.innerText = "Menghubungkan ke Engine: " + title;
   if (outputEl) {
-    outputEl.innerHTML = '<div class="quota-indicator-box"><span><i class="fa-solid fa-clock"></i> Sisa Kuota Uji Coba:</span><strong>' + (isFree ? currentQuota.remaining + ' / ' + MAX_FREE_DAILY_QUOTA : 'UNLIMITED (VIP)') + '</strong></div><div style="margin-top:8px;"><p><strong>[OPTIMIZED PROMPT]</strong><br>' + promptText + '</p><p style="margin-top:8px; color:var(--gold-light);"><strong>[STUDIO SPECIFICATION]</strong><br>Hasselblad H6D-100c • 85mm f/1.4 Lens • Cinematic Softbox Lighting --ar 9:16</p></div>';
+    outputEl.innerHTML = '<div class="quota-indicator-box"><span><i class="fa-solid fa-clock"></i> Sisa Kuota Uji Coba:</span><strong>' + (isFree ? currentQuota.remaining + ' / ' + MAX_FREE_DAILY_QUOTA : 'UNLIMITED (VIP)') + '</strong></div><div style="margin-top:8px;"><p><strong>[OPTIMIZED PROMPT]</strong><br>' + promptText + '</p><p style="margin-top:8px; color:var(--gold-light);"><strong>[ATELIER SPECIFICATION]</strong><br>Hasselblad H6D-100c • 85mm f/1.4 Lens • Cinematic Softbox Lighting --ar 9:16</p></div>';
   }
 }
 
@@ -685,7 +685,7 @@ function renderHomeCategories() {
     card.className = "catalog-card";
 
     if (item.status === "teaser") {
-      card.innerHTML = '<div style="position:relative; overflow:hidden;"><span class="badge-pill" style="background:#dc2626; color:#fff; border-color:#ef4444;">🔒 COMING SOON</span><img src="images/' + item.folder + '/cover.jpg" alt="' + item.title + '" class="aspect-9-16 img-blur-heavy" loading="lazy" onerror="this.onerror=null; this.src=\'images/velvet/cover.jpg\';"></div><div class="card-info"><h3 class="card-title">' + item.title + '</h3><p style="font-size:0.7rem; color:var(--text-muted); margin:4px 0 8px; line-height:1.3;">' + (item.description || 'Sedang dalam proses kurasi prompt 8K studio.') + '</p><button onclick="kirimPesananLangsungWA(\'' + item.title + '\', \'Pre-Order VIP\', \'Coming Soon\')" class="btn-copy" style="background:#1e1e24; color:var(--gold-light); border:1px solid var(--card-border); width:100%; box-sizing:border-box; font-size:0.72rem; padding:8px 6px;">🔔 Ingatkan Saya di WA</button></div>';
+      card.innerHTML = '<div style="position:relative; overflow:hidden;"><span class="badge-pill" style="background:#dc2626; color:#fff; border-color:#ef4444;">🔒 COMING SOON</span><img src="images/' + item.folder + '/cover.jpg" alt="' + item.title + '" class="aspect-9-16 img-blur-heavy" loading="lazy" onerror="this.onerror=null; this.src=\'images/velvet/cover.jpg\';"></div><div class="card-info"><h3 class="card-title">' + item.title + '</h3><p style="font-size:0.7rem; color:var(--text-muted); margin:4px 0 8px; line-height:1.3;">' + (item.description || 'Sedang dalam proses kurasi prompt 8K.') + '</p><button onclick="kirimPesananLangsungWA(\'' + item.title + '\', \'Pre-Order VIP\', \'Coming Soon\')" class="btn-copy" style="background:#1e1e24; color:var(--gold-light); border:1px solid var(--card-border); width:100%; box-sizing:border-box; font-size:0.72rem; padding:8px 6px;">🔔 Ingatkan Saya di WA</button></div>';
     } else {
       card.onclick = () => bukaDetailPack(item);
       card.innerHTML = '<div style="position:relative;"><span class="badge-pill">' + (item.type === 'video' ? '🎥 VIDEO AI' : '📸 100 PROMPT') + '</span><img src="images/' + item.folder + '/cover.jpg" alt="' + item.title + '" class="aspect-9-16" loading="lazy" onerror="this.onerror=null; this.src=\'images/velvet/cover.jpg\';"></div><div class="card-info"><h3 class="card-title">' + item.title + '</h3><div class="card-rating-badge">★ ' + (item.rating || '4.9/5') + ' (' + (item.sales || 'Ready') + ')</div><div style="font-weight:800; color:var(--gold-light); font-size:0.85rem; margin-top:4px;">Rp10.000 / Rp25.000</div><button class="btn-copy" style="margin-top:8px; padding:6px 12px; font-size:0.75rem; width:100%;">Buka Katalog (100 Item)</button></div>';
@@ -924,7 +924,7 @@ function tampilkanToast(msg) {
 }
 
 function bukaPortalAdmin() {
-  const inputPin = prompt("Masukkan PIN Akses Admin JIWAS Studio:");
+  const inputPin = prompt("Masukkan PIN Akses Admin JIWAS:");
   if (inputPin === null) return;
   if (inputPin.trim().toUpperCase() === "JIWAS99") {
     window.location.href = "analytics.html";
