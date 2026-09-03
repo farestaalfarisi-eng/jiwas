@@ -16,7 +16,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>JIWAS - Dark Luxury Digital Atelier</title>
 
-  <!-- Open Graph / WhatsApp / Facebook Share Preview -->
+  <!-- Open Graph / WhatsApp / Facebook Preview -->
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://jiwas.com/">
   <meta property="og:title" content="JIWAS — Studio Foto AI Bangsawan Mulai 10 Ribu">
@@ -39,29 +39,22 @@
 </head>
 <body>
 
-  <!-- ================= LIVE FOMO PULSE STRIP (2 BARIS RAPI DI KIRI ATAS) ================= -->
+  <!-- ================= LIVE FOMO PULSE STRIP (2 BARIS RAPAT) ================= -->
   <aside class="atelier-pulse-bar" aria-label="Aktivitas Langsung">
     <div class="pulse-container">
       <div class="pulse-grid-2row">
-        <!-- Baris 1 - Kiri -->
         <div class="pulse-item" id="fomoActiveItem">
           <span class="live-dot green"></span>
           <span class="pulse-text"><strong id="fomoActiveUsers">534</strong> Kreator Aktif</span>
         </div>
-
-        <!-- Baris 1 - Kanan -->
         <div class="pulse-item" id="fomoTransItem">
           <span class="live-dot gold"></span>
           <span class="pulse-text"><strong id="fomoTransUsers">152</strong> Sedang Transaksi</span>
         </div>
-
-        <!-- Baris 2 - Kiri -->
         <div class="pulse-item" id="fomoViewsItem">
           <span class="pulse-icon">👁️</span>
           <span class="pulse-text"><strong id="fomoViewsCount">13.4k+</strong> Dilihat</span>
         </div>
-
-        <!-- Baris 2 - Kanan -->
         <div class="pulse-item" id="fomoSlotItem">
           <span class="badge-fomo">Sisa <span id="fomoSlotCount">7</span> Slot VIP</span>
           <span class="pulse-text">Hari Ini</span>
@@ -258,12 +251,13 @@
         <div class="pab-buttons"></div>
       </div>
 
+      <!-- VIRAL REFERRAL & RESELLER BANNER -->
       <div class="referral-banner-box">
         <div class="referral-banner-text">
           <i class="fa-solid fa-handshake" style="color:var(--gold-primary);"></i> 
-          <strong>Mau Penghasilan Tambahan?</strong> Jadi Reseller PIN JIWAS & dapatkan komisi langsung.
+          <strong>Mau Penghasilan Tambahan?</strong> Jadi Reseller PIN JIWAS & dapatkan untung langsung per transaksi.
         </div>
-        <button class="btn-copy" style="padding: 5px 10px; font-size: 0.68rem;" onclick="hubungiAdminWaLangsung()">Info Reseller</button>
+        <button class="btn-copy" style="padding: 6px 12px; font-size: 0.7rem;" onclick="hubungiAdminWaLangsung()">Info Reseller</button>
       </div>
 
       <div id="itemsGrid" class="items-grid"></div>
@@ -300,6 +294,15 @@
       </button>
     </div>
   </nav>
+
+  <!-- AMAZON-STYLE LIVE SOCIAL PROOF POP-UP -->
+  <div id="liveBuyerToast" class="buyer-popup-toast hidden">
+    <div class="buyer-popup-avatar"><i class="fa-solid fa-bag-shopping"></i></div>
+    <div class="buyer-popup-info">
+      <span class="buyer-popup-title" id="buyerToastUser">Kak Lina (Surabaya)</span>
+      <span class="buyer-popup-desc" id="buyerToastDesc">Baru saja membeli PIN VIP 25K</span>
+    </div>
+  </div>
 
   <!-- MODAL: PIN VERIFIER -->
   <div id="pinModal" class="modal-overlay hidden">
