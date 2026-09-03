@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>JIWAS STUDIO - Master Radar, WA Dispatcher & Engine Monitor</title>
+  <title>JIWAS - Master Radar, WA Dispatcher & Engine Monitor</title>
 
   <!-- Google Fonts & Font Awesome -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -27,7 +27,6 @@
     body { background: var(--bg-dark); color: var(--text-main); padding: 24px 16px; display: flex; justify-content: center; }
     .container { width: 100%; max-width: 1100px; }
     
-    /* HEADER & TOMBOL KEMBALI */
     header {
       position: relative;
       text-align: center;
@@ -76,7 +75,6 @@
       }
     }
 
-    /* NAVIGASI 3 LEMBAR */
     .tab-nav-wrapper {
       display: flex;
       justify-content: center;
@@ -219,13 +217,12 @@
 
   <div class="container">
     <header>
-      <!-- TOMBOL KEMBALI KE ETALASE UTAMA -->
       <a href="index.html" class="btn-back-home" title="Kembali ke Web Etalase">
         <i class="fa-solid fa-arrow-left"></i> Kembali ke Etalase
       </a>
 
       <div>
-        <h1 class="brand-title">JIWAS STUDIO COMMAND CENTER</h1>
+        <h1 class="brand-title">JIWAS COMMAND CENTER</h1>
         <p style="color:var(--text-muted); font-size:0.8rem; margin-top:4px;">Pusat Pemantau Trafik, Generator Respon Balasan WA & Monitoring Engine AI</p>
       </div>
     </header>
@@ -288,7 +285,7 @@
       </div>
     </div>
 
-    <!-- LEMBAR 2: MASTER PIN & GENERATOR BALASAN WA REGULER -->
+    <!-- LEMBAR 2: MASTER PIN & GENERATOR BALASAN WA -->
     <div id="pinTab" class="sheet-content">
       <div class="panel-box">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:10px;">
@@ -387,7 +384,7 @@
       renderDashboardAnalytics();
       renderPinManager();
       sinkronkanEngineManual();
-      setInterval(sinkronkanEngineManual, 5000); // Auto-sync setiap 5 detik
+      setInterval(sinkronkanEngineManual, 5000);
     });
 
     function switchSheet(sheetId, btnEl) {
@@ -459,7 +456,7 @@
 🔑 *KODE PIN ANDA:* *${pinVal}*
 
 *Cara Aktivasi:*
-1. Buka kembali halaman katalog *${packTitle}* di web JIWAS Studio.
+1. Buka kembali halaman katalog *${packTitle}* di web JIWAS (https://jiwas.com).
 2. Klik tombol *[Masukkan PIN]*.
 3. Masukkan kode: *${pinVal}*
 4. Seluruh prompt studio otomatis terbuka dan siap disalin.
@@ -503,7 +500,6 @@ Selamat berkreasi! ✨`;
       setTimeout(() => toast.classList.add("hidden"), 3000);
     }
 
-    // 6. SINKRONISASI ENGINE KE RADAR
     async function sinkronkanEngineManual() {
       try {
         const res = await fetch(`${ENGINE_API_URL}/api/analytics/feed`);
