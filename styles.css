@@ -1,6 +1,6 @@
 /* =========================================================================
-   JIWAS - MASTER DARK LUXURY STYLESHEET (V11.0 Platinum Edition)
-   Cinzel & Plus Jakarta Sans • 9:16 Visual Ratio • Dual-Row Grid Pulse Bar
+   JIWAS - MASTER DARK LUXURY STYLESHEET (V11.0 Platinum Full Growth)
+   Cinzel & Plus Jakarta Sans • 9:16 Visual Ratio • Grid FOMO • Viral Badges
    ========================================================================= */
 
 :root {
@@ -55,14 +55,14 @@ body {
 }
 
 /* -------------------------------------------------------------------------
-   0. LIVE FOMO PULSE STRIP (2 BARIS RAPI COMPACT GRID)
+   0. LIVE FOMO PULSE STRIP (2 BARIS RAPAT ZERO TRUNCATION)
    ------------------------------------------------------------------------- */
 .atelier-pulse-bar {
   width: 100%;
   background: rgba(10, 10, 12, 0.96);
   border-bottom: 1px solid rgba(212, 175, 55, 0.18);
   backdrop-filter: blur(10px);
-  padding: 8px 14px;
+  padding: 7px 14px;
   font-size: 0.7rem;
   color: #94a3b8;
   letter-spacing: 0.3px;
@@ -688,7 +688,7 @@ body {
 }
 
 /* -------------------------------------------------------------------------
-   DETAIL PACK & 100 ITEM PROMPT CARDS
+   DETAIL PACK & ITEMS GRID
    ------------------------------------------------------------------------- */
 .detail-header {
   display: flex;
@@ -1209,6 +1209,59 @@ body {
   box-shadow: 0 4px 14px rgba(37, 211, 102, 0.4);
   z-index: 90;
   text-decoration: none;
+}
+
+/* -------------------------------------------------------------------------
+   AMAZON SOCIAL PROOF POP-UP TOAST
+   ------------------------------------------------------------------------- */
+.buyer-popup-toast {
+  position: fixed;
+  bottom: 72px;
+  left: 14px;
+  background: #14141e;
+  border: 1px solid var(--gold-primary);
+  border-radius: 10px;
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.85);
+  z-index: 99;
+  animation: slideInLeft 0.4s ease-out;
+  max-width: 280px;
+}
+
+.buyer-popup-avatar {
+  background: rgba(212, 175, 55, 0.15);
+  color: var(--gold-primary);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+}
+
+.buyer-popup-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.buyer-popup-title {
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: var(--gold-light);
+}
+
+.buyer-popup-desc {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+}
+
+@keyframes slideInLeft {
+  from { transform: translateX(-100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
 }
 
 footer {
