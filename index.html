@@ -21,13 +21,13 @@
   <meta property="og:url" content="https://jiwas.com/">
   <meta property="og:title" content="JIWAS — Studio Foto AI Bangsawan Mulai 10 Ribu">
   <meta property="og:description" content="Salin formula studio 8K, ubah foto biasa jadi potret mewah atelier bangsawan. 100 Formula siap pakai!">
-  <meta property="og:image" content="https://jiwas.com/images/velvet/cover.jpg">
+  <meta property="og:image" content="images/velvet/cover.jpg">
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="JIWAS — Studio Foto AI Bangsawan">
   <meta name="twitter:description" content="Formula prompt foto studio 8K instan sekelas atelier bangsawan.">
-  <meta name="twitter:image" content="https://jiwas.com/images/velvet/cover.jpg">
+  <meta name="twitter:image" content="images/velvet/cover.jpg">
 
   <!-- Google Fonts & FontAwesome Icons -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -262,6 +262,21 @@
 
       <div id="itemsGrid" class="items-grid"></div>
     </section>
+
+    <!-- BANNER INSTALL PWA KE HOMESCREEN HP -->
+    <div id="pwaInstallBanner" class="pwa-install-box hidden">
+      <div class="pwa-install-content">
+        <img src="images/icon-192.png" alt="JIWAS App" class="pwa-app-icon" onerror="this.src='images/velvet/cover.jpg'">
+        <div class="pwa-text-box">
+          <strong>Pasang Aplikasi JIWAS</strong>
+          <p>Akses cepat 1-klik langsung dari layar depan HP Anda.</p>
+        </div>
+      </div>
+      <div class="pwa-action-btns">
+        <button id="btnPwaClose" class="btn-pwa-dismiss" onclick="tutupBannerPWA()">Nanti Saja</button>
+        <button id="btnPwaInstall" class="btn-copy" style="padding: 7px 14px; font-size: 0.75rem;" onclick="picuInstallPWA()">Install Sekarang</button>
+      </div>
+    </div>
 
     <footer>
       <div class="footer-brand">JIWAS</div>
