@@ -14,7 +14,7 @@
 
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>JIWAS - Dark Luxury Digital Atelier</title>
+  <title>JIWAS — Dark Luxury Digital Atelier & Global AI Ecosystem</title>
 
   <!-- Open Graph / WhatsApp / Facebook Preview -->
   <meta property="og:type" content="website">
@@ -35,11 +35,12 @@
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
+  <!-- Stylesheet Utama -->
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-  <!-- ================= LIVE FOMO PULSE STRIP (2 BARIS RAPAT) ================= -->
+  <!-- ================= 0. LIVE FOMO PULSE STRIP (2 BARIS RAPAT ZERO TRUNCATION) ================= -->
   <aside class="atelier-pulse-bar" aria-label="Aktivitas Langsung">
     <div class="pulse-container">
       <div class="pulse-grid-2row">
@@ -63,7 +64,7 @@
     </div>
   </aside>
 
-  <!-- Top Urgency Marquee -->
+  <!-- ================= 1. TOP URGENCY MARQUEE TICKER ================= -->
   <div class="banner-urgency">
     <div class="marquee-text" id="liveMarqueeContainer">
       <span><i class="fa-solid fa-fire" style="color: #f59e0b;"></i> <strong id="salesCounterText">1.250+</strong> PAKET TELAH DIAKTIFKAN PEMBELI</span>
@@ -74,16 +75,17 @@
   </div>
 
   <div class="container">
-    <!-- Header Branding Mononym JIWAS -->
+    <!-- ================= 2. HEADER BRANDING MONONYM JIWAS ================= -->
     <header class="atelier-hero-compact">
-      <div class="brand-badge-pill" onclick="bukaPortalAdmin()" style="cursor: pointer;">
-        <i class="fa-solid fa-gem"></i> DIGITAL ATELIER • EST. 2026
-      </div>
+      <!-- Proteksi Tombol PIN RADAR -->
+      <button type="button" onclick="bukaRadarDenganPIN()" class="brand-badge-pill" title="Buka Growth OS Command Center" style="cursor: pointer; border: 1px solid var(--card-border); background: #161622;">
+        <span class="live-dot green" style="width: 6px; height: 6px;"></span> GROWTH OS RADAR <i class="fa-solid fa-lock" style="font-size: 0.65rem; margin-left: 4px; color: var(--gold-primary);"></i>
+      </button>
 
       <h1 class="brand-title-gold">JIWAS</h1>
       
       <p class="brand-statement">
-        "Mengubah foto biasa menjadi potret bernilai seni tinggi sekelas atelier bangsawan."
+        “Mengubah foto biasa menjadi potret bernilai seni tinggi sekelas atelier bangsawan.”
       </p>
 
       <div class="hero-feature-chips">
@@ -93,8 +95,9 @@
       </div>
     </header>
 
-    <!-- SECTION 0: ATELIER (SHOWCASE + PINTEREST FEED) -->
+    <!-- ================= SECTION 0: ATELIER (SHOWCASE + PINTEREST FEED) ================= -->
     <section id="sectionAtelier">
+      <!-- Showcase Before / After Slider -->
       <div class="showcase-section">
         <div class="hero-box" style="margin-bottom: 16px;">
           <span class="hero-badge"><i class="fa-solid fa-arrows-rotate"></i> AUTO TRANSFORMATION SHOWCASE</span>
@@ -113,6 +116,7 @@
 
       <hr class="section-divider">
 
+      <!-- Sesi Koleksi & Pre-Launch -->
       <div id="atelierCategoriesSection" class="category-section" style="margin-bottom: 28px;">
         <div class="hero-box" style="margin-bottom: 14px;">
           <span class="hero-badge"><i class="fa-solid fa-layer-group"></i> EXPLORE ALL CATEGORIES</span>
@@ -124,12 +128,14 @@
 
       <hr class="section-divider">
 
+      <!-- Pinterest Feed Header -->
       <div id="atelierMainHeader" class="hero-box">
         <span class="hero-badge"><i class="fa-solid fa-compass"></i> DISCOVER & INSPIRATION</span>
         <h2 class="hero-title">ATELIER VISUAL FEED</h2>
         <p class="brand-tagline">Jelajahi karya visual AI. Klik foto untuk eksplorasi koleksi sejenis.</p>
       </div>
 
+      <!-- Related Feed Header (Sub-Koleksi 100 Item) -->
       <div id="atelierRelatedHeader" class="related-header hidden">
         <button class="btn-back-atelier" onclick="tutupRelatedFeed()">
           <i class="fa-solid fa-arrow-left"></i> Kembali ke Discover
@@ -140,11 +146,12 @@
         </div>
       </div>
 
+      <!-- Pinterest Grids -->
       <div id="gridAtelierFeed" class="pinterest-grid"></div>
       <div id="gridAtelierRelated" class="pinterest-grid hidden"></div>
     </section>
 
-    <!-- SECTION 1: FOTO AI -->
+    <!-- ================= SECTION 1: FOTO AI ================= -->
     <section id="sectionFotoAI" class="hidden">
       <div class="guide-accordion-wrapper">
         <details class="guide-details-box">
@@ -194,7 +201,7 @@
               <ul class="ai-compat-list">
                 <li><i class="fa-solid fa-circle-check"></i> <div><strong>Google Gemini / Imagen 3:</strong> Multi-subjek, bahasa Indonesia, pencahayaan rim light halus.</div></li>
                 <li><i class="fa-solid fa-circle-check"></i> <div><strong>Microsoft Bing Image Creator:</strong> Gratis DALL-E 3, auto rasio <code>--ar 9:16</code>.</div></li>
-                <li><i class="fa-solid fa-circle-check"></i> <div><strong>Meta AI / WhatsApp Dola:</strong> Langsung paste prompt di chat Meta AI.</div></li>
+                <li><i class="fa-solid fa-circle-check"></i> <div><strong>Meta AI / WhatsApp Dola:</strong> Langsung paste prompt di obrolan Meta AI.</div></li>
                 <li><i class="fa-solid fa-circle-check"></i> <div><strong>Midjourney v6 & FLUX.1:</strong> Rendering fotorealistik maksimal <code>--style raw --v 6.0</code>.</div></li>
               </ul>
             </div>
@@ -211,7 +218,7 @@
       <div id="gridFotoKatalog" class="grid-catalog"></div>
     </section>
 
-    <!-- SECTION 2: VIDEO AI -->
+    <!-- ================= SECTION 2: VIDEO AI ================= -->
     <section id="sectionVideoAI" class="hidden">
       <div class="hero-box">
         <span class="hero-badge"><i class="fa-solid fa-film"></i> 8K CINEMATIC MOTION</span>
@@ -222,7 +229,7 @@
       <div id="gridVideoKatalog" class="grid-catalog"></div>
     </section>
 
-    <!-- SECTION 3: DIGITAL PRODUCT -->
+    <!-- ================= SECTION 3: DIGITAL PRODUCT & TOOLS ================= -->
     <section id="sectionAkunAI" class="hidden">
       <div class="hero-box">
         <span class="hero-badge"><i class="fa-solid fa-robot"></i> OFFICIAL LICENSED SUITE</span>
@@ -233,7 +240,7 @@
       <div id="gridAkunKatalog" class="grid-catalog"></div>
     </section>
 
-    <!-- SECTION 4: DETAIL PACK -->
+    <!-- ================= SECTION 4: DETAIL PACK (100 ITEMS) ================= -->
     <section id="sectionDetailPack" class="hidden">
       <div class="detail-header">
         <button class="btn-back" onclick="kembaliKeKatalog()"><i class="fa-solid fa-arrow-left"></i> Kembali</button>
@@ -255,7 +262,7 @@
       <div class="referral-banner-box">
         <div class="referral-banner-text">
           <i class="fa-solid fa-handshake" style="color:var(--gold-primary);"></i> 
-          <strong>Mau Penghasilan Tambahan?</strong> Jadi Reseller PIN JIWAS & dapatkan untung langsung per transaksi.
+          <strong>Mau Penghasilan Tambahan?</strong> Jadi Reseller PIN JIWAS & dapatkan keuntungan langsung per transaksi.
         </div>
         <button class="btn-copy" style="padding: 6px 12px; font-size: 0.7rem;" onclick="hubungiAdminWaLangsung()">Info Reseller</button>
       </div>
@@ -263,7 +270,7 @@
       <div id="itemsGrid" class="items-grid"></div>
     </section>
 
-    <!-- BANNER INSTALL PWA KE HOMESCREEN HP -->
+    <!-- ================= BANNER INSTALL PWA KE HOMESCREEN HP ================= -->
     <div id="pwaInstallBanner" class="pwa-install-box hidden">
       <div class="pwa-install-content">
         <img src="images/icon-192.png" alt="JIWAS App" class="pwa-app-icon" onerror="this.src='images/velvet/cover.jpg'">
@@ -281,11 +288,11 @@
     <footer>
       <div class="footer-brand">JIWAS</div>
       <p class="footer-desc">AI Cash Flow Storefront & Digital Atelier.</p>
-      <div class="footer-copy">© 2026 JIWAS. All Rights Reserved.</div>
+      <div class="footer-copy">© 2026 JIWAS. Curated by Sahabat Kaya.</div>
     </footer>
   </div>
 
-  <!-- FLOATING BOTTOM NAV BAR -->
+  <!-- ================= FLOATING BOTTOM NAVIGATION BAR ================= -->
   <nav class="pinterest-bottom-nav">
     <div class="bottom-nav-container">
       <button class="b-nav-item active" id="tabBtnAtelier" onclick="switchMainTab('atelier', this)">
@@ -310,7 +317,7 @@
     </div>
   </nav>
 
-  <!-- AMAZON-STYLE LIVE SOCIAL PROOF POP-UP -->
+  <!-- ================= AMAZON-STYLE LIVE SOCIAL PROOF POP-UP ================= -->
   <div id="liveBuyerToast" class="buyer-popup-toast hidden">
     <div class="buyer-popup-avatar"><i class="fa-solid fa-bag-shopping"></i></div>
     <div class="buyer-popup-info">
@@ -319,12 +326,12 @@
     </div>
   </div>
 
-  <!-- MODAL: PIN VERIFIER -->
+  <!-- ================= MODAL: PIN VERIFIER ================= -->
   <div id="pinModal" class="modal-overlay hidden">
     <div class="modal-content">
       <h3 class="modal-header-title">Buka Akses Pack</h3>
       <p class="modal-subtext">Masukkan Kode PIN yang diberikan Admin WA:</p>
-      <input type="text" id="pinInput" class="pin-input" placeholder="KODE PIN" maxlength="15">
+      <input type="text" id="pinInput" class="pin-input" placeholder="KODE PIN" maxlength="15" onkeyup="if(event.key==='Enter') verifikasiPIN()">
       <div class="modal-btn-group">
         <button class="btn-copy btn-cancel" onclick="tutupModalPIN()">Batal</button>
         <button class="btn-copy" onclick="verifikasiPIN()">Aktivasi</button>
@@ -332,15 +339,89 @@
     </div>
   </div>
 
-  <!-- MODAL: GEMINI ENGINE -->
+  <!-- ================= MODAL: GEMINI ENGINE & PROMPT STUDIO EDITOR ================= -->
   <div id="geminiModal" class="modal-overlay hidden">
-    <div class="modal-content" style="max-width: 480px;">
-      <h3 class="modal-header-title"><i class="fa-solid fa-bolt" style="color:#60a5fa;"></i> JIWAS ENGINE</h3>
-      <p class="modal-subtext" id="geminiEngineStatus">Memproses optimasi prompt via Gemini API...</p>
-      <div id="geminiOutput" class="gemini-result-box">Menghubungkan ke API...</div>
-      <div class="modal-btn-group" style="margin-top: 14px;">
+    <div class="modal-content" style="max-width: 520px; text-align: left;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+        <h3 class="modal-header-title" style="font-size: 1rem; color: var(--gold-light); display: flex; align-items: center; gap: 8px;">
+          <i class="fa-solid fa-bolt" style="color: #60a5fa;"></i> JIWAS GEMINI STUDIO EDITOR
+        </h3>
+        <button onclick="tutupModalGemini()" style="background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 1rem;">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <p class="modal-subtext" id="geminiEngineStatus" style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 12px;">
+        Uji dan sesuaikan parameter prompt sebelum dirender ke AI.
+      </p>
+
+      <label style="font-size: 0.72rem; font-weight: 700; color: var(--gold-primary); display: block; margin-bottom: 4px;">
+        FORMULA PROMPT (EDITABLE):
+      </label>
+      <textarea id="geminiPromptInput" style="width: 100%; height: 95px; background: #0a0a0e; border: 1px solid var(--card-border); border-radius: 6px; color: #e2e8f0; font-size: 0.75rem; padding: 8px; resize: vertical; outline: none; font-family: inherit;"></textarea>
+
+      <!-- Preset Modifikasi Cepat -->
+      <div style="margin: 10px 0;">
+        <span style="font-size: 0.68rem; color: var(--text-muted); display: block; margin-bottom: 6px;">PRESET SENTUHAN ATELIER:</span>
+        <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+          <button type="button" class="btn-copy" style="font-size: 0.65rem; padding: 4px 8px;" onclick="tambahSentuhanEditor('cinematic rim-light, gold atmospheric dust, luxury aesthetic')">✨ Gold Glow</button>
+          <button type="button" class="btn-copy" style="font-size: 0.65rem; padding: 4px 8px;" onclick="tambahSentuhanEditor('editorial high-fashion studio, shallow depth of field, Hasselblad shot')">📸 Editorial 8K</button>
+          <button type="button" class="btn-copy" style="font-size: 0.65rem; padding: 4px 8px;" onclick="tambahSentuhanEditor('hyperrealistic 8k, dramatic shadows, regal chiaroscuro lighting')">👑 Royal Shadows</button>
+        </div>
+      </div>
+
+      <div id="geminiOutput" class="gemini-result-box" style="margin-top: 10px;"></div>
+
+      <div class="modal-btn-group" style="margin-top: 14px; justify-content: flex-end; gap: 8px;">
         <button class="btn-copy btn-cancel" onclick="tutupModalGemini()">Tutup</button>
-        <button class="btn-copy" onclick="copasPrompt(document.getElementById('geminiOutput').innerText)">Salin Hasil</button>
+        <button class="btn-copy" onclick="copasPrompt(document.getElementById('geminiPromptInput').value)">
+          <i class="fa-solid fa-copy"></i> Salin Hasil Edit
+        </button>
+        <button class="btn-copy" style="background: linear-gradient(135deg, #2563eb, #1d4ed8); color: #fff; border: none;" onclick="jalankanTesRenderEditor()">
+          <i class="fa-solid fa-wand-magic-sparkles"></i> Render Uji Coba
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= MODAL: EXIT-INTENT CUSTOMER VOICE SURVEY ================= -->
+  <div id="surveyModal" class="modal-overlay hidden">
+    <div class="modal-content" style="max-width: 390px; text-align: left; border: 1px solid var(--gold-primary);">
+      <div id="surveyQuestionState">
+        <h3 class="modal-header-title" style="font-size: 0.95rem; color: var(--gold-light); display:flex; align-items:center; gap:8px;">
+          <i class="fa-solid fa-circle-question" style="color:var(--gold-primary);"></i> Sebelum pergi, ada kendala?
+        </h3>
+        <p class="modal-subtext" style="font-size: 0.75rem; margin-bottom: 12px; color: var(--text-muted);">
+          Bantu kami menyempurnakan koleksi JIWAS untuk Anda:
+        </p>
+        
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <button class="btn-copy" style="background:#161622; color:#fff; justify-content:flex-start; font-weight:600; font-size:0.75rem; padding:10px 12px; border:1px solid rgba(212,175,55,0.2);" onclick="jawabSurvey('HARGA_BELUM_PAS')">
+            💰 Harganya terasa belum pas di kantong
+          </button>
+          <button class="btn-copy" style="background:#161622; color:#fff; justify-content:flex-start; font-weight:600; font-size:0.75rem; padding:10px 12px; border:1px solid rgba(212,175,55,0.2);" onclick="jawabSurvey('BINGUNG_CARA_PAKAI')">
+            ❓ Bingung cara salin-tempel prompt ke AI
+          </button>
+          <button class="btn-copy" style="background:#161622; color:#fff; justify-content:flex-start; font-weight:600; font-size:0.75rem; padding:10px 12px; border:1px solid rgba(212,175,55,0.2);" onclick="jawabSurvey('MAU_METODE_BAYAR')">
+            💳 Butuh opsi QRIS instan / e-Wallet
+          </button>
+          <button class="btn-copy" style="background:#161622; color:#fff; justify-content:flex-start; font-weight:600; font-size:0.75rem; padding:10px 12px; border:1px solid rgba(212,175,55,0.2);" onclick="jawabSurvey('TEMA_LAIN')">
+            🎨 Sedang mencari tema gaya foto lain
+          </button>
+        </div>
+
+        <div style="margin-top: 14px; display:flex; justify-content:flex-end;">
+          <button class="btn-copy btn-cancel" style="padding: 5px 12px; font-size: 0.72rem;" onclick="tutupSurvey()">Nanti Saja</button>
+        </div>
+      </div>
+
+      <div id="surveySolutionState" class="hidden">
+        <h3 class="modal-header-title" id="frictionSolutionTitle" style="font-size: 0.95rem; color: var(--gold-light);">Solusi Khusus Untuk Anda</h3>
+        <div id="frictionSolutionBody" style="font-size: 0.8rem; color: #e2e8f0; line-height: 1.5; margin: 12px 0;"></div>
+        <div id="frictionSolutionAction" style="display: flex; flex-direction: column; gap: 8px;"></div>
+        <div style="margin-top: 12px; text-align: right;">
+          <button class="btn-copy btn-cancel" style="padding: 4px 10px; font-size: 0.7rem;" onclick="tutupSurvey()">Tutup</button>
+        </div>
       </div>
     </div>
   </div>
@@ -355,7 +436,7 @@
     <i class="fa-brands fa-whatsapp"></i>
   </a>
 
-  <!-- SCRIPTS -->
+  <!-- SCRIPTS SINKRON -->
   <script src="config-pin.js"></script>
   <script src="data.js"></script>
   <script src="app.js"></script>
