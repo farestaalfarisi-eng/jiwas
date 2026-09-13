@@ -1,7 +1,8 @@
 /* =========================================================================
-   JIWAS — MASTER STYLESHEET (styles.css V12.1 Platinum Enterprise)
+   JIWAS — MASTER STYLESHEET (styles.css V16.4 Full Master)
    Theme: Dark Luxury & Gold Atelier • Grid 9:16 Pinterest Strict Ratio
-   Anti-Stretching • Zero-Truncation Social Proof • PWA Ready
+   Anti-Stretching • 2-Column Luxury Mobile Layout • Family Formation Studio
+   Curated & Designed for JIWAS Atelier by Sahabat Kaya
    ========================================================================= */
 
 :root {
@@ -46,7 +47,7 @@ body {
 }
 
 /* -------------------------------------------------------------------------
-   0. LIVE FOMO PULSE STRIP (2 BARIS ANTI TRUNCATION)
+   0. LIVE FOMO PULSE STRIP
    ------------------------------------------------------------------------- */
 .atelier-pulse-bar {
   background: #0f0f14;
@@ -102,7 +103,7 @@ body {
 }
 
 /* -------------------------------------------------------------------------
-   1. TOP URGENCY MARQUEE TICKER
+   1. TICKER MARQUEE
    ------------------------------------------------------------------------- */
 .banner-urgency {
   background: #15151c;
@@ -132,7 +133,7 @@ body {
 }
 
 /* -------------------------------------------------------------------------
-   2. CONTAINER & ATELIER HERO COMPACT
+   2. CONTAINER & BRAND HERO
    ------------------------------------------------------------------------- */
 .container {
   max-width: 1100px;
@@ -227,18 +228,41 @@ body {
   margin: 28px 0;
 }
 
+/* Tombol Pemulih Etalase */
+.btn-text-restore {
+  background: transparent;
+  border: none;
+  color: var(--gold-light);
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  cursor: pointer;
+  opacity: 0.75;
+  transition: opacity 0.2s ease;
+  padding: 6px 12px;
+}
+
+.btn-text-restore:hover {
+  opacity: 1;
+  color: #fff;
+}
+
 /* -------------------------------------------------------------------------
-   3. BEFORE / AFTER SHOWCASE SLIDER
+   3. BEFORE & AFTER SHOWCASE SLIDER (18:16 WIDE RATIO)
    ------------------------------------------------------------------------- */
 .showcase-ba-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
   transition: opacity 0.2s ease;
 }
 
-@media (max-width: 860px) {
-  .showcase-ba-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+@media (max-width: 640px) {
+  .showcase-ba-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
 }
 
 .ba-card-unit {
@@ -246,55 +270,66 @@ body {
   border: 1px solid var(--card-border);
   border-radius: var(--radius-md);
   overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
 }
 
 .ba-dual-image-box {
   display: flex;
   width: 100%;
-  aspect-ratio: 9 / 16;
+  aspect-ratio: 18 / 16;
   position: relative;
   background: #000;
+  gap: 2px;
 }
 
 .ba-half-view {
+  flex: 1;
   width: 50%;
   height: 100%;
   position: relative;
   overflow: hidden;
+  background: #000;
 }
 
-.ba-half-view img {
+.ba-half-view img,
+.ba-half-view video {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
+  background: #000;
 }
 
 .badge-tag-side {
   position: absolute;
-  top: 8px;
-  font-size: 0.6rem;
+  top: 10px;
+  font-size: 0.65rem;
   font-weight: 800;
-  padding: 2px 6px;
+  padding: 3px 8px;
   border-radius: 4px;
+  letter-spacing: 0.05em;
+  z-index: 2;
 }
-.tag-before { left: 6px; background: rgba(0,0,0,0.75); color: #fff; }
-.tag-after { right: 6px; background: var(--gold-gradient); color: #000; }
+.tag-before { left: 8px; background: rgba(0,0,0,0.75); color: #fff; border: 1px solid rgba(255,255,255,0.15); }
+.tag-after { right: 8px; background: var(--gold-gradient); color: #000; }
 
 .ba-card-footer {
   display: flex;
   justify-content: space-between;
-  padding: 8px 10px;
-  font-size: 0.7rem;
+  align-items: center;
+  padding: 10px 14px;
+  font-size: 0.75rem;
+  font-weight: 600;
   border-top: 1px solid rgba(255,255,255,0.06);
+  background: #111117;
 }
 
 .showcase-nav-bar {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 12px;
-  margin-top: 12px;
+  gap: 14px;
+  margin-top: 16px;
 }
 
 .btn-slider-arrow {
@@ -308,24 +343,42 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: var(--transition-fast);
+}
+
+.btn-slider-arrow:hover {
+  background: var(--gold-primary);
+  color: #000;
 }
 
 .slider-dots-container {
   display: flex;
-  gap: 6px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 24px;
 }
 
 .dot-indicator {
-  width: 7px;
-  height: 7px;
-  background: rgba(255,255,255,0.2);
+  width: 8px;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.25);
   border-radius: 50%;
   cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid transparent;
 }
+
+.dot-indicator:hover {
+  background: rgba(212, 175, 55, 0.6);
+}
+
 .dot-indicator.active {
   background: var(--gold-primary);
-  width: 18px;
-  border-radius: 8px;
+  width: 22px;
+  height: 8px;
+  border-radius: 4px;
+  box-shadow: 0 0 8px rgba(212, 175, 55, 0.5);
 }
 
 /* -------------------------------------------------------------------------
@@ -403,7 +456,6 @@ body {
   color: var(--text-muted);
 }
 
-/* Three Dots Context Menu */
 .card-menu-container {
   position: absolute;
   top: 8px;
@@ -458,20 +510,26 @@ body {
 }
 
 /* -------------------------------------------------------------------------
-   5. GRID KATALOG (FOTO, VIDEO, AKUN, HOMEPAGE) — ANTI-STRETCHING
+   5. GRID KATALOG (ELEGAN 2 KOLOM DI MOBILE, RESPONSIF DI DESKTOP)
    ------------------------------------------------------------------------- */
 .grid-catalog {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(170px, 230px));
-  justify-content: center;
-  gap: 16px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
   width: 100%;
 }
 
-@media (max-width: 480px) {
+@media (min-width: 680px) {
   .grid-catalog {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .grid-catalog {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
   }
 }
 
@@ -485,7 +543,6 @@ body {
   display: flex;
   flex-direction: column;
   width: 100%;
-  max-width: 240px;
   margin: 0 auto;
 }
 
@@ -515,13 +572,13 @@ body {
 }
 
 .card-title {
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   font-weight: 700;
   line-height: 1.3;
 }
 
 .card-rating-badge {
-  font-size: 0.7rem;
+  font-size: 0.68rem;
   color: var(--accent-yellow);
   margin-top: 2px;
 }
@@ -541,12 +598,11 @@ body {
 }
 .badge-rank-gold { background: var(--gold-gradient); color: #000; font-weight: 800; border: none; }
 .badge-rank-blue { background: #2563eb; color: #fff; border: none; }
-.badge-rank-green { background: #16a34a; color: #fff; border: none; }
 .badge-video { background: rgba(168, 85, 247, 0.9); color: #fff; border: none; }
 .badge-app { background: rgba(56, 189, 248, 0.9); color: #000; font-weight: 800; border: none; }
 
 /* -------------------------------------------------------------------------
-   6. PANDUAN ACCORDION (FOTO AI)
+   6. PANDUAN ACCORDION
    ------------------------------------------------------------------------- */
 .guide-accordion-wrapper {
   margin-bottom: 24px;
@@ -587,21 +643,10 @@ body {
   background: #0c0c10;
 }
 
-.guide-subtitle {
-  font-size: 0.75rem;
-  font-weight: 800;
-  color: #fff;
-  margin-bottom: 10px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
 .steps-flow-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
   gap: 8px;
-  margin-bottom: 18px;
 }
 
 .step-badge-card {
@@ -634,27 +679,8 @@ body {
   line-height: 1.3;
 }
 
-.ai-compat-list {
-  list-style: none;
-  display: grid;
-  gap: 6px;
-  font-size: 0.72rem;
-  color: #94a3b8;
-}
-
-.ai-compat-list li {
-  display: flex;
-  gap: 8px;
-  align-items: flex-start;
-}
-
-.ai-compat-list i {
-  color: #22c55e;
-  margin-top: 3px;
-}
-
 /* -------------------------------------------------------------------------
-   7. DETAIL PACK (100 ITEMS) — ANTI-STRETCHING
+   7. DETAIL PACK & FAMILY FORMATION COMPOSER
    ------------------------------------------------------------------------- */
 .detail-header {
   display: flex;
@@ -731,36 +757,196 @@ body {
   cursor: pointer;
 }
 
-.referral-banner-box {
-  background: var(--gold-gradient-soft);
-  border: 1px dashed var(--gold-primary);
-  border-radius: 8px;
-  padding: 10px 14px;
+/* Kotak Formasi Keluarga */
+.family-composer-box {
+  background: #111119;
+  border: 1px solid var(--gold-primary);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+.composer-header {
   display: flex;
   justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.composer-body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.member-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: #171722;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.member-tag {
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: var(--gold-light);
+  text-transform: uppercase;
+}
+
+.member-row {
+  display: flex;
   align-items: center;
-  gap: 10px;
-  margin-bottom: 20px;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 
-.referral-banner-text {
+.member-label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  min-width: 85px;
+  color: #fff;
+}
+
+.select-composer, .input-composer {
+  background: #0b0b10;
+  border: 1px solid var(--card-border);
+  color: #fff;
+  padding: 6px 8px;
+  border-radius: 6px;
   font-size: 0.75rem;
-  color: #cbd5e1;
+  outline: none;
 }
 
-/* Grid Strict Ukuran 100 Item */
+.select-composer:focus, .input-composer:focus {
+  border-color: var(--gold-primary);
+}
+
+.dynamic-members-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.dynamic-member-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #151520;
+  border: 1px dashed rgba(212, 175, 55, 0.3);
+  padding: 8px 12px;
+  border-radius: 6px;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.dynamic-member-inputs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.btn-remove-member {
+  background: transparent;
+  border: none;
+  color: var(--accent-red);
+  cursor: pointer;
+  padding: 4px 8px;
+  font-size: 0.85rem;
+  transition: transform 0.2s;
+}
+
+.btn-remove-member:hover {
+  transform: scale(1.15);
+}
+
+.add-member-buttons {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+
+.btn-add-member {
+  background: #1a1a26;
+  border: 1px solid var(--card-border);
+  color: var(--gold-light);
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+
+.btn-add-member:hover {
+  background: var(--gold-primary);
+  color: #000;
+}
+
+.formation-result-wrapper {
+  margin-top: 10px;
+  background: #0a0a0e;
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  padding: 12px;
+  border-radius: 8px;
+}
+
+.formation-result-title {
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: var(--gold-light);
+  display: block;
+  margin-bottom: 6px;
+}
+
+.formation-output-box {
+  background: #12121a;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 8px 10px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  color: var(--accent-cyan);
+  line-height: 1.4;
+  font-family: monospace;
+  word-break: break-word;
+}
+
+.formation-action-btns {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+
+/* Grid 100 Item */
 .items-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 240px));
-  justify-content: center;
-  gap: 14px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
   width: 100%;
 }
 
-@media (max-width: 480px) {
+@media (min-width: 680px) {
   .items-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .items-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
   }
 }
 
@@ -772,7 +958,6 @@ body {
   display: flex;
   flex-direction: column;
   width: 100%;
-  max-width: 240px;
   margin: 0 auto;
 }
 
@@ -800,7 +985,7 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 14px;
+  padding: 10px;
   text-align: center;
 }
 
@@ -808,9 +993,9 @@ body {
   background: var(--gold-gradient);
   color: #000;
   border: none;
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   font-weight: 800;
-  padding: 6px 12px;
+  padding: 6px 10px;
   border-radius: 6px;
   cursor: pointer;
 }
@@ -883,7 +1068,7 @@ body {
 }
 
 /* -------------------------------------------------------------------------
-   8. PWA INSTALL BANNER & BOTTOM NAV
+   8. PWA & BOTTOM NAV
    ------------------------------------------------------------------------- */
 .pwa-install-box {
   position: fixed;
@@ -977,7 +1162,7 @@ body {
 }
 
 /* -------------------------------------------------------------------------
-   9. FLOATING ELEMENTS, TOAST & MODALS
+   9. TOAST, WA & MODALS
    ------------------------------------------------------------------------- */
 .wa-floating-btn {
   position: fixed;
@@ -1079,6 +1264,25 @@ body {
   width: 100%;
   max-width: 360px;
   text-align: center;
+  position: relative;
+}
+
+.btn-modal-close {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 1.15rem;
+  cursor: pointer;
+  padding: 4px;
+  transition: color 0.2s ease;
+  z-index: 10;
+}
+
+.btn-modal-close:hover {
+  color: #fff;
 }
 
 .pin-input {
@@ -1120,15 +1324,6 @@ body {
   text-align: left;
   line-height: 1.4;
   margin-top: 10px;
-}
-
-.quota-indicator-box {
-  display: flex;
-  justify-content: space-between;
-  border-bottom: 1px solid rgba(255,255,255,0.08);
-  padding-bottom: 6px;
-  color: var(--text-muted);
-  font-size: 0.72rem;
 }
 
 footer {
