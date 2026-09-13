@@ -390,19 +390,17 @@
               </tr>
             </thead>
             <tbody id="engineActivityTableBody">
-              <tr><td colspan="4" style="text-align:center; color:var(--text-muted);">Tekan sinkronkan untuk memeriksa aktivitas engine lokal...</td></tr>
+              <tr><td colspan="4" style="text-align:center; color:var(--text-muted);">Pemeriksaan status engine...</td></tr>
             </tbody>
           </table>
         </div>
       </div>
     </div>
 
-    <!-- ===================================================================
-         LEMBAR 4: JIWAS GROWTH OS (Pusat Kendali Penjualan & Promosi Instan)
-         =================================================================== -->
+    <!-- LEMBAR 4: JIWAS GROWTH OS -->
     <div id="growthTab" class="sheet-content">
       
-      <!-- PRIORITAS TINDAKAN HARI INI (AI STRATEGIST) -->
+      <!-- PRIORITAS TINDAKAN HARI INI -->
       <div class="panel-box" style="border: 1px solid var(--gold-primary); background: linear-gradient(135deg, rgba(212,175,55,0.08), rgba(18,18,24,0.95));">
         <div class="panel-title" style="margin-bottom:10px;">
           <span><i class="fa-solid fa-fire" style="color:#f59e0b;"></i> PRIORITAS TINDAKAN HARI INI (AI STRATEGIST)</span>
@@ -411,7 +409,7 @@
         <div id="growthActionPriorities" style="display:flex; flex-direction:column; gap:8px;"></div>
       </div>
 
-      <!-- AI CONTENT MATRIX (3-ANGLE SWITCHER & UTM BINDER) -->
+      <!-- AI CONTENT MATRIX -->
       <div class="panel-box">
         <div class="panel-title">
           <span><i class="fa-solid fa-layer-group" style="color:var(--accent-cyan);"></i> AI CONTENT MATRIX (3-ANGLE SWITCHER & UTM BINDER)</span>
@@ -492,7 +490,7 @@
         </div>
       </div>
 
-      <!-- Top Growth Metrics -->
+      <!-- Metrik Utama -->
       <div class="metric-grid">
         <div class="metric-card">
           <div class="metric-title">Omzet Terkunci (Riil)</div>
@@ -512,7 +510,7 @@
         </div>
       </div>
 
-      <!-- Conversion Diagnostic & Funnel Leakage -->
+      <!-- Conversion Diagnostic -->
       <div class="panel-box">
         <div class="panel-title">
           <span><i class="fa-solid fa-stethoscope" style="color:#ef4444;"></i> CONVERSION DIAGNOSTIC ("MENGAPA BELUM MEMBELI?")</span>
@@ -566,7 +564,7 @@
         </div>
       </div>
 
-      <!-- REKAMAN CUSTOMER VOICE (SURVEY KENDALA PENGUNJUNG) -->
+      <!-- Rekaman Suara Pengunjung -->
       <div class="panel-box">
         <div class="panel-title">
           <span><i class="fa-solid fa-comment-dots" style="color:#38bdf8;"></i> SUARA PENGUNJUNG (CUSTOMER VOICE EXIT-SURVEY)</span>
@@ -607,8 +605,15 @@
       renderDashboardAnalytics();
       renderPinManager();
       renderGrowthOS();
-      sinkronkanEngineManual();
-      setInterval(sinkronkanEngineManual, 8000);
+
+      const isLocalHost = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+      if (isLocalHost) {
+        sinkronkanEngineManual();
+        setInterval(sinkronkanEngineManual, 8000);
+      } else {
+        const ind = document.getElementById("engineStatusIndicator");
+        if (ind) ind.innerHTML = '<i class="fa-solid fa-cloud" style="color:var(--accent-cyan);"></i> CLOUD READY';
+      }
     });
 
     function switchSheet(sheetId, btnEl) {
@@ -635,7 +640,7 @@
     function renderPinManager() {
       const waInput = document.getElementById("adminWaInput");
       const currentWa = localStorage.getItem("JIWAS_CUSTOM_WA") || 
-                        (typeof NOMOR_WA_ADMIN_CONFIG !== "undefined" ? NOMOR_WA_ADMIN_CONFIG : "6281234567890");
+                        (typeof NOMOR_WA_ADMIN_CONFIG !== "undefined" ? NOMOR_WA_ADMIN_CONFIG : "6282255267793");
       if (waInput) waInput.value = currentWa;
 
       const tbody = document.getElementById("pinTableBody");
@@ -733,6 +738,12 @@ Selamat berkreasi di JIWAS! 🚀`;
     }
 
     async function sinkronkanEngineManual() {
+      const isLocalHost = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+      if (!isLocalHost) {
+        tampilkanToastRadar("ℹ️ Engine ATM berjalan di server cloud/lokal.");
+        return;
+      }
+
       try {
         const res = await fetch(`${ENGINE_API_URL}/api/analytics/feed`);
         const data = await res.json();
@@ -816,9 +827,7 @@ Selamat berkreasi di JIWAS! 🚀`;
       }
     }
 
-    // =========================================================================
-    // ENGINE KHUSUS LEMBAR 4: JIWAS GROWTH OS
-    // =========================================================================
+    // LEMBAR 4: JIWAS GROWTH OS
     function renderGrowthOS() {
       const logs = JSON.parse(localStorage.getItem("JIWAS_USER_LOGS") || "[]");
       const visits = parseInt(localStorage.getItem("JIWAS_VISIT_COUNT") || "1", 10);
@@ -884,7 +893,7 @@ Selamat berkreasi di JIWAS! 🚀`;
 
         if (actions.length === 0) {
           actions.push(`🚀 <strong>Koleksi Toko Berjalan Sehat</strong>. <em>Tindakan:</em> Sebarkan link ber-UTM ke 2 grup WhatsApp hari ini.`);
-          actions.push(`📸 Buat 1 video pendek vertikal 9:16 untuk katalog <strong>Luxury Royal Velvet Studio</strong> menggunakan generator di bawah.`);
+          actions.push(`📸 Buat 1 video pendek vertikal 9:16 untuk katalog <strong>Luxury Royal Velvet Studio</strong>.`);
         }
 
         actions.slice(0, 3).forEach((act, idx) => {
