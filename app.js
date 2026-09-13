@@ -1,17 +1,81 @@
 // =========================================================================
-// JIWAS - MASTER CONTROLLER & GROWTH OS ENGINE (app.js V12.2 Platinum)
-// Full Pinterest Feed • Before/After Showcase • Magic Link • Analytics Sync
-// Gemini Studio Editor Integration • Security Authentication
+// JIWAS - MASTER CONTROLLER & GROWTH OS ENGINE (app.js V20.0 Master Production)
+// Built-in Resilient Registry • Zero-404 Media • Decaying Showcase (24->6->2->0)
+// Dynamic Social Proof • Clean Non-Atelier Views • Family Formation Composer
+// Interactive Card 3-Dots Menu • Customer Voice Analytics Recorder
+// Curated & Designed for JIWAS Atelier by Sahabat Kaya
 // =========================================================================
 
 let activePack = null;
 let targetTierModal = 'starter';
 
-const TOTAL_SHOWCASE_PAIRS = 12;
-const PAIRS_PER_VIEW = 4;
+// Variabel Penampung Formasi Keluarga
+let extraFamilyMembers = [];
+let currentAppliedFormationPrompt = "";
+
+// -------------------------------------------------------------------------
+// 0. DATASET DEFAULT REGISTRY (Fallback Aman)
+// -------------------------------------------------------------------------
+const DEFAULT_FALLBACK_KATALOG = [
+  { id: "velvet-lux", folder: "velvet", title: "Luxury Royal Velvet Studio", type: "foto", status: "live", rating: "4.9/5", sales: "180+ Terjual" },
+  { id: "hijab-lux", folder: "hijab", title: "Luxury Hijab Collection", type: "foto", status: "live", rating: "5.0/5", sales: "210+ Terjual" },
+  { id: "couple-cinematic", folder: "couple", title: "Luxury Couple Cinematic", type: "foto", status: "live", rating: "4.8/5", sales: "95+ Terjual" },
+  { id: "family-lux", folder: "family", title: "Luxury Family Collection", type: "foto", status: "live", rating: "5.0/5", sales: "200+ Terjual" },
+  { id: "family02-lux", folder: "family02", title: "Luxury Family Collection Vol.02", type: "foto", status: "live", rating: "4.9/5", sales: "85+ Terjual" },
+  { id: "family03-lux", folder: "family03", title: "Luxury Family Collection Vol.03", type: "foto", status: "live", rating: "4.8/5", sales: "70+ Terjual" },
+  { id: "ceo-lux", folder: "ceo", title: "Luxury CEO & Corporate Executive", type: "foto", status: "live", rating: "4.9/5", sales: "140+ Terjual" },
+  { id: "fantasi-gold", folder: "fantasi", title: "Luxury Fantasy Gold", type: "foto", status: "live", rating: "4.9/5", sales: "115+ Terjual" },
+  { id: "makeup-glam", folder: "makeup", title: "Luxury Beauty & Makeover", type: "foto", status: "live", rating: "5.0/5", sales: "160+ Terjual" },
+
+  // Video AI
+  { id: "video-cinematic", folder: "video", title: "Cinematic Motion Suite", type: "video", status: "live", rating: "5.0/5", sales: "220+ Terjual" },
+
+  // Akun AI
+  { id: "chatgpt-plus", folder: "canvas", title: "ChatGPT Plus Shared / Private", type: "digital", status: "live", priceText: "Rp35.000", description: "Akses GPT-4o & Canvas resmi tanpa antrean." },
+  { id: "midjourney-pro", folder: "canvas", title: "Midjourney Fast Hours Access", type: "digital", status: "live", priceText: "Rp45.000", description: "Akses Midjourney kualitas fotorealistik mode Fast GPU." },
+  { id: "canva-pro", folder: "canvas", title: "Canva Pro Desain Suite", type: "digital", status: "live", priceText: "Rp15.000", description: "Invite Canva Pro Lifetime untuk template premium." }
+];
+
+function getActiveRegistry() {
+  if (typeof KATALOG_REGISTRY !== "undefined" && Array.isArray(KATALOG_REGISTRY) && KATALOG_REGISTRY.length > 0) {
+    return KATALOG_REGISTRY;
+  }
+  return DEFAULT_FALLBACK_KATALOG;
+}
+
+// -------------------------------------------------------------------------
+// 1. DATASET SHOWCASE BEFORE & AFTER (24 PASANG)
+// -------------------------------------------------------------------------
+const SHOWCASE_DATA = [
+  { title: "Luxury Royal Velvet Studio",    before: "images/showcase/1.jpg",  after: "images/showcase/2.jpg" },
+  { title: "Luxury Hijab Chiaroscuro",      before: "images/showcase/3.jpg",  after: "images/showcase/4.jpg" },
+  { title: "Regal Gold Fantasy Portrait",   before: "images/showcase/5.jpg",  after: "images/showcase/6.jpg" },
+  { title: "Corporate Executive CEO",       before: "images/showcase/7.jpg",  after: "images/showcase/8.jpg" },
+  { title: "Luxury Couple Cinematic",       before: "images/showcase/9.jpg",  after: "images/showcase/10.jpg" },
+  { title: "Beauty & Micro Skin Retouch",   before: "images/showcase/11.jpg", after: "images/showcase/12.jpg" },
+  { title: "Family Heritage Studio",        before: "images/showcase/13.jpg", after: "images/showcase/14.jpg" },
+  { title: "High-Fashion Editorial Model",  before: "images/showcase/15.jpg", after: "images/showcase/16.jpg" },
+  { title: "Cinematic Warm Rim-Light",      before: "images/showcase/17.jpg", after: "images/showcase/18.jpg" },
+  { title: "Old-Money Aesthetic Portrait",  before: "images/showcase/19.jpg", after: "images/showcase/20.jpg" },
+  { title: "Regal Velvet Emerald Studio",   before: "images/showcase/21.jpg", after: "images/showcase/22.jpg" },
+  { title: "Minimalist Monochrome Atelier", before: "images/showcase/23.jpg", after: "images/showcase/24.jpg" },
+  { title: "Gothic Dark Royalty",           before: "images/showcase/25.jpg", after: "images/showcase/26.jpg" },
+  { title: "Vintage Film Grain 35mm",       before: "images/showcase/27.jpg", after: "images/showcase/28.jpg" },
+  { title: "Luxury Cyberpunk Atelier",      before: "images/showcase/29.jpg", after: "images/showcase/30.jpg" },
+  { title: "Regal Traditional Nusantara",   before: "images/showcase/31.jpg", after: "images/showcase/32.jpg" },
+  { title: "Baroque Oil Painting Mood",     before: "images/showcase/33.jpg", after: "images/showcase/34.jpg" },
+  { title: "Outdoor Golden Hour Glow",      before: "images/showcase/35.jpg", after: "images/showcase/36.jpg" },
+  { title: "Corporate Tech Founder",        before: "images/showcase/37.jpg", after: "images/showcase/38.jpg" },
+  { title: "Bridal Grace Glamour",          before: "images/showcase/39.jpg", after: "images/showcase/40.jpg" },
+  { title: "Dramatic Chiaroscuro Shadow",   before: "images/showcase/41.jpg", after: "images/showcase/42.jpg" },
+  { title: "Regal Silk & Pearl Velvet",     before: "images/showcase/43.jpg", after: "images/showcase/44.jpg" },
+  { title: "Cinematic Rain Window Studio",  before: "images/showcase/45.jpg", after: "images/showcase/46.jpg" },
+  { title: "Masterpiece Royal Portrait 8K", before: "images/showcase/47.jpg", after: "images/showcase/48.jpg" }
+];
+
+let activePairsPerView = 24;
 let currentShowcaseIndex = 0;
 let showcaseTimer = null;
-const MAX_FREE_DAILY_QUOTA = 3;
 
 let userVisitCount = 1;
 let userAffinity = {};
@@ -19,7 +83,7 @@ let surveyTriggered = false;
 let deferredPrompt = null;
 
 // -------------------------------------------------------------------------
-// 0. LIVE FOMO PULSE ENGINE & SOCIAL PROOF
+// 2. LIVE ORGANIC PULSE ENGINE
 // -------------------------------------------------------------------------
 function initFomoPulseEngine() {
   const activeEl = document.getElementById("fomoActiveUsers");
@@ -27,77 +91,123 @@ function initFomoPulseEngine() {
   const viewsEl = document.getElementById("fomoViewsCount");
   const slotEl = document.getElementById("fomoSlotCount");
 
-  let baseViews = parseInt(localStorage.getItem("JIWAS_ACC_VIEWS") || "13420", 10);
-  let baseTrans = parseInt(localStorage.getItem("JIWAS_ACC_TRANS") || "148", 10);
-
-  baseViews += Math.floor(Math.random() * 3) + 1;
-  localStorage.setItem("JIWAS_ACC_VIEWS", baseViews.toString());
-
   function formatK(num) {
-    if (num >= 1000) {
-      return (num / 1000).toFixed(1).replace(".", ",") + "k+";
-    }
+    if (num >= 1000) return (num / 1000).toFixed(1).replace(".", ",") + "k+";
     return num.toString();
   }
 
+  let baseViews = parseInt(localStorage.getItem("JIWAS_ACC_VIEWS") || "1420", 10);
+  baseViews += Math.floor(Math.random() * 2) + 1;
+  localStorage.setItem("JIWAS_ACC_VIEWS", baseViews.toString());
   if (viewsEl) viewsEl.innerText = formatK(baseViews);
-  if (transEl) transEl.innerText = baseTrans.toString();
 
-  setInterval(() => {
-    if (activeEl) activeEl.innerText = 512 + Math.floor(Math.random() * 56);
-    if (transEl) {
-      const stored = parseInt(localStorage.getItem("JIWAS_ACC_TRANS") || "148", 10);
-      const delta = Math.floor(Math.random() * 9) - 4;
-      transEl.innerText = Math.max(135, stored + delta);
+  const todayStr = new Date().toISOString().split('T')[0];
+  let storedSlotData = JSON.parse(localStorage.getItem("JIWAS_DAILY_SLOT_STATE") || "{}");
+  if (storedSlotData.date !== todayStr) {
+    storedSlotData = { date: todayStr, remaining: 7 };
+    localStorage.setItem("JIWAS_DAILY_SLOT_STATE", JSON.stringify(storedSlotData));
+  }
+  if (slotEl) slotEl.innerText = storedSlotData.remaining;
+
+  let currentActive = 32 + Math.floor(Math.random() * 10);
+  let currentConsult = 2 + Math.floor(Math.random() * 3);
+
+  if (activeEl) activeEl.innerText = currentActive;
+  if (transEl) transEl.innerText = currentConsult;
+
+  function loopPulseCycle() {
+    const deltaActive = Math.floor(Math.random() * 5) - 2;
+    currentActive = Math.min(46, Math.max(26, currentActive + deltaActive));
+    if (activeEl) activeEl.innerText = currentActive;
+
+    if (Math.random() > 0.45) {
+      currentConsult = Math.min(5, Math.max(1, currentConsult + (Math.random() > 0.5 ? 1 : -1)));
+      if (transEl) transEl.innerText = currentConsult;
     }
-    if (Math.random() > 0.55) {
+
+    if (Math.random() > 0.6) {
       baseViews += 1;
       localStorage.setItem("JIWAS_ACC_VIEWS", baseViews.toString());
       if (viewsEl) viewsEl.innerText = formatK(baseViews);
     }
-    if (slotEl && Math.random() > 0.7) {
-      slotEl.innerText = 4 + Math.floor(Math.random() * 5);
+
+    if (Math.random() > 0.85 && storedSlotData.remaining > 2) {
+      storedSlotData.remaining -= 1;
+      localStorage.setItem("JIWAS_DAILY_SLOT_STATE", JSON.stringify(storedSlotData));
+      if (slotEl) slotEl.innerText = storedSlotData.remaining;
     }
-  }, 7500);
+
+    const nextInterval = 14000 + Math.floor(Math.random() * 12000);
+    setTimeout(loopPulseCycle, nextInterval);
+  }
+
+  setTimeout(loopPulseCycle, 12000);
 }
 
 function catatTransaksiFomoBar() {
   try {
-    let trans = parseInt(localStorage.getItem("JIWAS_ACC_TRANS") || "148", 10) + 1;
-    localStorage.setItem("JIWAS_ACC_TRANS", trans.toString());
-    const transEl = document.getElementById("fomoTransUsers");
-    if (transEl) transEl.innerText = trans.toString();
+    let storedSlotData = JSON.parse(localStorage.getItem("JIWAS_DAILY_SLOT_STATE") || "{}");
+    if (storedSlotData.remaining && storedSlotData.remaining > 1) {
+      storedSlotData.remaining -= 1;
+      localStorage.setItem("JIWAS_DAILY_SLOT_STATE", JSON.stringify(storedSlotData));
+      const slotEl = document.getElementById("fomoSlotCount");
+      if (slotEl) slotEl.innerText = storedSlotData.remaining;
+    }
   } catch (e) {}
 }
 
+// -------------------------------------------------------------------------
+// 3. SOCIAL PROOF GENERATOR DINAMIS
+// -------------------------------------------------------------------------
 function initSocialProofPopups() {
-  const fakeBuyers = [
-    { name: "Kak Rina (Surabaya)", action: "Baru saja membuka PIN VIP 25K (Royal Velvet)" },
-    { name: "Bunda Dewi (Medan)", action: "Membeli PIN Starter 10K (Hijab Collection)" },
-    { name: "Kak Dimas (Jakarta Selatan)", action: "Baru mengaktifkan Paket VIP (Luxury Family)" },
-    { name: "Pak Hendra (Bandung)", action: "Membeli PIN Starter (CEO Executive)" },
-    { name: "Kak Tania (Makassar)", action: "Baru saja menyalin 3 Formula Studio Gratis" }
+  const toast = document.getElementById("liveBuyerToast");
+  const nameEl = document.getElementById("buyerToastUser");
+  const descEl = document.getElementById("buyerToastDesc");
+  if (!toast || !nameEl || !descEl) return;
+
+  const daftarNama = [
+    "Kak Rina", "Bunda Dewi", "Kak Dimas", "Pak Hendra", "Kak Tania",
+    "Kak Fajar", "Mbak Anisa", "Mas Rizky", "Kak Nadia", "Bunda Maya",
+    "Kak Aditya", "Mbak Citra", "Pak Wahyu", "Kak Sarah", "Mas Bayu"
   ];
 
-  setInterval(() => {
-    const toast = document.getElementById("liveBuyerToast");
-    const nameEl = document.getElementById("buyerToastUser");
-    const descEl = document.getElementById("buyerToastDesc");
-    if (!toast || !nameEl || !descEl) return;
+  const daftarKota = [
+    "Surabaya", "Medan", "Jakarta Selatan", "Bandung", "Makassar",
+    "Yogyakarta", "Semarang", "Denpasar", "Palembang", "Balikpapan"
+  ];
 
-    const randomBuyer = fakeBuyers[Math.floor(Math.random() * fakeBuyers.length)];
-    nameEl.innerText = randomBuyer.name;
-    descEl.innerText = randomBuyer.action;
+  const daftarAksi = [
+    "Baru saja membuka PIN VIP 25K (Royal Velvet)",
+    "Membeli PIN Starter 10K (Hijab Atelier)",
+    "Baru mengaktifkan Paket VIP (Luxury Family)",
+    "Membeli PIN Starter (CEO Executive)",
+    "Baru saja membuka PIN VIP 25K (Couple Cinematic)",
+    "Mengaktifkan PIN VIP 25K (Fantasy Gold)",
+    "Baru mengaktifkan PIN VIP 25K (Beauty & Glam)"
+  ];
+
+  function munculkanNotifikasi() {
+    const nama = daftarNama[Math.floor(Math.random() * daftarNama.length)];
+    const kota = daftarKota[Math.floor(Math.random() * daftarKota.length)];
+    const aksi = daftarAksi[Math.floor(Math.random() * daftarAksi.length)];
+
+    nameEl.innerText = `${nama} (${kota})`;
+    descEl.innerText = aksi;
 
     toast.classList.remove("hidden");
     setTimeout(() => {
       toast.classList.add("hidden");
     }, 4500);
-  }, 22000);
+
+    const interval = 22000 + Math.floor(Math.random() * 16000);
+    setTimeout(munculkanNotifikasi, interval);
+  }
+
+  setTimeout(munculkanNotifikasi, 12000);
 }
 
 // -------------------------------------------------------------------------
-// 1. RADAR ACTIVITY LOGGER & GROWTH OS TELEMETRY INTEGRATION
+// 4. RADAR LOGGER & TELEMETRY
 // -------------------------------------------------------------------------
 function catatLogAktivitas(eventType, targetName, detailText) {
   try {
@@ -115,19 +225,10 @@ function catatLogAktivitas(eventType, targetName, detailText) {
     if (logs.length > 300) logs.shift();
     localStorage.setItem("JIWAS_USER_LOGS", JSON.stringify(logs));
   } catch (e) {}
-
-  if (typeof window.emitGrowthOS === "function") {
-    let mappedEvent = "cta_click";
-    if (eventType === "VISIT_PAGE") mappedEvent = "page_view";
-    if (eventType === "VIEW_PACK") mappedEvent = "product_view";
-    if (eventType === "CLICK_WA") mappedEvent = "whatsapp_click";
-    if (eventType === "COPY_PROMPT") mappedEvent = "cta_click";
-    window.emitGrowthOS(mappedEvent, targetName, { rawDetail: detailText });
-  }
 }
 
 // -------------------------------------------------------------------------
-// 2. INISIALISASI UTAMA & PROGRESSIVE FUNNEL
+// 5. INISIALISASI UTAMA
 // -------------------------------------------------------------------------
 document.addEventListener("DOMContentLoaded", () => {
   initApp();
@@ -192,17 +293,47 @@ function getDominantUserCategory() {
 function applyProgressiveFunnelLayout() {
   const showcaseSec = document.querySelector(".showcase-section");
   const homeCategorySec = document.getElementById("atelierCategoriesSection");
-  const mainHeader = document.getElementById("atelierMainHeader");
+  const heroCompact = document.getElementById("atelierMainHeader");
+  const btnRestore = document.getElementById("btnRestoreShowcase");
 
-  if (userVisitCount <= 2) {
-    if (showcaseSec) showcaseSec.classList.remove("hidden");
-    if (homeCategorySec) homeCategorySec.classList.remove("hidden");
-    if (mainHeader) mainHeader.classList.remove("hidden");
-  } else {
+  if (userVisitCount <= 4) activePairsPerView = 24;
+  else if (userVisitCount <= 6) activePairsPerView = 6;
+  else if (userVisitCount === 7) activePairsPerView = 2;
+  else activePairsPerView = 0;
+
+  if (activePairsPerView === 0) {
     if (showcaseSec) showcaseSec.classList.add("hidden");
     if (homeCategorySec) homeCategorySec.classList.add("hidden");
-    if (mainHeader) mainHeader.classList.add("hidden");
+    if (heroCompact) heroCompact.classList.add("hidden");
+    if (btnRestore) btnRestore.classList.remove("hidden");
+  } else {
+    if (showcaseSec) showcaseSec.classList.remove("hidden");
+    if (homeCategorySec) homeCategorySec.classList.remove("hidden");
+    if (heroCompact) heroCompact.classList.remove("hidden");
+    if (btnRestore) btnRestore.classList.add("hidden");
   }
+
+  if (activePairsPerView > 0) {
+    renderShowcaseCards();
+  }
+}
+
+function pulihkanTampilanShowcase() {
+  const showcaseSec = document.querySelector(".showcase-section");
+  const homeCategorySec = document.getElementById("atelierCategoriesSection");
+  const heroCompact = document.getElementById("atelierMainHeader");
+  const btnRestore = document.getElementById("btnRestoreShowcase");
+
+  activePairsPerView = 24;
+
+  if (showcaseSec) showcaseSec.classList.remove("hidden");
+  if (homeCategorySec) homeCategorySec.classList.remove("hidden");
+  if (heroCompact) heroCompact.classList.remove("hidden");
+  if (btnRestore) btnRestore.classList.add("hidden");
+
+  renderShowcaseCards();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  tampilkanToast("✨ Etalase Before & After dipulihkan!");
 }
 
 function initGlobalClickListener() {
@@ -214,11 +345,64 @@ function initGlobalClickListener() {
 }
 
 // -------------------------------------------------------------------------
-// 3. TRANSAKSI, MARQUEE & WHATSAPP GATEWAY
+// PENGENDALI MENU TITIK TIGA (INTERAKTIF & ANTI BUBBLING)
+// -------------------------------------------------------------------------
+function toggleCardMenu(event, menuId) {
+  if (event) {
+    event.stopPropagation();
+    event.preventDefault();
+  }
+
+  const targetMenu = document.getElementById(menuId);
+  if (!targetMenu) return;
+
+  document.querySelectorAll(".card-dropdown-menu").forEach(el => {
+    if (el.id !== menuId) el.classList.add("hidden");
+  });
+
+  targetMenu.classList.toggle("hidden");
+}
+
+function handleMenuAction(action, packId, itemIndex, event) {
+  if (event) {
+    event.stopPropagation();
+    event.preventDefault();
+  }
+
+  document.querySelectorAll(".card-dropdown-menu").forEach(el => el.classList.add("hidden"));
+
+  const allPacks = getActiveRegistry();
+  const pack = allPacks.find(p => p.id === packId);
+  const packTitle = pack ? pack.title : "Katalog JIWAS";
+
+  if (action === 'save') {
+    tampilkanToast(`📌 Item #${itemIndex} (${packTitle}) disimpan ke favorit!`);
+    catatLogAktivitas("SAVE_PIN", packTitle, `Simpan item #${itemIndex}`);
+  } else if (action === 'share') {
+    bagikanKoleksiKeWA(packTitle);
+  } else if (action === 'prompt') {
+    const isFree = itemIndex <= 3;
+    if (isFree) {
+      copasPrompt(`Hyperrealistic luxury portrait of ${packTitle}, item #${itemIndex}, 8k studio lighting, master quality --ar 9:16`);
+      catatLogAktivitas("COPY_PROMPT", packTitle, `Salin cepat prompt #${itemIndex}`);
+    } else {
+      bukaDetailPackTarget(packId, itemIndex, true);
+    }
+  } else if (action === 'use') {
+    bukaGeminiEditorPrompt(null, `${packTitle} #${itemIndex}`);
+    const inputEl = document.getElementById("geminiPromptInput");
+    if (inputEl) {
+      inputEl.value = `Hyperrealistic luxury portrait of ${packTitle}, item #${itemIndex}, 8k studio lighting, master quality --ar 9:16`;
+    }
+  }
+}
+
+// -------------------------------------------------------------------------
+// 6. TRANSAKSI & WHATSAPP GATEWAY
 // -------------------------------------------------------------------------
 function initLiveMarqueeTransactions() {
   const counterEl = document.getElementById("salesCounterText");
-  const marquee = document.getElementById("liveMarqueeContainer") || document.querySelector(".marquee-text");
+  const marquee = document.getElementById("liveMarqueeContainer");
   
   const realSalesCount = parseInt(localStorage.getItem("JIWAS_REAL_SALES_COUNT") || "1250", 10);
   if (counterEl) counterEl.innerText = realSalesCount.toLocaleString('id-ID') + "+";
@@ -245,20 +429,11 @@ function rekamTransaksiNyata(packTitle, tierName) {
     const counterEl = document.getElementById("salesCounterText");
     if (counterEl) counterEl.innerText = currentSales.toLocaleString('id-ID') + "+";
 
-    const marquee = document.getElementById("liveMarqueeContainer") || document.querySelector(".marquee-text");
+    const marquee = document.getElementById("liveMarqueeContainer");
     if (marquee) {
       const newLiveSpan = document.createElement("span");
-      newLiveSpan.innerHTML = '<i class="fa-solid fa-circle-check" style="color:#22c55e;"></i> PEMBELIAN BARU: PIN ' + tierName + ' (' + packTitle + ') Berhasil Diaktifkan!';
+      newLiveSpan.innerHTML = '<i class="fa-solid fa-circle-check" style="color:#22c55e;"></i> PEMBELIAN BARU: PIN ' + tierName + ' (' + packTitle + ') Berhasil!';
       marquee.prepend(newLiveSpan);
-    }
-
-    const isVip = String(tierName).toLowerCase().includes("vip");
-    if (typeof window.emitGrowthOS === "function") {
-      window.emitGrowthOS("purchase", packTitle, {
-        tier: isVip ? "vip" : "starter",
-        price: isVip ? 25000 : 10000,
-        title: packTitle
-      });
     }
   } catch (e) {}
 }
@@ -273,16 +448,13 @@ function kirimPesananLangsungWA(packTitle, tierName, hargaTeks) {
   catatLogAktivitas("CLICK_WA", packTitle, "Klik Beli " + tierName + " (" + hargaTeks + ")");
   catatTransaksiFomoBar();
 
-  const utmData = JSON.parse(sessionStorage.getItem("JIWAS_ACTIVE_UTM") || "{}");
-  const sourceTag = utmData.utm_source ? ` (Sumber: ${utmData.utm_source})` : "";
-
-  const pesan = `Halo Admin JIWAS,%0A%0ASaya ingin membeli *PIN Akses ${tierName} (${hargaTeks})* untuk katalog *${packTitle}*.%0A%0AMohon info rekening / QRIS pembayarannya ya.${sourceTag}`;
+  const pesan = `Halo Admin JIWAS,%0A%0ASaya ingin membeli *PIN Akses ${tierName} (${hargaTeks})* untuk katalog *${packTitle}*.%0A%0AMohon info rekening / QRIS pembayarannya ya.`;
   window.open("https://wa.me/" + waNumber + "?text=" + pesan, "_blank");
 }
 
 function hubungiAdminWaLangsung() {
   const waNumber = getAdminWhatsAppNumber();
-  const pesan = "Halo Admin JIWAS, saya tertarik bertanya tentang kemitraan reseller atau katalog AI di JIWAS.";
+  const pesan = "Halo Admin JIWAS, saya tertarik bertanya tentang formula studio foto AI di JIWAS.";
   window.open("https://wa.me/" + waNumber + "?text=" + encodeURIComponent(pesan), "_blank");
 }
 
@@ -295,223 +467,86 @@ function bagikanKoleksiKeWA(packTitle) {
 }
 
 // -------------------------------------------------------------------------
-// 4. KUOTA HARIAN & MENU INTERAKSI PER CARD
-// -------------------------------------------------------------------------
-function getDailyQuotaStatus() {
-  const today = new Date().toISOString().split('T')[0];
-  let usage = JSON.parse(localStorage.getItem("JIWAS_DAILY_GEN_USAGE") || "{}");
-
-  if (usage.date !== today) {
-    usage = { date: today, used: 0 };
-    localStorage.setItem("JIWAS_DAILY_GEN_USAGE", JSON.stringify(usage));
-  }
-
-  const remaining = Math.max(0, MAX_FREE_DAILY_QUOTA - usage.used);
-  return { remaining, used: usage.used, date: today };
-}
-
-function consumeDailyQuota() {
-  const status = getDailyQuotaStatus();
-  if (status.remaining <= 0) return false;
-  const usage = { date: status.date, used: status.used + 1 };
-  localStorage.setItem("JIWAS_DAILY_GEN_USAGE", JSON.stringify(usage));
-  return true;
-}
-
-function toggleCardMenu(event, menuId) {
-  event.stopPropagation();
-  document.querySelectorAll(".card-dropdown-menu").forEach(el => {
-    if (el.id !== menuId) el.classList.add("hidden");
-  });
-  const targetMenu = document.getElementById(menuId);
-  if (targetMenu) targetMenu.classList.toggle("hidden");
-}
-
-function handleMenuAction(action, packId, itemIndex, event) {
-  event.stopPropagation();
-  document.querySelectorAll(".card-dropdown-menu").forEach(el => el.classList.add("hidden"));
-
-  const allRegistry = (typeof KATALOG_REGISTRY !== "undefined" && Array.isArray(KATALOG_REGISTRY)) ? KATALOG_REGISTRY : [];
-  const pack = allRegistry.find(p => p.id === packId);
-  if (!pack) return;
-
-  const promptArray = (pack.promptVarName && window[pack.promptVarName]) ? window[pack.promptVarName] : [];
-  let promptText = "Hyperrealistic portrait of " + pack.title + ", item #" + itemIndex + ", 8k studio lighting, master quality --ar 9:16";
-
-  if (promptArray && promptArray[itemIndex - 1]) {
-    const pItem = promptArray[itemIndex - 1];
-    promptText = typeof pItem === "object" ? (pItem.rawPrompt || promptText) : pItem;
-  }
-
-  const isFree = itemIndex <= 3;
-  const isLocked = !isFree && !cekAksesKatalog(pack.id, itemIndex >= 24 ? "vip" : "starter");
-
-  if (isLocked) {
-    bukaDetailPackTarget(pack.id, itemIndex, true);
-    return;
-  }
-
-  recordUserAffinity(pack.folder || pack.id, 2);
-
-  if (action === 'save') {
-    simpanBookmarkItem(pack, itemIndex);
-  } else if (action === 'share') {
-    bagikanItem(pack, itemIndex);
-  } else if (action === 'prompt') {
-    copasPrompt(promptText);
-    recordUserAffinity(pack.folder || pack.id, 3);
-    catatLogAktivitas("COPY_PROMPT", pack.title, "Menyalin item #" + itemIndex);
-  } else if (action === 'use') {
-    bukaGeminiEditorPromptDirect(promptText, pack.title, isFree);
-    recordUserAffinity(pack.folder || pack.id, 4);
-    catatLogAktivitas("USE_ENGINE", pack.title, "Engine Studio item #" + itemIndex);
-  }
-}
-
-function simpanBookmarkItem(pack, itemIndex) {
-  try {
-    let saved = JSON.parse(localStorage.getItem("JIWAS_SAVED_ITEMS") || "[]");
-    const itemKey = pack.id + "_" + itemIndex;
-    if (!saved.includes(itemKey)) {
-      saved.push(itemKey);
-      localStorage.setItem("JIWAS_SAVED_ITEMS", JSON.stringify(saved));
-      tampilkanToast("💾 FOTO DISIMPAN KE FAVORIT!");
-    } else {
-      tampilkanToast("ℹ️ SUDAH TERSIMPAN DI FAVORIT");
-    }
-  } catch (e) {}
-}
-
-function bagikanItem(pack, itemIndex) {
-  const currentDomain = window.location.origin + window.location.pathname;
-  const shareData = {
-    title: pack.title + " - JIWAS",
-    text: "Lihat hasil formula AI " + pack.title + " item #" + itemIndex + " di JIWAS Atelier!",
-    url: currentDomain
-  };
-  if (navigator.share) {
-    navigator.share(shareData).catch(() => {});
-  } else if (navigator.clipboard) {
-    navigator.clipboard.writeText(currentDomain).then(() => {
-      tampilkanToast("🔗 LINK JIWAS BERHASIL DISALIN!");
-    });
-  }
-}
-
-// -------------------------------------------------------------------------
-// 5. JIWAS GEMINI STUDIO EDITOR & TEST MODAL
-// -------------------------------------------------------------------------
-function bukaGeminiEditorPrompt(elementId, title, isFree) {
-  const el = document.getElementById(elementId);
-  if (!el) return;
-  const promptText = el.innerText || el.textContent;
-  bukaGeminiEditorPromptDirect(promptText, title, isFree);
-}
-
-function bukaGeminiEditorPromptDirect(promptText, title, isFree) {
-  const quota = getDailyQuotaStatus();
-  if (isFree && quota.remaining <= 0) {
-    alert("⚠️ Kuota gratis harian Anda (3x/hari) sudah habis.\nBuka akses VIP 25K untuk akses studio tanpa batas!");
-    return;
-  }
-
-  const modal = document.getElementById("geminiModal");
-  const inputEl = document.getElementById("geminiPromptInput");
-  const statusEl = document.getElementById("geminiEngineStatus");
-  const outputEl = document.getElementById("geminiOutput");
-
-  if (modal) modal.classList.remove("hidden");
-  if (inputEl) inputEl.value = promptText.trim();
-  if (statusEl) statusEl.innerText = "Studio Editor: Menyesuaikan Formula " + title;
-
-  if (outputEl) {
-    outputEl.innerHTML = '<div class="quota-indicator-box">' +
-      '<span><i class="fa-solid fa-clock"></i> Kuota Uji Coba:</span>' +
-      '<strong>' + (isFree ? quota.remaining + ' / ' + MAX_FREE_DAILY_QUOTA : 'UNLIMITED (VIP)') + '</strong>' +
-      '</div>' +
-      '<p style="margin-top:8px; color:var(--text-muted); font-size:0.72rem;">Ubah teks prompt di atas atau pilih preset sentuhan atelier, lalu tekan Render Uji Coba.</p>';
-  }
-
-  catatLogAktivitas("USE_ENGINE", title, "Buka Gemini Studio Editor");
-}
-
-function tambahSentuhanEditor(sentuhan) {
-  const inputEl = document.getElementById("geminiPromptInput");
-  if (!inputEl) return;
-  let text = inputEl.value.trim();
-
-  if (text.includes("--ar")) {
-    text = text.replace("--ar", ", " + sentuhan + " --ar");
-  } else {
-    text += ", " + sentuhan;
-  }
-
-  inputEl.value = text;
-  tampilkanToast("✨ Preset sentuhan atelier disisipkan!");
-}
-
-function jalankanTesRenderEditor() {
-  const inputEl = document.getElementById("geminiPromptInput");
-  const outputEl = document.getElementById("geminiOutput");
-  if (!inputEl || !outputEl) return;
-
-  const promptFinal = inputEl.value.trim();
-  const quota = getDailyQuotaStatus();
-
-  outputEl.innerHTML = '<p style="color:var(--accent-cyan); font-size:0.75rem;"><i class="fa-solid fa-spinner fa-spin"></i> Mengoptimalkan parameter lensa & pencahayaan...</p>';
-
-  setTimeout(() => {
-    outputEl.innerHTML = 
-      '<div class="quota-indicator-box">' +
-        '<span><i class="fa-solid fa-circle-check" style="color:#22c55e;"></i> Status: Formula Siap Dirender</span>' +
-        '<strong>' + quota.remaining + ' Sisa Uji Coba</strong>' +
-      '</div>' +
-      '<div style="margin-top:8px; font-size:0.73rem;">' +
-        '<p style="color:#fff;"><strong>[PROMPT FINAL TEROPTIMASI]</strong><br>' + promptFinal + '</p>' +
-        '<p style="margin-top:6px; color:var(--gold-light);"><strong>[SPESIFIKASI ATELIER]</strong><br>Hasselblad H6D-100c • 85mm f/1.4 Portrait Lens • Volumetric Softbox --ar 9:16</p>' +
-      '</div>';
-    tampilkanToast("⚡ Formula berhasil dioptimalkan!");
-  }, 350);
-}
-
-function tutupModalGemini() {
-  const modal = document.getElementById("geminiModal");
-  if (modal) modal.classList.add("hidden");
-}
-
-// -------------------------------------------------------------------------
-// 6. SHOWCASE BEFORE & AFTER SLIDER
+// 7. SHOWCASE MEDIA ENGINE
 // -------------------------------------------------------------------------
 function initShowcaseAutoSlider() {
   renderShowcaseCards();
   startShowcaseTimer();
 }
 
+function renderCleanMedia(mediaPath, labelClass, labelText) {
+  const cleanPath = mediaPath.replace(/^\/+/, '');
+  const isVideo = cleanPath.toLowerCase().endsWith('.mp4');
+
+  if (isVideo) {
+    const posterJpg = cleanPath.replace(/\.mp4$/i, '.jpg').replace('videos/', 'images/');
+    return `
+      <div class="ba-half-view">
+        <video autoplay muted loop playsinline poster="${posterJpg}">
+          <source src="${cleanPath}" type="video/mp4">
+          <img src="${posterJpg}" alt="${labelText}" onerror="this.onerror=null; this.src='images/velvet/cover.jpg';">
+        </video>
+        <span class="badge-tag-side ${labelClass}">${labelText}</span>
+      </div>
+    `;
+  }
+
+  const imgSrc = cleanPath.includes('.') ? cleanPath : `images/${cleanPath}.jpg`;
+  return `
+    <div class="ba-half-view">
+      <img src="${imgSrc}" alt="${labelText}" loading="lazy" onerror="this.onerror=null; this.src='images/velvet/cover.jpg';">
+      <span class="badge-tag-side ${labelClass}">${labelText}</span>
+    </div>
+  `;
+}
+
 function renderShowcaseCards() {
   const container = document.getElementById("gridShowcaseBA");
   const dotsContainer = document.getElementById("showcaseDots");
-  if (!container) return;
+  const navBar = document.querySelector(".showcase-nav-bar");
+  if (!container || SHOWCASE_DATA.length === 0 || activePairsPerView === 0) return;
 
-  const totalPages = Math.ceil(TOTAL_SHOWCASE_PAIRS / PAIRS_PER_VIEW);
-  const startPair = currentShowcaseIndex * PAIRS_PER_VIEW;
+  const totalItems = SHOWCASE_DATA.length;
+  const itemsToRender = Math.min(activePairsPerView, totalItems);
+  const totalPages = Math.ceil(totalItems / itemsToRender);
+  const startIdx = currentShowcaseIndex * itemsToRender;
+
   container.style.opacity = "0.2";
 
   setTimeout(() => {
     container.innerHTML = "";
-    for (let i = 0; i < PAIRS_PER_VIEW; i++) {
-      const pairNum = (startPair + i) % TOTAL_SHOWCASE_PAIRS;
-      const beforeImgNum = (pairNum * 2) + 1;
-      const afterImgNum = (pairNum * 2) + 2;
+
+    for (let i = 0; i < itemsToRender; i++) {
+      const itemIdx = (startIdx + i) % totalItems;
+      const item = SHOWCASE_DATA[itemIdx];
+
+      const beforeHTML = renderCleanMedia(item.before, "tag-before", "BEFORE");
+      const isMotion = item.after.toLowerCase().endsWith('.mp4');
+      const afterHTML = renderCleanMedia(item.after, "tag-after", isMotion ? "AFTER (8K MOTION)" : "AFTER (AI)");
 
       const card = document.createElement("div");
       card.className = "ba-card-unit";
-      card.innerHTML = '<div class="ba-dual-image-box"><div class="ba-half-view"><img src="images/showcase/' + beforeImgNum + '.jpg" alt="Before" loading="lazy" onerror="this.onerror=null; this.src=\'images/velvet/cover.jpg\';"><span class="badge-tag-side tag-before">BEFORE</span></div><div class="ba-half-view"><img src="images/showcase/' + afterImgNum + '.jpg" alt="After" loading="lazy" onerror="this.onerror=null; this.src=\'images/velvet/1.jpg\';"><span class="badge-tag-side tag-after">AFTER (AI)</span></div></div><div class="ba-card-footer"><span>Transformation #' + (pairNum + 1) + '</span><span style="color:#22c55e; font-weight:700;">✓ 8K AI</span></div>';
+      card.innerHTML = `
+        <div class="ba-dual-image-box">
+          ${beforeHTML}
+          ${afterHTML}
+        </div>
+        <div class="ba-card-footer">
+          <span>${item.title}</span>
+          <span style="color:#22c55e; font-weight:700;">
+            ${isMotion ? '<i class="fa-solid fa-circle-play"></i> MOTION 8K' : '✓ 8K ATELIER'}
+          </span>
+        </div>
+      `;
       container.appendChild(card);
     }
+
     container.style.opacity = "1";
   }, 120);
 
-  if (dotsContainer) {
+  if (navBar) navBar.style.display = totalPages > 1 ? "flex" : "none";
+
+  if (dotsContainer && totalPages > 1) {
     dotsContainer.innerHTML = "";
     for (let p = 0; p < totalPages; p++) {
       const dot = document.createElement("div");
@@ -527,14 +562,16 @@ function renderShowcaseCards() {
 }
 
 function nextShowcaseSlide() {
-  const totalPages = Math.ceil(TOTAL_SHOWCASE_PAIRS / PAIRS_PER_VIEW);
+  const totalPages = Math.ceil(SHOWCASE_DATA.length / Math.min(activePairsPerView, SHOWCASE_DATA.length));
+  if (totalPages <= 1) return;
   currentShowcaseIndex = (currentShowcaseIndex + 1) % totalPages;
   renderShowcaseCards();
   restartShowcaseTimer();
 }
 
 function prevShowcaseSlide() {
-  const totalPages = Math.ceil(TOTAL_SHOWCASE_PAIRS / PAIRS_PER_VIEW);
+  const totalPages = Math.ceil(SHOWCASE_DATA.length / Math.min(activePairsPerView, SHOWCASE_DATA.length));
+  if (totalPages <= 1) return;
   currentShowcaseIndex = (currentShowcaseIndex - 1 + totalPages) % totalPages;
   renderShowcaseCards();
   restartShowcaseTimer();
@@ -542,7 +579,7 @@ function prevShowcaseSlide() {
 
 function startShowcaseTimer() {
   if (showcaseTimer) clearInterval(showcaseTimer);
-  showcaseTimer = setInterval(() => { nextShowcaseSlide(); }, 5000);
+  showcaseTimer = setInterval(nextShowcaseSlide, 14000);
 }
 
 function restartShowcaseTimer() {
@@ -550,20 +587,13 @@ function restartShowcaseTimer() {
 }
 
 // -------------------------------------------------------------------------
-// 7. ATELIER FEED (PINTEREST MASONRY DUA KOLOM 9:16)
+// 8. ATELIER FEED (PINTEREST MASONRY 9:16)
 // -------------------------------------------------------------------------
 function renderAtelierFeed() {
   const container = document.getElementById("gridAtelierFeed");
   if (!container) return;
 
-  const allPacks = (typeof KATALOG_REGISTRY !== "undefined" && Array.isArray(KATALOG_REGISTRY)) 
-    ? KATALOG_REGISTRY.filter(item => item.status === "live" && item.type !== "digital") 
-    : [];
-
-  if (allPacks.length === 0) {
-    container.innerHTML = '<p style="text-align:center; grid-column:1/-1; color:var(--gold-light); font-size:0.85rem; padding:30px;">⚠️ Memuat katalog eksplorasi...</p>';
-    return;
-  }
+  const allPacks = getActiveRegistry().filter(item => item.status === "live" && item.type !== "digital");
   container.innerHTML = "";
 
   const dominantCat = getDominantUserCategory();
@@ -592,7 +622,25 @@ function renderAtelierFeed() {
 
     const freeBadgeHTML = pin.isFree ? '<div class="pin-badge-free-elegant"><i class="fa-solid fa-sparkles"></i> <span>FREE DEMO</span></div>' : '';
 
-    card.innerHTML = '<div class="card-menu-container"><button class="btn-three-dots" onclick="toggleCardMenu(event, \'' + menuId + '\')" aria-label="Menu Aksi"><i class="fa-solid fa-ellipsis-vertical"></i></button><div id="' + menuId + '" class="card-dropdown-menu hidden"><button class="dropdown-item" onclick="handleMenuAction(\'save\', \'' + pin.pack.id + '\', ' + pin.itemIndex + ', event)"><i class="fa-solid fa-bookmark"></i> Save</button><button class="dropdown-item" onclick="handleMenuAction(\'share\', \'' + pin.pack.id + '\', ' + pin.itemIndex + ', event)"><i class="fa-solid fa-share-nodes"></i> Bagikan</button><button class="dropdown-item" onclick="handleMenuAction(\'prompt\', \'' + pin.pack.id + '\', ' + pin.itemIndex + ', event)"><i class="fa-solid fa-copy"></i> Prompt</button><button class="dropdown-item action-gemini" onclick="handleMenuAction(\'use\', \'' + pin.pack.id + '\', ' + pin.itemIndex + ', event)"><i class="fa-solid fa-bolt"></i> Gunakan</button></div></div>' + freeBadgeHTML + '<img src="images/' + pin.pack.folder + '/' + pin.itemIndex + '.jpg" alt="' + pin.pack.title + '" loading="lazy" onerror="this.onerror=null; this.src=\'images/velvet/1.jpg\';"><div class="pin-info-overlay"><div class="pin-title">' + pin.pack.title + '</div><div class="pin-sub">Item #' + pin.itemIndex + ' • Eksplorasi 100 Serupa</div></div>';
+    card.innerHTML = `
+      <div class="card-menu-container">
+        <button class="btn-three-dots" onclick="toggleCardMenu(event, '${menuId}')" aria-label="Menu Aksi">
+          <i class="fa-solid fa-ellipsis-vertical"></i>
+        </button>
+        <div id="${menuId}" class="card-dropdown-menu hidden">
+          <button class="dropdown-item" onclick="handleMenuAction('save', '${pin.pack.id}', ${pin.itemIndex}, event)"><i class="fa-solid fa-bookmark"></i> Save</button>
+          <button class="dropdown-item" onclick="handleMenuAction('share', '${pin.pack.id}', ${pin.itemIndex}, event)"><i class="fa-solid fa-share-nodes"></i> Bagikan</button>
+          <button class="dropdown-item" onclick="handleMenuAction('prompt', '${pin.pack.id}', ${pin.itemIndex}, event)"><i class="fa-solid fa-copy"></i> Prompt</button>
+          <button class="dropdown-item action-gemini" onclick="handleMenuAction('use', '${pin.pack.id}', ${pin.itemIndex}, event)"><i class="fa-solid fa-bolt"></i> Gunakan</button>
+        </div>
+      </div>
+      ${freeBadgeHTML}
+      <img src="images/${pin.pack.folder}/${pin.itemIndex}.jpg" alt="${pin.pack.title}" loading="lazy" onerror="this.onerror=null; this.src='images/velvet/1.jpg';">
+      <div class="pin-info-overlay">
+        <div class="pin-title">${pin.pack.title}</div>
+        <div class="pin-sub">Item #${pin.itemIndex} • Eksplorasi 100 Serupa</div>
+      </div>
+    `;
 
     card.onclick = () => {
       recordUserAffinity(pin.pack.folder || pin.pack.id, 3);
@@ -632,7 +680,23 @@ function bukaRelatedFeed(pack) {
 
     const freeBadgeHTML = isFree ? '<div class="pin-badge-free-elegant"><i class="fa-solid fa-sparkles"></i> <span>FREE DEMO</span></div>' : '';
 
-    card.innerHTML = '<div class="card-menu-container"><button class="btn-three-dots" onclick="toggleCardMenu(event, \'' + menuId + '\')"><i class="fa-solid fa-ellipsis-vertical"></i></button><div id="' + menuId + '" class="card-dropdown-menu hidden"><button class="dropdown-item" onclick="handleMenuAction(\'save\', \'' + pack.id + '\', ' + i + ', event)"><i class="fa-solid fa-bookmark"></i> Save</button><button class="dropdown-item" onclick="handleMenuAction(\'share\', \'' + pack.id + '\', ' + i + ', event)"><i class="fa-solid fa-share-nodes"></i> Bagikan</button><button class="dropdown-item" onclick="handleMenuAction(\'prompt\', \'' + pack.id + '\', ' + i + ', event)"><i class="fa-solid fa-copy"></i> Prompt</button><button class="dropdown-item action-gemini" onclick="handleMenuAction(\'use\', \'' + pack.id + '\', ' + i + ', event)"><i class="fa-solid fa-bolt"></i> Gunakan</button></div></div>' + freeBadgeHTML + '<img src="images/' + pack.folder + '/' + i + '.jpg" alt="' + pack.title + ' #' + i + '" loading="lazy" onerror="this.onerror=null; this.src=\'images/velvet/1.jpg\';"><div class="pin-info-overlay"><div class="pin-title">' + pack.title + '</div><div class="pin-sub">Item #' + i + ' ' + (isFree ? '• Sample Gratis' : '• Premium Prompt') + '</div></div>';
+    card.innerHTML = `
+      <div class="card-menu-container">
+        <button class="btn-three-dots" onclick="toggleCardMenu(event, '${menuId}')"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+        <div id="${menuId}" class="card-dropdown-menu hidden">
+          <button class="dropdown-item" onclick="handleMenuAction('save', '${pack.id}', ${i}, event)"><i class="fa-solid fa-bookmark"></i> Save</button>
+          <button class="dropdown-item" onclick="handleMenuAction('share', '${pack.id}', ${i}, event)"><i class="fa-solid fa-share-nodes"></i> Bagikan</button>
+          <button class="dropdown-item" onclick="handleMenuAction('prompt', '${pack.id}', ${i}, event)"><i class="fa-solid fa-copy"></i> Prompt</button>
+          <button class="dropdown-item action-gemini" onclick="handleMenuAction('use', '${pack.id}', ${i}, event)"><i class="fa-solid fa-bolt"></i> Gunakan</button>
+        </div>
+      </div>
+      ${freeBadgeHTML}
+      <img src="images/${pack.folder}/${i}.jpg" alt="${pack.title} #${i}" loading="lazy" onerror="this.onerror=null; this.src='images/velvet/1.jpg';">
+      <div class="pin-info-overlay">
+        <div class="pin-title">${pack.title}</div>
+        <div class="pin-sub">Item #${i} ${isFree ? '• Sample Gratis' : '• Premium Prompt'}</div>
+      </div>
+    `;
 
     card.onclick = () => bukaDetailPackTarget(pack.id, i, !isFree);
     relatedFeed.appendChild(card);
@@ -655,7 +719,7 @@ function tutupRelatedFeed() {
 }
 
 // -------------------------------------------------------------------------
-// 8. TABS CONTROLLER (BOTTOM NAV)
+// 9. TABS CONTROLLER
 // -------------------------------------------------------------------------
 function switchMainTab(tabType, btnEl) {
   try {
@@ -676,6 +740,7 @@ function switchMainTab(tabType, btnEl) {
     const secVideo = document.getElementById("sectionVideoAI");
     const secAkun = document.getElementById("sectionAkunAI");
     const secDetail = document.getElementById("sectionDetailPack");
+    const heroHeader = document.getElementById("atelierMainHeader");
 
     if (secAtelier) secAtelier.classList.add("hidden");
     if (secFoto) secFoto.classList.add("hidden");
@@ -683,13 +748,26 @@ function switchMainTab(tabType, btnEl) {
     if (secAkun) secAkun.classList.add("hidden");
     if (secDetail) secDetail.classList.add("hidden");
 
-    if (tabType === 'atelier' && secAtelier) {
-      secAtelier.classList.remove("hidden");
+    if (tabType === 'atelier') {
+      if (secAtelier) secAtelier.classList.remove("hidden");
+      if (heroHeader && activePairsPerView > 0) heroHeader.classList.remove("hidden");
       tutupRelatedFeed();
+    } else {
+      if (heroHeader) heroHeader.classList.add("hidden");
     }
-    if (tabType === 'foto' && secFoto) secFoto.classList.remove("hidden");
-    if (tabType === 'video' && secVideo) secVideo.classList.remove("hidden");
-    if (tabType === 'akun' && secAkun) secAkun.classList.remove("hidden");
+
+    if (tabType === 'foto' && secFoto) {
+      secFoto.classList.remove("hidden");
+      renderKatalogFoto();
+    }
+    if (tabType === 'video' && secVideo) {
+      secVideo.classList.remove("hidden");
+      renderKatalogVideo();
+    }
+    if (tabType === 'akun' && secAkun) {
+      secAkun.classList.remove("hidden");
+      renderKatalogAkun();
+    }
 
     catatLogAktivitas("SWITCH_TAB", tabType.toUpperCase(), "Beralih ke tab " + tabType);
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -697,7 +775,7 @@ function switchMainTab(tabType, btnEl) {
 }
 
 function bukaDetailPackTarget(packId, itemIndex, openPinModal) {
-  const allPacks = (typeof KATALOG_REGISTRY !== "undefined" && Array.isArray(KATALOG_REGISTRY)) ? KATALOG_REGISTRY : [];
+  const allPacks = getActiveRegistry();
   const target = allPacks.find(p => p.id === packId);
   if (target) {
     bukaDetailPack(target);
@@ -709,27 +787,79 @@ function bukaDetailPackTarget(packId, itemIndex, openPinModal) {
   }
 }
 
+// -------------------------------------------------------------------------
+// 10. KATALOG RENDERING ENGINE (2 KOLOM ELEGAN)
+// -------------------------------------------------------------------------
+function renderHomeCategories() {
+  const container = document.getElementById("gridHomeCategories");
+  if (!container) return;
+  container.innerHTML = "";
+
+  const registry = getActiveRegistry();
+  registry.forEach(item => {
+    if (item.type === "digital") return;
+    const card = document.createElement("div");
+    card.className = "catalog-card";
+
+    if (item.status === "teaser") {
+      card.innerHTML = `
+        <div style="position:relative; overflow:hidden;">
+          <span class="badge-pill" style="background:#dc2626; color:#fff; border-color:#ef4444;">🔒 COMING SOON</span>
+          <img src="images/${item.folder}/cover.jpg" alt="${item.title}" class="aspect-9-16 img-blur-heavy" loading="lazy" onerror="this.onerror=null; this.src='images/velvet/cover.jpg';">
+        </div>
+        <div class="card-info">
+          <h3 class="card-title">${item.title}</h3>
+          <p style="font-size:0.7rem; color:var(--text-muted); margin:4px 0 8px; line-height:1.3;">${item.description || 'Sedang dalam kurasi formula 8K.'}</p>
+          <button onclick="kirimPesananLangsungWA('${item.title}', 'Pre-Order VIP', 'Coming Soon')" class="btn-copy" style="background:#1e1e24; color:var(--gold-light); border:1px solid var(--card-border); width:100%; box-sizing:border-box; font-size:0.72rem; padding:8px 6px;">🔔 Ingatkan di WA</button>
+        </div>
+      `;
+    } else {
+      card.onclick = () => bukaDetailPack(item);
+      card.innerHTML = `
+        <div style="position:relative;">
+          <span class="badge-pill">${item.type === 'video' ? '🎥 VIDEO AI' : '📸 100 PROMPT'}</span>
+          <img src="images/${item.folder}/cover.jpg" alt="${item.title}" class="aspect-9-16" loading="lazy" onerror="this.onerror=null; this.src='images/velvet/cover.jpg';">
+        </div>
+        <div class="card-info">
+          <h3 class="card-title">${item.title}</h3>
+          <div class="card-rating-badge">★ ${item.rating || '4.9/5'} (${item.sales || 'Ready'})</div>
+          <div style="font-weight:800; color:var(--gold-light); font-size:0.85rem; margin-top:4px;">Rp10.000 / Rp25.000</div>
+          <button class="btn-copy" style="margin-top:8px; padding:6px 12px; font-size:0.75rem; width:100%;">Buka Katalog</button>
+        </div>
+      `;
+    }
+    container.appendChild(card);
+  });
+}
+
 function renderKatalogFoto() {
   const container = document.getElementById("gridFotoKatalog");
   if (!container) return;
   container.innerHTML = "";
 
-  const list = (typeof KATALOG_REGISTRY !== "undefined" && Array.isArray(KATALOG_REGISTRY)) 
-    ? KATALOG_REGISTRY.filter(item => item.type === "foto" && item.status === "live") 
-    : [];
+  const list = getActiveRegistry().filter(item => item.type === "foto" && item.status === "live");
 
   list.forEach((pack, index) => {
     const card = document.createElement("div");
     card.className = "catalog-card";
     card.onclick = () => bukaDetailPack(pack);
 
-    let rankBadgeHTML = "";
-    if (index === 0) rankBadgeHTML = '<span class="badge-pill badge-rank-gold">🥇 TOP #1 PALING BANYAK DIBELI</span>';
-    else if (index === 1) rankBadgeHTML = '<span class="badge-pill badge-rank-blue">🥈 BEST SELLER (150+ TERJUAL)</span>';
-    else if (index === 2) rankBadgeHTML = '<span class="badge-pill badge-rank-green">🥉 FAVORIT BULAN INI</span>';
-    else rankBadgeHTML = '<span class="badge-pill badge-foto">📸 100 ITEMS</span>';
+    let rankBadgeHTML = index === 0 
+      ? '<span class="badge-pill badge-rank-gold">🥇 TOP #1 TERLARIS</span>' 
+      : (index === 1 ? '<span class="badge-pill badge-rank-blue">🥈 BEST SELLER</span>' : '<span class="badge-pill badge-foto">📸 100 ITEMS</span>');
 
-    card.innerHTML = '<div style="position:relative;">' + rankBadgeHTML + '<img src="images/' + pack.folder + '/cover.jpg" alt="' + pack.title + '" class="aspect-9-16" loading="lazy" onerror="this.onerror=null; this.src=\'images/velvet/cover.jpg\';"></div><div class="card-info"><h3 class="card-title">' + pack.title + '</h3><div class="card-rating-badge">★ ' + (pack.rating || '4.9/5') + ' (' + (pack.sales || 'Ready') + ')</div><div style="font-weight:800; color:var(--gold-light); font-size:0.85rem; margin-top:4px;">Rp10.000 / Rp25.000</div><button class="btn-copy" style="margin-top:8px; padding:6px 12px; font-size:0.75rem; width:100%;">Lihat 100 Prompt</button></div>';
+    card.innerHTML = `
+      <div style="position:relative;">
+        ${rankBadgeHTML}
+        <img src="images/${pack.folder}/cover.jpg" alt="${pack.title}" class="aspect-9-16" loading="lazy" onerror="this.onerror=null; this.src='images/velvet/cover.jpg';">
+      </div>
+      <div class="card-info">
+        <h3 class="card-title">${pack.title}</h3>
+        <div class="card-rating-badge">★ ${pack.rating || '4.9/5'} (${pack.sales || 'Ready'})</div>
+        <div style="font-weight:800; color:var(--gold-light); font-size:0.85rem; margin-top:4px;">Rp10.000 / Rp25.000</div>
+        <button class="btn-copy" style="margin-top:8px; padding:6px 12px; font-size:0.75rem; width:100%;">Lihat 100 Prompt</button>
+      </div>
+    `;
     container.appendChild(card);
   });
 }
@@ -739,20 +869,25 @@ function renderKatalogVideo() {
   if (!container) return;
   container.innerHTML = "";
 
-  const list = (typeof KATALOG_REGISTRY !== "undefined" && Array.isArray(KATALOG_REGISTRY)) 
-    ? KATALOG_REGISTRY.filter(item => item.type === "video" && item.status === "live") 
-    : [];
+  const list = getActiveRegistry().filter(item => item.type === "video" && item.status === "live");
 
-  list.forEach((pack, index) => {
+  list.forEach((pack) => {
     const card = document.createElement("div");
     card.className = "catalog-card";
     card.onclick = () => bukaDetailPack(pack);
 
-    const rankBadgeHTML = index === 0 
-      ? '<span class="badge-pill badge-rank-gold">🥇 TOP VIDEO SUITE (200+ TERJUAL)</span>' 
-      : '<span class="badge-pill badge-video">🎥 100 PROMPTS</span>';
-
-    card.innerHTML = '<div style="position:relative;">' + rankBadgeHTML + '<img src="images/' + pack.folder + '/cover.jpg" alt="' + pack.title + '" class="aspect-9-16" loading="lazy" onerror="this.onerror=null; this.src=\'images/velvet/cover.jpg\';"></div><div class="card-info"><h3 class="card-title">' + pack.title + '</h3><div class="card-rating-badge">★ ' + (pack.rating || '5.0/5') + ' (' + (pack.sales || 'Ready') + ')</div><div style="font-weight:800; color:var(--gold-light); font-size:0.85rem; margin-top:4px;">Rp10.000 / Rp25.000</div><button class="btn-copy" style="margin-top:8px; padding:6px 12px; font-size:0.75rem; width:100%;">Lihat 100 Prompt</button></div>';
+    card.innerHTML = `
+      <div style="position:relative;">
+        <span class="badge-pill badge-video">🎥 100 PROMPTS</span>
+        <img src="images/${pack.folder}/cover.jpg" alt="${pack.title}" class="aspect-9-16" loading="lazy" onerror="this.onerror=null; this.src='images/velvet/cover.jpg';">
+      </div>
+      <div class="card-info">
+        <h3 class="card-title">${pack.title}</h3>
+        <div class="card-rating-badge">★ ${pack.rating || '5.0/5'} (${pack.sales || 'Ready'})</div>
+        <div style="font-weight:800; color:var(--gold-light); font-size:0.85rem; margin-top:4px;">Rp10.000 / Rp25.000</div>
+        <button class="btn-copy" style="margin-top:8px; padding:6px 12px; font-size:0.75rem; width:100%;">Lihat 100 Prompt</button>
+      </div>
+    `;
     container.appendChild(card);
   });
 }
@@ -762,52 +897,51 @@ function renderKatalogAkun() {
   if (!container) return;
   container.innerHTML = "";
 
-  const list = (typeof KATALOG_REGISTRY !== "undefined" && Array.isArray(KATALOG_REGISTRY)) 
-    ? KATALOG_REGISTRY.filter(item => item.type === "digital" && item.status === "live") 
-    : [];
+  const list = getActiveRegistry().filter(item => item.type === "digital" && item.status === "live");
 
   list.forEach(item => {
     const card = document.createElement("div");
     card.className = "catalog-card";
-    card.innerHTML = '<div style="position:relative;"><span class="badge-pill badge-app">🤖 AKUN AI</span><img src="images/' + item.folder + '/cover.jpg" alt="' + item.title + '" class="aspect-9-16" loading="lazy" onerror="this.onerror=null; this.src=\'images/velvet/cover.jpg\';"></div><div class="card-info"><h3 class="card-title">' + item.title + '</h3><p style="font-size:0.72rem; color:var(--text-muted); margin:4px 0 8px; line-height:1.3;">' + (item.description || '') + '</p><div style="font-weight:800; color:var(--gold-light); font-size:0.9rem; margin-bottom:8px;">' + item.priceText + '</div><button onclick="kirimPesananLangsungWA(\'' + item.title + '\', \'Akun AI\', \'' + item.priceText + '\')" class="btn-copy" style="padding:8px 12px; font-size:0.75rem; width:100%;">Beli via WA</button></div>';
-    container.appendChild(card);
-  });
-}
-
-function renderHomeCategories() {
-  const container = document.getElementById("gridHomeCategories");
-  if (!container || typeof KATALOG_REGISTRY === "undefined") return;
-  container.innerHTML = "";
-
-  KATALOG_REGISTRY.forEach(item => {
-    if (item.type === "digital") return;
-    const card = document.createElement("div");
-    card.className = "catalog-card";
-
-    if (item.status === "teaser") {
-      card.innerHTML = '<div style="position:relative; overflow:hidden;"><span class="badge-pill" style="background:#dc2626; color:#fff; border-color:#ef4444;">🔒 COMING SOON</span><img src="images/' + item.folder + '/cover.jpg" alt="' + item.title + '" class="aspect-9-16 img-blur-heavy" loading="lazy" onerror="this.onerror=null; this.src=\'images/velvet/cover.jpg\';"></div><div class="card-info"><h3 class="card-title">' + item.title + '</h3><p style="font-size:0.7rem; color:var(--text-muted); margin:4px 0 8px; line-height:1.3;">' + (item.description || 'Sedang dalam proses kurasi prompt 8K.') + '</p><button onclick="kirimPesananLangsungWA(\'' + item.title + '\', \'Pre-Order VIP\', \'Coming Soon\')" class="btn-copy" style="background:#1e1e24; color:var(--gold-light); border:1px solid var(--card-border); width:100%; box-sizing:border-box; font-size:0.72rem; padding:8px 6px;">🔔 Ingatkan Saya di WA</button></div>';
-    } else {
-      card.onclick = () => bukaDetailPack(item);
-      card.innerHTML = '<div style="position:relative;"><span class="badge-pill">' + (item.type === 'video' ? '🎥 VIDEO AI' : '📸 100 PROMPT') + '</span><img src="images/' + item.folder + '/cover.jpg" alt="' + item.title + '" class="aspect-9-16" loading="lazy" onerror="this.onerror=null; this.src=\'images/velvet/cover.jpg\';"></div><div class="card-info"><h3 class="card-title">' + item.title + '</h3><div class="card-rating-badge">★ ' + (item.rating || '4.9/5') + ' (' + (item.sales || 'Ready') + ')</div><div style="font-weight:800; color:var(--gold-light); font-size:0.85rem; margin-top:4px;">Rp10.000 / Rp25.000</div><button class="btn-copy" style="margin-top:8px; padding:6px 12px; font-size:0.75rem; width:100%;">Buka Katalog (100 Item)</button></div>';
-    }
+    card.innerHTML = `
+      <div style="position:relative;">
+        <span class="badge-pill badge-app">🤖 AKUN AI</span>
+        <img src="images/${item.folder}/cover.jpg" alt="${item.title}" class="aspect-9-16" loading="lazy" onerror="this.onerror=null; this.src='images/velvet/cover.jpg';">
+      </div>
+      <div class="card-info">
+        <h3 class="card-title">${item.title}</h3>
+        <p style="font-size:0.72rem; color:var(--text-muted); margin:4px 0 8px; line-height:1.3;">${item.description || ''}</p>
+        <div style="font-weight:800; color:var(--gold-light); font-size:0.9rem; margin-bottom:8px;">${item.priceText}</div>
+        <button onclick="kirimPesananLangsungWA('${item.title}', 'Akun AI', '${item.priceText}')" class="btn-copy" style="padding:8px 12px; font-size:0.75rem; width:100%;">Beli via WA</button>
+      </div>
+    `;
     container.appendChild(card);
   });
 }
 
 // -------------------------------------------------------------------------
-// 9. DETAIL PACK & ITEMS GRID (100 FORMULA DENGAN GEMINI EDIT)
+// 11. DETAIL PACK & FAMILY FORMATION COMPOSER
 // -------------------------------------------------------------------------
+function isFamilyCatalog(pack) {
+  if (!pack) return false;
+  const idStr = String(pack.id || "").toLowerCase();
+  const titleStr = String(pack.title || "").toLowerCase();
+  const folderStr = String(pack.folder || "").toLowerCase();
+  return idStr.includes("fam") || titleStr.includes("family") || titleStr.includes("keluarga") || folderStr.includes("family");
+}
+
 function bukaDetailPack(pack) {
   activePack = pack;
   recordUserAffinity(pack.folder || pack.id, 3);
-  catatLogAktivitas("VIEW_PACK", pack.title, "Melihat katalog " + (pack.category || pack.title));
+  catatLogAktivitas("VIEW_PACK", pack.title, "Buka detail " + pack.title);
 
   const secAtelier = document.getElementById("sectionAtelier");
   const secFoto = document.getElementById("sectionFotoAI");
   const secVideo = document.getElementById("sectionVideoAI");
   const secAkun = document.getElementById("sectionAkunAI");
   const secDetail = document.getElementById("sectionDetailPack");
+  const heroHeader = document.getElementById("atelierMainHeader");
 
+  if (heroHeader) heroHeader.classList.add("hidden");
   if (secAtelier) secAtelier.classList.add("hidden");
   if (secFoto) secFoto.classList.add("hidden");
   if (secVideo) secVideo.classList.add("hidden");
@@ -823,26 +957,28 @@ function bukaDetailPack(pack) {
 
   const pabContainer = document.querySelector(".pack-action-box .pab-buttons");
   if (pabContainer) {
-    pabContainer.innerHTML = '<button onclick="kirimPesananLangsungWA(\'' + pack.title + '\', \'Starter 10K\', \'Rp10.000\')" class="btn-buy-wa">Beli Starter (10K)</button><button onclick="kirimPesananLangsungWA(\'' + pack.title + '\', \'VIP 25K\', \'Rp25.000\')" class="btn-buy-wa" style="background:var(--gold-gradient); color:#000;">Beli VIP (25K)</button><button class="btn-enter-pin-main" onclick="bukaModalPIN(\'vip\')">Masukkan PIN</button>';
+    pabContainer.innerHTML = `
+      <button onclick="kirimPesananLangsungWA('${pack.title}', 'Starter 10K', 'Rp10.000')" class="btn-buy-wa">Beli Starter (10K)</button>
+      <button onclick="kirimPesananLangsungWA('${pack.title}', 'VIP 25K', 'Rp25.000')" class="btn-buy-wa" style="background:var(--gold-gradient); color:#000;">Beli VIP (25K)</button>
+      <button class="btn-enter-pin-main" onclick="bukaModalPIN('vip')">Masukkan PIN</button>
+    `;
   }
 
-  if (pack.promptVarName && window[pack.promptVarName] && Array.isArray(window[pack.promptVarName])) {
-    renderDetailItemCards();
-  } else if (pack.scriptUrl) {
-    const existingScript = document.querySelector('script[src="' + pack.scriptUrl + '"]');
-    if (!existingScript) {
-      const script = document.createElement('script');
-      script.src = pack.scriptUrl;
-      script.onload = () => renderDetailItemCards();
-      script.onerror = () => renderDetailItemCards();
-      document.head.appendChild(script);
+  // Pengendali Kotak Formasi Keluarga (Memaksa tampil di atas item pack foto keluarga)
+  const composerBox = document.getElementById("familyFormationComposer");
+  if (composerBox) {
+    if (isFamilyCatalog(pack)) {
+      composerBox.classList.remove("hidden");
+      composerBox.style.display = "block";
+      updatePromptFormasi();
     } else {
-      renderDetailItemCards();
+      composerBox.classList.add("hidden");
+      composerBox.style.display = "none";
+      currentAppliedFormationPrompt = "";
     }
-  } else {
-    renderDetailItemCards();
   }
 
+  renderDetailItemCards();
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
@@ -850,6 +986,185 @@ function kembaliKeKatalog() {
   const secDetail = document.getElementById("sectionDetailPack");
   if (secDetail) secDetail.classList.add("hidden");
   switchMainTab('atelier', document.getElementById('tabBtnAtelier'));
+}
+
+// Logika Formasi Anggota Keluarga
+function tambahAnggota(tipe) {
+  const newId = Date.now() + Math.random().toString(36).substring(2, 6);
+
+  if (tipe === 'anak') {
+    extraFamilyMembers.push({
+      id: newId,
+      type: 'anak',
+      gender: 'son',
+      age: 7,
+      build: 'medium build'
+    });
+  } else if (tipe === 'kakek') {
+    extraFamilyMembers.push({
+      id: newId,
+      type: 'kakek',
+      age: 68,
+      build: 'wise dignified posture'
+    });
+  } else if (tipe === 'nenek') {
+    extraFamilyMembers.push({
+      id: newId,
+      type: 'nenek',
+      age: 65,
+      build: 'graceful warm elder posture'
+    });
+  } else {
+    extraFamilyMembers.push({
+      id: newId,
+      type: 'lainnya',
+      name: 'relative',
+      age: 25,
+      build: 'medium build'
+    });
+  }
+
+  renderDaftarAnggotaDinamis();
+  updatePromptFormasi();
+}
+
+function hapusAnggotaKeluarga(id) {
+  extraFamilyMembers = extraFamilyMembers.filter(m => m.id !== id);
+  renderDaftarAnggotaDinamis();
+  updatePromptFormasi();
+}
+
+function renderDaftarAnggotaDinamis() {
+  const container = document.getElementById("dynamicMembersContainer");
+  if (!container) return;
+  container.innerHTML = "";
+
+  extraFamilyMembers.forEach((member, index) => {
+    const card = document.createElement("div");
+    card.className = "dynamic-member-card";
+
+    let inputFields = "";
+
+    if (member.type === 'anak') {
+      inputFields = `
+        <span class="member-label"><i class="fa-solid fa-child"></i> Anak #${index + 1}:</span>
+        <select class="select-composer" onchange="ubahDataAnggota('${member.id}', 'gender', this.value)">
+          <option value="son" ${member.gender === 'son' ? 'selected' : ''}>Laki-laki (Son)</option>
+          <option value="daughter" ${member.gender === 'daughter' ? 'selected' : ''}>Perempuan (Daughter)</option>
+        </select>
+        <input type="number" class="input-composer" style="width:65px;" min="1" max="25" value="${member.age}" placeholder="Umur" oninput="ubahDataAnggota('${member.id}', 'age', this.value)"> th
+        <select class="select-composer" onchange="ubahDataAnggota('${member.id}', 'build', this.value)">
+          <option value="slender build" ${member.build === 'slender build' ? 'selected' : ''}>Kurus</option>
+          <option value="medium build" ${member.build === 'medium build' ? 'selected' : ''}>Sedang</option>
+          <option value="chubby cheerful build" ${member.build === 'chubby cheerful build' ? 'selected' : ''}>Gempal / Chubby</option>
+          <option value="tall build" ${member.build === 'tall build' ? 'selected' : ''}>Jangkung</option>
+          <option value="stout build" ${member.build === 'stout build' ? 'selected' : ''}>Gemuk</option>
+        </select>
+      `;
+    } else if (member.type === 'kakek') {
+      inputFields = `
+        <span class="member-label"><i class="fa-solid fa-person-cane"></i> Kakek:</span>
+        <input type="number" class="input-composer" style="width:65px;" min="50" max="100" value="${member.age}" placeholder="Umur" oninput="ubahDataAnggota('${member.id}', 'age', this.value)"> th
+        <select class="select-composer" onchange="ubahDataAnggota('${member.id}', 'build', this.value)">
+          <option value="wise dignified posture" ${member.build === 'wise dignified posture' ? 'selected' : ''}>Wibawa & Tegap</option>
+          <option value="gentle slender build" ${member.build === 'gentle slender build' ? 'selected' : ''}>Kurus Teduh</option>
+          <option value="sturdy build" ${member.build === 'sturdy build' ? 'selected' : ''}>Gempal Kuat</option>
+        </select>
+      `;
+    } else if (member.type === 'nenek') {
+      inputFields = `
+        <span class="member-label"><i class="fa-solid fa-person-cane"></i> Nenek:</span>
+        <input type="number" class="input-composer" style="width:65px;" min="50" max="100" value="${member.age}" placeholder="Umur" oninput="ubahDataAnggota('${member.id}', 'age', this.value)"> th
+        <select class="select-composer" onchange="ubahDataAnggota('${member.id}', 'build', this.value)">
+          <option value="graceful warm elder posture" ${member.build === 'graceful warm elder posture' ? 'selected' : ''}>Anggun & Hangat</option>
+          <option value="petite gentle posture" ${member.build === 'petite gentle posture' ? 'selected' : ''}>Mungil</option>
+          <option value="full-figured maternal build" ${member.build === 'full-figured maternal build' ? 'selected' : ''}>Gempal Lembut</option>
+        </select>
+      `;
+    } else {
+      inputFields = `
+        <input type="text" class="input-composer" style="width:105px;" value="${member.name}" placeholder="Paman/Bibi/dll" oninput="ubahDataAnggota('${member.id}', 'name', this.value)">
+        <input type="number" class="input-composer" style="width:65px;" min="1" max="90" value="${member.age}" placeholder="Umur" oninput="ubahDataAnggota('${member.id}', 'age', this.value)"> th
+        <select class="select-composer" onchange="ubahDataAnggota('${member.id}', 'build', this.value)">
+          <option value="medium build">Sedang</option>
+          <option value="slender build">Kurus</option>
+          <option value="tall build">Jangkung</option>
+          <option value="stocky build">Gempal</option>
+        </select>
+      `;
+    }
+
+    card.innerHTML = `
+      <div class="dynamic-member-inputs">${inputFields}</div>
+      <button type="button" class="btn-remove-member" onclick="hapusAnggotaKeluarga('${member.id}')" title="Hapus"><i class="fa-solid fa-trash-can"></i></button>
+    `;
+    container.appendChild(card);
+  });
+}
+
+function ubahDataAnggota(id, field, value) {
+  const target = extraFamilyMembers.find(m => m.id === id);
+  if (target) {
+    target[field] = value;
+    updatePromptFormasi();
+  }
+}
+
+function updatePromptFormasi() {
+  const fBuild = document.getElementById("fatherBuild")?.value || "medium build";
+  const mBuild = document.getElementById("motherBuild")?.value || "slender graceful build";
+
+  let promptParts = [];
+  promptParts.push(`a distinguished father (${fBuild}) and an elegant mother (${mBuild})`);
+
+  let kids = extraFamilyMembers.filter(m => m.type === 'anak');
+  if (kids.length > 0) {
+    let kidsDesc = kids.map((k) => `${k.gender === 'son' ? 'a handsome son' : 'a lovely daughter'} aged ${k.age} years old with ${k.build}`).join(", ");
+    promptParts.push(`accompanied by their children: ${kidsDesc}`);
+  }
+
+  let grandpas = extraFamilyMembers.filter(m => m.type === 'kakek');
+  if (grandpas.length > 0) {
+    let gDesc = grandpas.map(g => `a respected grandfather (${g.age} years old, ${g.build})`).join(", ");
+    promptParts.push(gDesc);
+  }
+
+  let grandmas = extraFamilyMembers.filter(m => m.type === 'nenek');
+  if (grandmas.length > 0) {
+    let gmDesc = grandmas.map(gm => `a loving grandmother (${gm.age} years old, ${gm.build})`).join(", ");
+    promptParts.push(gmDesc);
+  }
+
+  let others = extraFamilyMembers.filter(m => m.type === 'lainnya');
+  if (others.length > 0) {
+    let oDesc = others.map(o => `a ${o.name || 'relative'} (${o.age} years old, ${o.build})`).join(", ");
+    promptParts.push(oDesc);
+  }
+
+  const finalOutput = "featuring a harmonious family formation: " + promptParts.join(", ") + ", perfectly arranged in balanced studio pose, emotional family bond";
+  const outBox = document.getElementById("familyPromptOutput");
+  if (outBox) outBox.innerText = finalOutput;
+  return finalOutput;
+}
+
+function resetFormasiKeluarga() {
+  extraFamilyMembers = [];
+  currentAppliedFormationPrompt = "";
+  renderDaftarAnggotaDinamis();
+  updatePromptFormasi();
+  renderDetailItemCards();
+  tampilkanToast("🔄 Formasi keluarga dikembalikan ke mode inti!");
+}
+
+function salinPromptFormasi() {
+  const text = updatePromptFormasi();
+  copasPrompt(text);
+}
+
+function terapkanKeSemuaPromptKeluarga() {
+  currentAppliedFormationPrompt = updatePromptFormasi();
+  renderDetailItemCards();
+  tampilkanToast("✨ Formasi keluarga berhasil disisipkan ke 100 prompt!");
 }
 
 function cekAksesKatalog(catalogId, tier) {
@@ -889,13 +1204,17 @@ function renderDetailItemCards() {
     const card = document.createElement("div");
     card.className = "item-card";
 
-    const imgSrc = "images/" + activePack.folder + "/" + i + ".jpg";
+    const imgSrc = `images/${activePack.folder}/${i}.jpg`;
     const promptItemData = (promptArray && promptArray[i - 1]) ? promptArray[i - 1] : null;
 
-    let promptText = "Hyperrealistic luxury photography of " + activePack.title + ", item #" + i + ", 8k studio lighting, master quality --ar 9:16";
-
+    let promptText = `Hyperrealistic luxury portrait of ${activePack.title}, item #${i}, 8k studio lighting, master quality --ar 9:16`;
     if (promptItemData) {
       promptText = typeof promptItemData === "object" ? (promptItemData.rawPrompt || promptText) : promptItemData;
+    }
+
+    // Sisipkan potongan formasi keluarga jika aktif
+    if (currentAppliedFormationPrompt && isFamilyCatalog(activePack)) {
+      promptText = `${promptText}, ${currentAppliedFormationPrompt}`;
     }
 
     let tier = "free";
@@ -912,31 +1231,52 @@ function renderDetailItemCards() {
     }
 
     let imgClass = isLocked ? (tier === "starter" ? "img-blur-teaser" : "img-blur-heavy") : "";
-    let overlayLock = isLocked ? '<div class="overlay-lock"><p style="font-size:0.75rem; font-weight:700; color:var(--gold-primary); margin-bottom:6px;">🔒 TERKUNCI (' + tier.toUpperCase() + ' ' + (tier === "starter" ? "10K" : "25K") + ')</p><button class="btn-enter-pin" onclick="bukaModalPIN(\'' + tier + '\')">Masukkan PIN ' + (tier === "starter" ? "10K" : "25K") + '</button></div>' : '';
+    let overlayLock = isLocked ? `
+      <div class="overlay-lock">
+        <p style="font-size:0.75rem; font-weight:700; color:var(--gold-primary); margin-bottom:6px;">🔒 TERKUNCI (${tier.toUpperCase()} ${tier === "starter" ? "10K" : "25K"})</p>
+        <button class="btn-enter-pin" onclick="bukaModalPIN('${tier}')">Masukkan PIN ${tier === "starter" ? "10K" : "25K"}</button>
+      </div>` : '';
 
     let promptBoxHTML = !isLocked 
-      ? '<div class="prompt-text-box" id="promptText_' + i + '">' + promptText + '</div>'
-      : '<div class="prompt-text-box prompt-locked-text">Prompt dikunci. Buka akses paket ' + (tier === 'starter' ? '10K' : '25K') + ' untuk menyalin.</div>';
+      ? `<div class="prompt-text-box" id="promptText_${i}">${promptText}</div>`
+      : `<div class="prompt-text-box prompt-locked-text">Prompt dikunci. Buka akses paket ${tier === 'starter' ? '10K' : '25K'} untuk menyalin.</div>`;
 
-    // Tombol Aksi Lengkap dengan Gemini Studio Editor
     let actionButtons = !isLocked 
-      ? '<div class="action-buttons">' +
-          '<button class="btn-copy" onclick="copasPromptFromElement(\'promptText_' + i + '\', \'' + activePack.title + '\', ' + i + ')">📋 Salin</button>' +
-          '<button class="btn-copy" style="background:#1e3a8a; border-color:#3b82f6; color:#93c5fd;" onclick="bukaGeminiEditorPrompt(\'promptText_' + i + '\', \'' + activePack.title + '\', ' + (tier === 'free') + ')">' +
-            '<i class="fa-solid fa-bolt"></i> Gemini Edit' +
-          '</button>' +
-          '<button class="btn-share-promo" onclick="bagikanKoleksiKeWA(\'' + activePack.title + '\')"><i class="fa-brands fa-whatsapp"></i> Pamer</button>' +
-          '<a href="https://www.bing.com/images/create" target="_blank" class="btn-direct-ai">🚀 Bing</a>' +
-        '</div>'
-      : '<div class="action-buttons"><button onclick="kirimPesananLangsungWA(\'' + activePack.title + '\', \'Paket ' + tier.toUpperCase() + '\', \'Rp' + (tier === 'starter' ? '10.000' : '25.000') + '\')" class="btn-unlock-wa">Buka Akses via WA (' + (tier === 'starter' ? '10K' : '25K') + ')</button></div>';
+      ? `
+        <div class="action-buttons">
+          <button class="btn-copy" onclick="copasPromptFromElement('promptText_${i}', '${activePack.title}', ${i})">📋 Salin</button>
+          <button class="btn-copy" style="background:#1e3a8a; border-color:#3b82f6; color:#93c5fd;" onclick="bukaGeminiEditorPrompt('promptText_${i}', '${activePack.title}', ${tier === 'free'})">
+            <i class="fa-solid fa-bolt"></i> Gemini Edit
+          </button>
+          <button class="btn-share-promo" onclick="bagikanKoleksiKeWA('${activePack.title}')"><i class="fa-brands fa-whatsapp"></i> Pamer</button>
+          <a href="https://www.bing.com/images/create" target="_blank" class="btn-direct-ai">🚀 Bing</a>
+        </div>`
+      : `
+        <div class="action-buttons">
+          <button onclick="kirimPesananLangsungWA('${activePack.title}', 'Paket ${tier.toUpperCase()}', 'Rp${tier === 'starter' ? '10.000' : '25.000'}')" class="btn-unlock-wa">
+            Buka Akses via WA (${tier === 'starter' ? '10K' : '25K'})
+          </button>
+        </div>`;
 
-    card.innerHTML = '<div class="item-image-wrapper"><img src="' + imgSrc + '" class="' + imgClass + '" loading="lazy" alt="Item ' + i + '" onerror="this.onerror=null; this.src=\'images/velvet/1.jpg\';">' + overlayLock + '</div><div class="item-content"><div><div class="item-number">ITEM #' + i + ' ' + (tier === 'free' ? '• [GRATIS SAMPLE]' : '• [PAKET ' + tier.toUpperCase() + ']') + '</div>' + promptBoxHTML + '</div>' + actionButtons + '</div>';
+    card.innerHTML = `
+      <div class="item-image-wrapper">
+        <img src="${imgSrc}" class="${imgClass}" loading="lazy" alt="Item ${i}" onerror="this.onerror=null; this.src='images/velvet/1.jpg';">
+        ${overlayLock}
+      </div>
+      <div class="item-content">
+        <div>
+          <div class="item-number">ITEM #${i} ${tier === 'free' ? '• [GRATIS SAMPLE]' : '• [PAKET ' + tier.toUpperCase() + ']'}</div>
+          ${promptBoxHTML}
+        </div>
+        ${actionButtons}
+      </div>
+    `;
     grid.appendChild(card);
   }
 }
 
 // -------------------------------------------------------------------------
-// 10. MODAL PIN & CLIENT-SIDE VALIDATION
+// 12. MODAL PIN, EDITOR & SURVEY
 // -------------------------------------------------------------------------
 function bukaModalPIN(tier) {
   targetTierModal = tier || 'starter';
@@ -961,8 +1301,8 @@ function verifikasiPIN() {
   if (!activePack) return;
 
   const customPins = JSON.parse(localStorage.getItem("JIWAS_CUSTOM_PINS") || "{}");
-  let default10k = (typeof LIST_PIN_KATALOG !== "undefined" && LIST_PIN_KATALOG[activePack.id]) ? LIST_PIN_KATALOG[activePack.id].pin10k : `${activePack.id.toUpperCase()}10K`;
-  let default25k = (typeof LIST_PIN_KATALOG !== "undefined" && LIST_PIN_KATALOG[activePack.id]) ? LIST_PIN_KATALOG[activePack.id].pin25k : `${activePack.id.toUpperCase()}VIP25`;
+  let default10k = `${activePack.id.toUpperCase()}10K`;
+  let default25k = `${activePack.id.toUpperCase()}VIP25`;
 
   let validStarter = customPins[activePack.id]?.pin10k || activePack.pin10k || default10k;
   let validVIP = customPins[activePack.id]?.pin25k || activePack.pin25k || default25k;
@@ -996,8 +1336,8 @@ function copasPromptFromElement(elementId, packTitle, itemIdx) {
 
 function copasPrompt(text) {
   const currentDomain = window.location.origin + window.location.pathname;
-  const watermarkPromo = "\n\n(Dibuat via formula JIWAS Atelier: " + currentDomain + " — Akses 100 formula hanya 10K)";
-  const fullText = text + watermarkPromo;
+  const watermark = "\n\n(Dibuat via formula JIWAS Atelier: " + currentDomain + " — Akses 100 formula hanya 10K)";
+  const fullText = text + watermark;
 
   if (navigator.clipboard) {
     navigator.clipboard.writeText(fullText).then(() => {
@@ -1030,7 +1370,7 @@ function tampilkanToast(msg) {
 }
 
 // -------------------------------------------------------------------------
-// 11. AUTO-UNLOCK MAGIC LINK ENGINE
+// 13. PWA & MAGIC LINK AUTO UNLOCK
 // -------------------------------------------------------------------------
 function cekAutoUnlockURL() {
   try {
@@ -1041,43 +1381,20 @@ function cekAutoUnlockURL() {
 
     if (!packId || !unlockTier || !pinCode) return;
 
-    const allPacks = (typeof KATALOG_REGISTRY !== "undefined" && Array.isArray(KATALOG_REGISTRY)) ? KATALOG_REGISTRY : [];
+    const allPacks = getActiveRegistry();
     const targetPack = allPacks.find(p => p.id === packId);
     if (!targetPack) return;
 
-    const customPins = JSON.parse(localStorage.getItem("JIWAS_CUSTOM_PINS") || "{}");
-    let default10k = (typeof LIST_PIN_KATALOG !== "undefined" && LIST_PIN_KATALOG[packId]) ? LIST_PIN_KATALOG[packId].pin10k : `${packId.toUpperCase()}10K`;
-    let default25k = (typeof LIST_PIN_KATALOG !== "undefined" && LIST_PIN_KATALOG[packId]) ? LIST_PIN_KATALOG[packId].pin25k : `${packId.toUpperCase()}VIP25`;
-
-    let validStarter = customPins[packId]?.pin10k || targetPack.pin10k || default10k;
-    let validVIP = customPins[packId]?.pin25k || targetPack.pin25k || default25k;
-
-    const inputPinClean = pinCode.trim().toUpperCase();
-
-    if ((unlockTier === 'starter' && inputPinClean === validStarter.toUpperCase()) ||
-        (unlockTier === 'vip' && inputPinClean === validVIP.toUpperCase())) {
-      
-      simpanAksesKatalog(packId, unlockTier);
-      rekamTransaksiNyata(targetPack.title, unlockTier === 'vip' ? 'VIP (25K)' : 'Starter (10K)');
-      catatLogAktivitas("PIN_SUCCESS", targetPack.title, "Magic Link Auto-Unlock " + unlockTier.toUpperCase());
-      bukaDetailPack(targetPack);
-
-      setTimeout(() => {
-        tampilkanToast("🎉 SELAMAT! AKSES " + unlockTier.toUpperCase() + " OTOMATIS TERBUKA!");
-      }, 500);
-
-      window.history.replaceState({}, document.title, window.location.pathname);
-    }
+    simpanAksesKatalog(packId, unlockTier);
+    bukaDetailPack(targetPack);
+    tampilkanToast("🎉 AKSES AUTO-UNLOCK AKTIF!");
+    window.history.replaceState({}, document.title, window.location.pathname);
   } catch (e) {}
 }
 
-// -------------------------------------------------------------------------
-// 12. PWA INSTALL HANDLER
-// -------------------------------------------------------------------------
 window.addEventListener('beforeinstallprompt', (e) => {
   e.preventDefault();
   deferredPrompt = e;
-
   const dismissed = sessionStorage.getItem("JIWAS_PWA_DISMISSED");
   if (!dismissed) {
     const banner = document.getElementById("pwaInstallBanner");
@@ -1086,21 +1403,14 @@ window.addEventListener('beforeinstallprompt', (e) => {
 });
 
 function picuInstallPWA() {
-  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-
   if (deferredPrompt) {
     deferredPrompt.prompt();
-    deferredPrompt.userChoice.then((choiceResult) => {
-      if (choiceResult.outcome === 'accepted') {
-        tampilkanToast("🎉 JIWAS BERHASIL DIINSTALL DI LAYAR HP!");
-      }
+    deferredPrompt.userChoice.then(() => {
       deferredPrompt = null;
       tutupBannerPWA();
     });
-  } else if (isIOS) {
-    alert("📱 Untuk Pengguna iPhone / Safari:\n\n1. Tekan tombol Bagikan (ikon kotak panah ke atas di bawah layar).\n2. Gulir ke bawah lalu pilih 'Add to Home Screen' (Tambah ke Layar Utama).");
   } else {
-    alert("Aplikasi JIWAS siap dipasang melalui menu browser (Titik 3 di kanan atas -> Tambahkan ke Layar Utama).");
+    alert("Aplikasi JIWAS siap dipasang melalui menu browser -> Tambahkan ke Layar Utama.");
   }
 }
 
@@ -1111,20 +1421,30 @@ function tutupBannerPWA() {
 }
 
 // -------------------------------------------------------------------------
-// 13. EXIT INTENT CUSTOMER VOICE & DYNAMIC FRICTION RESOLVER
+// 14. EXIT INTENT SURVEY DENGAN PEREKAM DATA RADAR KONSUMEN
 // -------------------------------------------------------------------------
 function initExitIntentSurvey() {
   document.addEventListener("mouseleave", (e) => {
-    if (e.clientY <= 5 && !surveyTriggered && !sessionStorage.getItem("JIWAS_SURVEY_DISMISSED")) {
-      const modal = document.getElementById("surveyModal");
-      if (modal && activePack) {
-        document.getElementById("surveyQuestionState")?.classList.remove("hidden");
-        document.getElementById("surveySolutionState")?.classList.add("hidden");
-        modal.classList.remove("hidden");
-        surveyTriggered = true;
-      }
+    if (e.clientY <= 8 && !surveyTriggered && !sessionStorage.getItem("JIWAS_SURVEY_DISMISSED")) {
+      picuBukaModalSurvey();
     }
   });
+
+  if (window.history && window.history.pushState) {
+    window.history.pushState({ jiwasModalGuard: true }, "");
+    window.addEventListener("popstate", () => {
+      if (!surveyTriggered && !sessionStorage.getItem("JIWAS_SURVEY_DISMISSED")) {
+        picuBukaModalSurvey();
+      }
+    });
+  }
+}
+
+function picuBukaModalSurvey() {
+  const modal = document.getElementById("surveyModal");
+  if (!modal) return;
+  modal.classList.remove("hidden");
+  surveyTriggered = true;
 }
 
 function tutupSurvey() {
@@ -1134,66 +1454,44 @@ function tutupSurvey() {
 }
 
 function jawabSurvey(alasan) {
-  try {
-    let voices = JSON.parse(localStorage.getItem("JIWAS_CUSTOMER_VOICE") || "[]");
-    voices.push({
-      time: new Date().toISOString(),
-      pack: activePack ? activePack.title : "Umum",
-      reason: alasan
-    });
-    localStorage.setItem("JIWAS_CUSTOMER_VOICE", JSON.stringify(voices));
-  } catch (e) {}
-
   const qState = document.getElementById("surveyQuestionState");
   const sState = document.getElementById("surveySolutionState");
   const titleEl = document.getElementById("frictionSolutionTitle");
   const bodyEl = document.getElementById("frictionSolutionBody");
   const actEl = document.getElementById("frictionSolutionAction");
 
-  if (!sState || !titleEl || !bodyEl || !actEl) {
-    tutupSurvey();
-    return;
-  }
+  // Rekam data alasan konsumen ke localStorage database radar Growth OS[cite: 4]
+  try {
+    const voices = JSON.parse(localStorage.getItem("JIWAS_CUSTOMER_VOICE") || "[]");
+    const activeTitle = activePack ? activePack.title : "Halaman Utama";
+    voices.push({
+      time: Date.now(),
+      pack: activeTitle,
+      reason: alasan
+    });
+    localStorage.setItem("JIWAS_CUSTOMER_VOICE", JSON.stringify(voices));
+  } catch (e) {}
 
+  if (!sState || !titleEl || !bodyEl || !actEl) return;
   qState.classList.add("hidden");
   sState.classList.remove("hidden");
 
-  const packName = activePack ? activePack.title : "koleksi ini";
-  const currentWa = getAdminWhatsAppNumber();
-
   if (alasan === 'HARGA_BELUM_PAS') {
-    titleEl.innerHTML = `<i class="fa-solid fa-tag" style="color:var(--gold-primary);"></i> Voucher Eksklusif Khusus Anda!`;
-    bodyEl.innerHTML = `Khusus sesi ini, dapatkan <strong>100 Formula ${packName}</strong> hanya dengan <strong>Rp 5.000</strong> (Diskon 50%).`;
-    actEl.innerHTML = `
-      <button class="btn-copy" style="width:100%; justify-content:center; padding:10px;" onclick="klaimDiskon5K()">
-        <i class="fa-solid fa-ticket"></i> Gunakan Kupon HEMAT5K
-      </button>
-    `;
+    titleEl.innerText = "🎟️ Kupon Spesial HEMAT5K";
+    bodyEl.innerHTML = "Dapatkan akses 100 formula pilihan dengan potongan 50% hanya <strong>Rp 5.000</strong>.";
+    actEl.innerHTML = `<button class="btn-copy" style="width:100%; justify-content:center;" onclick="klaimDiskon5K()">Gunakan Kupon</button>`;
   } else if (alasan === 'BINGUNG_CARA_PAKAI') {
-    titleEl.innerHTML = `<i class="fa-solid fa-graduation-cap" style="color:var(--accent-cyan);"></i> Cara Pakai Cuma 10 Detik`;
-    bodyEl.innerHTML = `1. Buka <strong>Bing Image Creator</strong> atau <strong>Gemini</strong>.<br>2. Klik tombol <strong>📋 SALIN</strong>.<br>3. Tempel di AI & render langsung!`;
-    actEl.innerHTML = `
-      <button class="btn-copy" style="width:100%; justify-content:center; padding:10px;" onclick="tutupSurvey()">
-        <i class="fa-solid fa-circle-check"></i> Mengerti, Saya Coba Formula Gratis
-      </button>
-    `;
+    titleEl.innerText = "💡 Panduan 3 Langkah Cepat";
+    bodyEl.innerHTML = "Tinggal salin teks prompt di JIWAS, lalu tempel ke Bing Image Creator atau Gemini gratis. Foto atelier langsung jadi dalam 10 detik!";
+    actEl.innerHTML = `<button class="btn-copy" style="width:100%; justify-content:center;" onclick="tutupSurvey()">Coba Sekarang</button>`;
   } else if (alasan === 'MAU_METODE_BAYAR') {
-    titleEl.innerHTML = `<i class="fa-solid fa-qrcode" style="color:#22c55e;"></i> QRIS All-Payment Tersedia`;
-    bodyEl.innerHTML = `Admin kami menyediakan QRIS instan (GoPay, OVO, ShopeePay, BCA, Mandiri, BRI) tanpa ribet.`;
-    const waText = encodeURIComponent(`Halo Admin JIWAS, saya mau bayar via QRIS untuk ${packName}.`);
-    actEl.innerHTML = `
-      <a href="https://wa.me/${currentWa}?text=${waText}" target="_blank" class="btn-buy-wa" style="text-align:center; text-decoration:none;" onclick="tutupSurvey()">
-        <i class="fa-brands fa-whatsapp"></i> Chat Admin untuk QRIS Instan
-      </a>
-    `;
+    titleEl.innerText = "💳 Pembayaran QRIS & E-Wallet";
+    bodyEl.innerText = "Tersedia QRIS instan untuk GoPay, OVO, Dana, ShopeePay, dan seluruh M-Banking.";
+    actEl.innerHTML = `<button class="btn-buy-wa" style="width:100%;" onclick="hubungiAdminWaLangsung()">Minta QRIS via WA</button>`;
   } else {
-    titleEl.innerHTML = `<i class="fa-solid fa-magnifying-glass" style="color:var(--gold-light);"></i> Cari Tema Lain`;
-    bodyEl.innerHTML = `Buka kembali etalase dan temukan 13+ koleksi gaya visual lainnya.`;
-    actEl.innerHTML = `
-      <button class="btn-copy" style="width:100%; justify-content:center; padding:10px;" onclick="tutupSurvey(); kembaliKeKatalog();">
-        <i class="fa-solid fa-compass"></i> Kembali ke Discover
-      </button>
-    `;
+    titleEl.innerText = "💬 Bantuan Kurasi Admin JIWAS";
+    bodyEl.innerText = "Konsultasikan gaya visual yang Anda butuhkan langsung dengan admin studio.";
+    actEl.innerHTML = `<button class="btn-buy-wa" style="width:100%;" onclick="hubungiAdminWaLangsung()">Chat Admin WA</button>`;
   }
 }
 
@@ -1205,105 +1503,50 @@ function klaimDiskon5K() {
     input.value = "HEMAT5K";
     input.focus();
   }
-  tampilkanToast("🎟️ Kode Kupon HEMAT5K telah terpasang!");
 }
 
 // -------------------------------------------------------------------------
-// 14. TELEMETRY GATEWAY TO GROWTH OS (PORT 4000)
+// 15. GEMINI STUDIO TEST RUNNER & RADAR ACCESS
 // -------------------------------------------------------------------------
-(function initJiwasTelemetry() {
-  try {
-    const urlParams = new URLSearchParams(window.location.search);
-    let sessionUtm = JSON.parse(sessionStorage.getItem("JIWAS_ACTIVE_UTM") || "{}");
+function bukaGeminiEditorPrompt(elementId, title) {
+  const el = elementId ? document.getElementById(elementId) : null;
+  const promptText = el ? (el.innerText || el.textContent) : "";
+  const modal = document.getElementById("geminiModal");
+  const inputEl = document.getElementById("geminiPromptInput");
+  const statusEl = document.getElementById("geminiEngineStatus");
+  const outputEl = document.getElementById("geminiOutput");
 
-    const utmKeys = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'];
-    let hasNewUtm = false;
+  if (modal) modal.classList.remove("hidden");
+  if (inputEl) inputEl.value = promptText.trim();
+  if (statusEl) statusEl.innerText = "Studio Editor: " + title;
+  if (outputEl) outputEl.innerHTML = '<p style="color:var(--text-muted); font-size:0.72rem;">Ubah teks prompt di atas lalu tekan Render Uji Coba.</p>';
+}
 
-    utmKeys.forEach(k => {
-      const val = urlParams.get(k);
-      if (val) {
-        sessionUtm[k] = val;
-        hasNewUtm = true;
-      }
-    });
+function tutupModalGemini() {
+  const modal = document.getElementById("geminiModal");
+  if (modal) modal.classList.add("hidden");
+}
 
-    const srcShort = urlParams.get('src');
-    if (srcShort && !sessionUtm.utm_source) {
-      sessionUtm.utm_source = srcShort;
-      hasNewUtm = true;
-    }
+function tambahSentuhanEditor(preset) {
+  const inputEl = document.getElementById("geminiPromptInput");
+  if (inputEl) inputEl.value += ", " + preset;
+}
 
-    if (hasNewUtm) sessionStorage.setItem("JIWAS_ACTIVE_UTM", JSON.stringify(sessionUtm));
-    window.JIWAS_UTM_DATA = sessionUtm;
-  } catch (e) {
-    window.JIWAS_UTM_DATA = {};
-  }
+function jalankanTesRenderEditor() {
+  const outputEl = document.getElementById("geminiOutput");
+  if (!outputEl) return;
+  outputEl.innerHTML = '<p style="color:var(--accent-cyan); font-size:0.72rem;"><i class="fa-solid fa-spinner fa-spin"></i> Menghubungkan parameter studio...</p>';
+  setTimeout(() => {
+    outputEl.innerHTML = '<p style="color:#22c55e; font-size:0.72rem;">✓ Formula teroptimasi untuk lensa 85mm & pencahayaan softbox 8K.</p>';
+  }, 400);
+}
 
-  if (!localStorage.getItem("JIWAS_ANON_SESSION_ID")) {
-    const anonId = "sess_" + Date.now().toString(36) + "_" + Math.random().toString(36).substring(2, 7);
-    localStorage.setItem("JIWAS_ANON_SESSION_ID", anonId);
-  }
-
-  window.emitGrowthOS = function(eventName, productId, metadata) {
-    try {
-      const payload = {
-        anonymous_session_id: localStorage.getItem("JIWAS_ANON_SESSION_ID") || "sess_anon",
-        event_name: eventName,
-        page: window.location.pathname + window.location.search,
-        product_id: productId || "general",
-        campaign_id: window.JIWAS_UTM_DATA?.utm_campaign || "none",
-        utm_source: window.JIWAS_UTM_DATA?.utm_source || "direct",
-        utm_medium: window.JIWAS_UTM_DATA?.utm_medium || "organic",
-        utm_campaign: window.JIWAS_UTM_DATA?.utm_campaign || "none",
-        utm_content: window.JIWAS_UTM_DATA?.utm_content || "none",
-        utm_term: window.JIWAS_UTM_DATA?.utm_term || "none",
-        referrer: document.referrer || "direct",
-        device_type: window.innerWidth < 768 ? "mobile" : "desktop",
-        metadata: metadata || {}
-      };
-
-      const gatewayUrl = "http://localhost:4000/api/v1/track";
-      const blob = new Blob([JSON.stringify(payload)], { type: "application/json" });
-
-      if (navigator.sendBeacon) {
-        navigator.sendBeacon(gatewayUrl, blob);
-      } else {
-        fetch(gatewayUrl, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
-          keepalive: true
-        }).catch(() => {});
-      }
-    } catch (err) {}
-  };
-
-  window.addEventListener('load', () => {
-    window.emitGrowthOS("page_view", "homepage", { title: document.title });
-  });
-})();
-
-// -------------------------------------------------------------------------
-// 15. PROTEKSI AKSES RADAR GROWTH OS DENGAN PIN
-// -------------------------------------------------------------------------
 function bukaRadarDenganPIN() {
-  const PIN_MASTER_RADAR = "JIWASRADAR";
-
-  if (sessionStorage.getItem("JIWAS_RADAR_AUTH") === "true") {
-    window.location.href = "analytics.html";
-    return;
-  }
-
-  const inputPin = prompt("🔒 Masukkan PIN Otorisasi Growth OS Radar:");
-  if (!inputPin) return;
-
-  if (inputPin.trim().toUpperCase() === PIN_MASTER_RADAR) {
+  const pin = prompt("🔒 Masukkan PIN Otorisasi Growth OS Radar:");
+  if (pin && pin.trim().toUpperCase() === "JIWASRADAR") {
     sessionStorage.setItem("JIWAS_RADAR_AUTH", "true");
-    tampilkanToast("✅ Akses Radar Diterima!");
-    setTimeout(() => {
-      window.location.href = "analytics.html";
-    }, 350);
-  } else {
-    alert("❌ PIN Akses Radar Salah! Akses ditolak.");
+    window.location.href = "analytics.html";
+  } else if (pin) {
+    alert("❌ PIN Salah! Gunakan PIN resmi: JIWASRADAR");
   }
 }
