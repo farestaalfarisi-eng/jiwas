@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-  <title>JIWAS Atelier — Formula Foto Studio AI & Video Generative</title>
+  <title>JIWAS Atelier — Formula Foto Studio AI, Video Generative & Akun Premium</title>
   
   <!-- PWA Settings -->
   <link rel="manifest" href="manifest.json">
@@ -180,14 +180,23 @@
       <div class="grid-catalog" id="gridVideoKatalog"></div>
     </section>
 
-    <!-- 6. TAB 4: AKUN AI & ASSET -->
+    <!-- 6. TAB 4: AKUN AI & ASSET (TERINTEGRASI LENGKAP) -->
     <section id="sectionAkunAI" class="hidden">
       <div class="hero-box" style="margin-bottom:14px;">
-        <span class="hero-badge">LAYANAN DIGITAL</span>
+        <span class="hero-badge">OFFICIAL AI STORE</span>
         <h2 class="hero-title">Akun & Langganan AI</h2>
-        <p class="brand-tagline">Akses akun private / shared premium untuk kebutuhan produksi konten studio tanpa kendala pembayaran luar negeri.</p>
+        <p class="brand-tagline">Akses resmi AI premium untuk riset, desain, pembuatan konten, dan koding tanpa kartu kredit luar negeri.</p>
       </div>
-      <div class="grid-catalog" id="gridAkunKatalog"></div>
+
+      <div class="ai-account-wrapper">
+        <div class="ai-search-box">
+          <i class="fa-solid fa-magnifying-glass ai-search-icon"></i>
+          <input type="text" class="ai-search-input" placeholder="Cari akun ChatGPT, Midjourney, Canva, Perplexity..." oninput="AiAccountEngine.handleSearch(this.value)">
+        </div>
+
+        <div class="ai-categories-scroll" id="aiCategoriesContainer"></div>
+        <div class="ai-grid-catalog" id="aiAccountCatalogGrid"></div>
+      </div>
     </section>
 
     <!-- 7. SECTION DETAIL PACK (100 PROMPT) -->
@@ -209,7 +218,7 @@
         <div class="pab-buttons"></div>
       </div>
 
-      <!-- GENERATOR FORMASI ANGGOTA KELUARGA (KHUSUS KATALOG FOTO KELUARGA) -->
+      <!-- GENERATOR FORMASI ANGGOTA KELUARGA -->
       <div id="familyFormationComposer" class="family-composer-box" style="display:none;">
         <div class="composer-header">
           <div>
@@ -221,7 +230,6 @@
         </div>
 
         <div class="composer-body">
-          <!-- Anggota Inti: Ayah & Ibu -->
           <div class="member-group">
             <div class="member-tag">Anggota Inti (Default):</div>
             <div class="member-row">
@@ -246,10 +254,8 @@
             </div>
           </div>
 
-          <!-- Wadah Anggota Tambahan Dinamis -->
           <div id="dynamicMembersContainer" class="dynamic-members-list"></div>
 
-          <!-- Tombol Aksi Tambah Anggota (+) -->
           <div class="add-member-buttons">
             <button type="button" class="btn-add-member" onclick="tambahAnggota('anak')">
               <i class="fa-solid fa-plus"></i> Tambah Anak
@@ -265,7 +271,6 @@
             </button>
           </div>
 
-          <!-- Output Teks Tambahan Formasi -->
           <div class="formation-result-wrapper">
             <label class="formation-result-title"><i class="fa-solid fa-wand-magic-sparkles"></i> Potongan Prompt Formasi Siap Pakai:</label>
             <div class="formation-output-box" id="familyPromptOutput">Menghitung formasi...</div>
@@ -281,7 +286,7 @@
         </div>
       </div>
 
-      <!-- Grid 100 Item Cards (2 Kolom Elegan di Mobile) -->
+      <!-- Grid 100 Item Cards -->
       <div class="items-grid" id="itemsGrid"></div>
     </section>
 
@@ -409,9 +414,13 @@
     </div>
   </aside>
 
-  <!-- MASTER SCRIPT DATA & CONTROLLER (URUTAN WAJIB) -->
+  <!-- MASTER SCRIPTS (URUTAN DEPENDENSI WAJIB) -->
   <script src="config-pin.js"></script>
   <script src="data.js"></script>
+  <script src="database.js"></script>
+  <script src="supplier-connector.js"></script>
+  <script src="components.js"></script>
+  <script src="ai-account-app.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
