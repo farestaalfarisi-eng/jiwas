@@ -1,6 +1,12 @@
-// Ganti nama cache agar browser otomatis membuang cache lama
-const CACHE_NAME = 'jiwas-studio-v3.5';
-const ASSETS_TO_CACHE = [
+// =========================================================================
+// JIWAS STUDIO - RESILIENT SERVICE WORKER (sw.js v4.0)
+// Zero-Failure Cache Architecture • Safe Stale-While-Revalidate
+// =========================================================================
+
+const CACHE_NAME = 'jiwas-atelier-v4.0';
+
+// Aset lokal wajib (harus sukses di-cache)
+const CORE_LOCAL_ASSETS = [
   './',
   './index.html',
   './styles.css',
@@ -8,21 +14,35 @@ const ASSETS_TO_CACHE = [
   './data.js',
   './config-pin.js',
   './manifest.json',
+  './favicon.ico'
+];
+
+// Aset CDN pihak ketiga (ditoleransi jika jaringan lambat / offline saat install)
+const OPTIONAL_CDN_ASSETS = [
   'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css',
   'https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800;900&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap'
 ];
 
-// Install Event - Pre-cache core assets
+// Install Event - Cache aset inti tanpa takut gagal karena CDN pihak ketiga
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(ASSETS_TO_CACHE);
+    caches.open(CACHE_NAME).then(async (cache) => {
+      // 1. Cache berkas lokal mutlak
+      await cache.addAll(CORE_LOCAL_ASSETS);
+      // 2. Cache berkas eksternal satu per satu dengan penanganan error mandiri
+      for (const url of OPTIONAL_CDN_ASSETS) {
+        try {
+          await cache.add(url);
+        } catch (e) {
+          // Lewatkan jika CDN terhalang; jangan batalkan instalasi Service Worker
+        }
+      }
     })
   );
   self.skipWaiting();
 });
 
-// Activate Event - Bersihkan cache lama jika ada update versi
+// Activate Event - Bersihkan cache lawas secara otomatis
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((keys) => {
@@ -34,9 +54,15 @@ self.addEventListener('activate', (event) => {
   self.clients.claim();
 });
 
-// Fetch Event - Stale-while-revalidate strategy
+// Fetch Event - Stale-while-revalidate strategy aman
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
+
+  const requestUrl = new URL(event.request.url);
+  // Jangan cache permintaan backend lokal atau API
+  if (requestUrl.port === '3000' || requestUrl.port === '4000' || requestUrl.pathname.startsWith('/api/')) {
+    return;
+  }
 
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
