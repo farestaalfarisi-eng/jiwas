@@ -1,7 +1,9 @@
 /* =========================================================================
-   JIWAS — MASTER STYLESHEET (styles.css V16.4 Full Master)
+   JIWAS — MASTER STYLESHEET (styles.css V18.0 Full Master Shimmer Edition)
    Theme: Dark Luxury & Gold Atelier • Grid 9:16 Pinterest Strict Ratio
    Anti-Stretching • 2-Column Luxury Mobile Layout • Family Formation Studio
+   Zero-Black Screen Skeleton Shimmer & Image Fade-In Transition
+   Integrated AI Account Store & Supplier Connector
    Curated & Designed for JIWAS Atelier by Sahabat Kaya
    ========================================================================= */
 
@@ -44,6 +46,44 @@ body {
   line-height: 1.5;
   overflow-x: hidden;
   padding-bottom: 96px;
+}
+
+/* -------------------------------------------------------------------------
+   SKELETON LUXURY SHIMMER & SMOOTH IMAGE FADE-IN (ANTI-KOTAK HITAM)
+   ------------------------------------------------------------------------- */
+.item-image-wrapper,
+.aspect-9-16,
+.pin-item,
+.ba-half-view,
+.ai-card-image-wrap {
+  background: linear-gradient(
+    90deg,
+    #111116 0%,
+    rgba(212, 175, 55, 0.08) 50%,
+    #111116 100%
+  ) !important;
+  background-size: 200% 100% !important;
+  animation: jiwasShimmer 1.8s infinite linear;
+  position: relative;
+}
+
+@keyframes jiwasShimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.item-image-wrapper img,
+.catalog-card img,
+.pin-item img,
+.ba-half-view img,
+.ba-half-view video,
+.ai-card-image-wrap img {
+  opacity: 0;
+  transition: opacity 0.35s ease-in-out;
+}
+
+.img-loaded {
+  opacity: 1 !important;
 }
 
 /* -------------------------------------------------------------------------
@@ -228,7 +268,6 @@ body {
   margin: 28px 0;
 }
 
-/* Tombol Pemulih Etalase */
 .btn-text-restore {
   background: transparent;
   border: none;
@@ -278,7 +317,6 @@ body {
   width: 100%;
   aspect-ratio: 18 / 16;
   position: relative;
-  background: #000;
   gap: 2px;
 }
 
@@ -288,7 +326,6 @@ body {
   height: 100%;
   position: relative;
   overflow: hidden;
-  background: #000;
 }
 
 .ba-half-view img,
@@ -297,7 +334,6 @@ body {
   height: 100%;
   object-fit: cover;
   display: block;
-  background: #000;
 }
 
 .badge-tag-side {
@@ -399,7 +435,6 @@ body {
 .pin-item {
   break-inside: avoid;
   margin-bottom: 12px;
-  background: var(--bg-card);
   border: 1px solid var(--card-border);
   border-radius: var(--radius-md);
   overflow: hidden;
@@ -418,7 +453,6 @@ body {
   aspect-ratio: 9 / 16;
   object-fit: cover;
   display: block;
-  background: #0d0d12;
 }
 
 .pin-badge-free-elegant {
@@ -510,7 +544,7 @@ body {
 }
 
 /* -------------------------------------------------------------------------
-   5. GRID KATALOG (ELEGAN 2 KOLOM DI MOBILE, RESPONSIF DI DESKTOP)
+   5. GRID KATALOG (2 KOLOM ELEGAN)
    ------------------------------------------------------------------------- */
 .grid-catalog {
   display: grid;
@@ -557,7 +591,6 @@ body {
   height: auto;
   object-fit: cover;
   display: block;
-  background: #000;
 }
 
 .img-blur-teaser { filter: blur(7px); }
@@ -680,7 +713,7 @@ body {
 }
 
 /* -------------------------------------------------------------------------
-   7. DETAIL PACK & FAMILY FORMATION COMPOSER
+   7. DETAIL PACK & FAMILY COMPOSER
    ------------------------------------------------------------------------- */
 .detail-header {
   display: flex;
@@ -744,6 +777,11 @@ body {
   font-size: 0.75rem;
   font-weight: 800;
   cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
 }
 
 .btn-enter-pin-main {
@@ -757,7 +795,6 @@ body {
   cursor: pointer;
 }
 
-/* Kotak Formasi Keluarga */
 .family-composer-box {
   background: #111119;
   border: 1px solid var(--gold-primary);
@@ -928,7 +965,6 @@ body {
   flex-wrap: wrap;
 }
 
-/* Grid 100 Item */
 .items-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -966,7 +1002,6 @@ body {
   width: 100%;
   aspect-ratio: 9 / 16;
   overflow: hidden;
-  background: #000;
 }
 
 .item-image-wrapper img {
@@ -1068,7 +1103,318 @@ body {
 }
 
 /* -------------------------------------------------------------------------
-   8. PWA & BOTTOM NAV
+   8. MODUL AI ACCOUNT ATELIER
+   ------------------------------------------------------------------------- */
+.ai-account-wrapper {
+  margin-top: 10px;
+}
+
+.ai-search-box {
+  position: relative;
+  margin-bottom: 14px;
+}
+
+.ai-search-input {
+  width: 100%;
+  background: #111118;
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-md);
+  color: #fff;
+  padding: 10px 14px 10px 38px;
+  font-size: 0.8rem;
+  outline: none;
+  transition: var(--transition-fast);
+}
+
+.ai-search-input:focus {
+  border-color: var(--gold-primary);
+  box-shadow: 0 0 10px rgba(212, 175, 55, 0.2);
+}
+
+.ai-search-icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.ai-categories-scroll {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 12px;
+  scrollbar-width: none;
+}
+
+.ai-categories-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.ai-chip {
+  background: #14141d;
+  border: 1px solid var(--card-border);
+  color: var(--text-muted);
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: var(--transition-fast);
+}
+
+.ai-chip.active, .ai-chip:hover {
+  background: var(--gold-gradient);
+  color: #000;
+  border-color: transparent;
+}
+
+.ai-grid-catalog {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+@media (min-width: 680px) {
+  .ai-grid-catalog { grid-template-columns: repeat(3, 1fr); gap: 14px; }
+}
+@media (min-width: 1024px) {
+  .ai-grid-catalog { grid-template-columns: repeat(4, 1fr); gap: 16px; }
+}
+
+.ai-card {
+  background: var(--bg-card);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.ai-card-image-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 9 / 16;
+  background: #111116;
+}
+
+.ai-card-image-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.ai-badge {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background: rgba(0, 0, 0, 0.8);
+  border: 1px solid var(--card-border);
+  color: var(--gold-light);
+  font-size: 0.62rem;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 4px;
+  z-index: 2;
+}
+
+.ai-card-body {
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  justify-content: space-between;
+}
+
+.ai-category-tag {
+  font-size: 0.65rem;
+  color: var(--gold-light);
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.ai-card-title {
+  font-size: 0.82rem;
+  color: #fff;
+  margin: 3px 0 6px;
+  line-height: 1.3;
+}
+
+.ai-card-price-box {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+
+.ai-price-promo {
+  color: var(--gold-light);
+  font-weight: 800;
+  font-size: 0.9rem;
+}
+
+.ai-price-normal {
+  color: var(--text-muted);
+  font-size: 0.68rem;
+  text-decoration: line-through;
+}
+
+.ai-card-guarantee {
+  font-size: 0.66rem;
+  color: var(--accent-green);
+  margin-bottom: 8px;
+}
+
+.ai-card-btn-group {
+  display: flex;
+  gap: 6px;
+}
+
+.btn-ai-detail, .btn-ai-buy {
+  padding: 6px 0;
+  border-radius: 6px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-align: center;
+  cursor: pointer;
+  text-decoration: none;
+  border: none;
+}
+
+.btn-ai-detail {
+  background: #1e1e28;
+  border: 1px solid var(--card-border);
+  color: var(--text-main);
+  flex: 1;
+}
+
+.btn-ai-buy {
+  background: var(--accent-green);
+  color: #fff;
+  flex: 1;
+}
+
+/* Modal Detail AI */
+.ai-modal-container {
+  background: #13131a;
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  width: 100%;
+  max-width: 440px;
+  max-height: 85vh;
+  overflow-y: auto;
+  color: #fff;
+}
+
+.ai-modal-header {
+  position: relative;
+  margin-bottom: 14px;
+}
+
+.ai-modal-close {
+  position: absolute;
+  top: -6px;
+  right: -4px;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+.ai-modal-branding {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.ai-modal-logo {
+  width: 54px;
+  height: 54px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+.ai-modal-title {
+  font-size: 1rem;
+  color: #fff;
+}
+
+.ai-modal-price-card {
+  background: #0d0d12;
+  border: 1px solid rgba(255,255,255,0.06);
+  padding: 10px 14px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.ai-status-pill {
+  background: rgba(34, 197, 94, 0.2);
+  color: var(--accent-green);
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 0.65rem;
+  font-weight: 800;
+}
+
+.ai-detail-section {
+  margin-bottom: 12px;
+  font-size: 0.75rem;
+  line-height: 1.5;
+  color: #cbd5e1;
+}
+
+.ai-detail-section h4 {
+  font-size: 0.78rem;
+  color: var(--gold-light);
+  margin-bottom: 4px;
+}
+
+.ai-faq-item {
+  background: #0e0e14;
+  padding: 8px;
+  border-radius: 6px;
+  margin-top: 6px;
+}
+
+.ai-faq-item strong {
+  color: var(--text-main);
+  font-size: 0.72rem;
+  display: block;
+}
+
+.ai-faq-item p {
+  color: var(--text-muted);
+  font-size: 0.7rem;
+  margin-top: 2px;
+}
+
+.ai-modal-footer {
+  margin-top: 14px;
+}
+
+.btn-hero-primary {
+  background: var(--gold-gradient);
+  color: #000;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 0.78rem;
+}
+
+/* -------------------------------------------------------------------------
+   9. PWA & BOTTOM NAV
    ------------------------------------------------------------------------- */
 .pwa-install-box {
   position: fixed;
@@ -1162,7 +1508,7 @@ body {
 }
 
 /* -------------------------------------------------------------------------
-   9. TOAST, WA & MODALS
+   10. TOAST, WA & MODALS
    ------------------------------------------------------------------------- */
 .wa-floating-btn {
   position: fixed;
