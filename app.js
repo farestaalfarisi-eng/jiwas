@@ -877,8 +877,9 @@ function bukaRadarDenganPIN() {
   }
 }
 
+
 // -------------------------------------------------------------------------
-// 10. FORMASI KELUARGA (FAMILY COMPOSER)
+// 10. FORMASI KELUARGA (FAMILY COMPOSER LENGKAP: UMUR, TINGGI & POSTUR)
 // -------------------------------------------------------------------------
 function updatePromptFormasi() {
   const father = document.getElementById("fatherBuild")?.value || "medium build";
@@ -890,7 +891,12 @@ function updatePromptFormasi() {
   ];
 
   extraFamilyMembers.forEach(mem => {
-    parts.push(`Include ${mem.role} with a ${mem.build}, seated or standing gracefully in the family formation.`);
+    if (mem.type === 'anak') {
+      // Menyusun deskripsi detail anak: umur, postur/berat badan, dan tinggi
+      parts.push(`Include ${mem.gender}, around ${mem.age} old, ${mem.height}, with a ${mem.build}, standing or seated harmoniously with the parents.`);
+    } else {
+      parts.push(`Include ${mem.role} with a ${mem.build}, seated or standing gracefully in the family formation.`);
+    }
   });
 
   const finalString = parts.join(" ");
@@ -910,41 +916,104 @@ function resetFormasiKeluarga() {
 }
 
 function tambahAnggota(tipe) {
-  let roleText = "a child";
-  if (tipe === 'kakek') roleText = "the grandfather";
-  if (tipe === 'nenek') roleText = "the grandmother";
-  if (tipe === 'lainnya') roleText = "an extended relative";
-
-  extraFamilyMembers.push({ role: roleText, build: "slender graceful posture" });
-
   const container = document.getElementById("dynamicMembersContainer");
-  if (container) {
+  if (!container) return;
+
+  const memberIndex = extraFamilyMembers.length;
+
+  if (tipe === 'anak') {
+    // Data default untuk anggota anak
+    const childObj = {
+      type: 'anak',
+      gender: 'a young boy',
+      age: '5 years',
+      height: 'waist-height standing next to parents',
+      build: 'slender healthy posture'
+    };
+    extraFamilyMembers.push(childObj);
+
+    const div = document.createElement("div");
+    div.className = "member-row member-child-row";
+    div.id = `memberRow_${memberIndex}`;
+    div.style.cssText = "display: flex; gap: 6px; flex-wrap: wrap; align-items: center; background: #0e0e15; padding: 8px; border-radius: 6px; border: 1px solid rgba(212,175,55,0.15); margin-bottom: 6px;";
+
+    div.innerHTML = `
+      <span class="member-label" style="min-width:70px;"><i class="fa-solid fa-child"></i> Anak:</span>
+      
+      <!-- Jenis Kelamin -->
+      <select class="select-composer" onchange="updateMemberChild(${memberIndex}, 'gender', this.value)">
+        <option value="a young boy">Anak Laki-laki</option>
+        <option value="a young girl">Anak Perempuan</option>
+        <option value="a baby boy">Bayi Laki-laki</option>
+        <option value="a baby girl">Bayi Perempuan</option>
+        <option value="a teenage boy">Remaja Laki-laki</option>
+        <option value="a teenage girl">Remaja Perempuan</option>
+      </select>
+
+      <!-- Umur -->
+      <select class="select-composer" onchange="updateMemberChild(${memberIndex}, 'age', this.value)">
+        <option value="6 months old (in arms)">6 Bulan (Digendong)</option>
+        <option value="1-2 years old (toddler)">1–2 Tahun (Balita)</option>
+        <option value="3-4 years old">3–4 Tahun</option>
+        <option value="5-7 years old" selected>5–7 Tahun</option>
+        <option value="8-10 years old">8–10 Tahun</option>
+        <option value="11-13 years old">11–13 Tahun</option>
+        <option value="14-17 years old">14–17 Tahun (Remaja)</option>
+      </select>
+
+      <!-- Tinggi Relatif -->
+      <select class="select-composer" onchange="updateMemberChild(${memberIndex}, 'height', this.value)">
+        <option value="held gently in mother's arms">Digendong Ibu/Ayah</option>
+        <option value="knee-height of parents">Setinggi Lutut Orang Tua</option>
+        <option value="waist-height of parents" selected>Setinggi Pinggang</option>
+        <option value="chest-height of parents">Setinggi Dada</option>
+        <option value="shoulder-height of parents">Hampir Setinggi Bahu</option>
+      </select>
+
+      <!-- Postur / Bentuk Badan (Berat Badan AI) -->
+      <select class="select-composer" onchange="updateMemberChild(${memberIndex}, 'build', this.value)">
+        <option value="slender healthy posture" selected>Ramping Sehat</option>
+        <option value="chubby adorable cheeks and build">Gembul / Berisi Lucu</option>
+        <option value="average cute proportion">Sedang / Proporsional</option>
+        <option value="tall slender athletic build">Jangkung Ramping</option>
+        <option value="sturdy chubby build">Gempal Kuat</option>
+      </select>
+    `;
+    container.appendChild(div);
+
+  } else {
+    // Anggota selain anak (Kakek, Nenek, Kerabat)
+    let roleText = "the grandfather";
+    if (tipe === 'nenek') roleText = "the grandmother";
+    if (tipe === 'lainnya') roleText = "an extended relative";
+
+    extraFamilyMembers.push({ type: tipe, role: roleText, build: "noble elderly posture" });
+
     const div = document.createElement("div");
     div.className = "member-row";
     div.innerHTML = `
       <span class="member-label"><i class="fa-solid fa-user-plus"></i> ${roleText}:</span>
-      <select class="select-composer" onchange="extraFamilyMembers[${extraFamilyMembers.length - 1}].build = this.value; updatePromptFormasi();">
+      <select class="select-composer" onchange="extraFamilyMembers[${memberIndex}].build = this.value; updatePromptFormasi();">
+        <option value="noble elderly posture">Bersahaja & Berwibawa (Lansia)</option>
         <option value="slender graceful posture">Postur Ramping</option>
         <option value="medium build">Postur Sedang</option>
-        <option value="cute playful posture">Menggemaskan (Anak)</option>
-        <option value="noble elderly posture">Bersahaja & Berwibawa (Lansia)</option>
+        <option value="sturdy dignified build">Gempal Berwibawa</option>
       </select>
     `;
     container.appendChild(div);
   }
+
   updatePromptFormasi();
 }
 
-function salinPromptFormasi() {
-  const text = updatePromptFormasi();
-  copasPrompt(text);
+function updateMemberChild(index, field, value) {
+  if (extraFamilyMembers[index]) {
+    extraFamilyMembers[index][field] = value;
+    updatePromptFormasi();
+  }
 }
 
-function terapkanKeSemuaPromptKeluarga() {
-  currentAppliedFormationPrompt = updatePromptFormasi();
-  if (activePack) renderDetailItemCards();
-  tampilkanToast("✨ Formasi disisipkan ke seluruh kartu!");
-}
+
 
 // -------------------------------------------------------------------------
 // 11. EXIT-INTENT SURVEY & PWA INSTALLER
