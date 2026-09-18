@@ -1,5 +1,6 @@
-// ai-account/js/database.js
-// Database Master Produk AI Account TIGAJIWA STUDIO V1.0 (Full Version)
+// =========================================================================
+// JIWAS STUDIO — MASTER DATABASE AI ACCOUNT (database.js V2.0)
+// =========================================================================
 
 const DATABASE_AI_ACCOUNT = [
   {
@@ -7,7 +8,7 @@ const DATABASE_AI_ACCOUNT = [
     nama: "ChatGPT Plus (GPT-4o) Premium",
     kategori: "AI",
     subKategori: "Text & Coding",
-    logo: "images/showcase/emosi-1.jpg",
+    logo: "images/canvas/cover.jpg",
     harga: 350000,
     hargaPromo: 65000,
     badge: "🔥 TERLARIS",
@@ -16,7 +17,7 @@ const DATABASE_AI_ACCOUNT = [
     garansi: "30 Hari Full Replace",
     deskripsi: "Akses resmi ChatGPT Plus GPT-4o, DALL-E 3, Browsing & Custom GPTs tanpa batas. Kecepatan respon maksimal cocok untuk riset, koding, dan konten.",
     faq: [
-      { q: "Apakah perlu VPN?", a: "Tidak perlu, bisa diakses langsung dari Browser HP/Laptop." },
+      { q: "Apakah perlu VPN?", a: "Tidak perlu, bisa diakses langsung dari browser HP maupun laptop." },
       { q: "Bagaimana jika terkena limit?", a: "Langsung klaim garansi ganti akun baru via Admin WhatsApp." }
     ],
     supplier: {
@@ -30,7 +31,7 @@ const DATABASE_AI_ACCOUNT = [
     nama: "Midjourney v6 Standard Plan",
     kategori: "Design",
     subKategori: "Image Generator",
-    logo: "images/showcase/emosi-2.jpg",
+    logo: "images/canvas/cover.jpg",
     harga: 480000,
     hargaPromo: 89000,
     badge: "💎 POPULER",
@@ -52,7 +53,7 @@ const DATABASE_AI_ACCOUNT = [
     nama: "Claude 3.5 Sonnet Pro",
     kategori: "AI",
     subKategori: "Copywriting & Analysis",
-    logo: "images/showcase/emosi-3.jpg",
+    logo: "images/canvas/cover.jpg",
     harga: 320000,
     hargaPromo: 75000,
     badge: "⚡ FAST SPEED",
@@ -61,7 +62,7 @@ const DATABASE_AI_ACCOUNT = [
     garansi: "30 Hari Full Replace",
     deskripsi: "AI terbaik untuk pembuatan artikel natural, analisis dokumen PDF panjang, serta penulisan kode pemrograman yang sangat rapi.",
     faq: [
-      { q: "Apakah cocok untuk bikin naskah?", a: "Sangat cocok, gaya bahasa Claude jauh lebih humanis dibanding AI lain." }
+      { q: "Apakah cocok untuk bikin naskah?", a: "Sangat cocok, gaya bahasa Claude jauh lebih humanis dibanding model AI lainnya." }
     ],
     supplier: {
       supplierId: "SUP-SECONDARY",
@@ -74,7 +75,7 @@ const DATABASE_AI_ACCOUNT = [
     nama: "Canva Pro Invite Email (1 Tahun)",
     kategori: "Design",
     subKategori: "Graphic Design",
-    logo: "images/showcase/emosi-4.jpg",
+    logo: "images/canvas/cover.jpg",
     harga: 150000,
     hargaPromo: 35000,
     badge: "🛡️ GARANSI 1 THN",
@@ -96,7 +97,7 @@ const DATABASE_AI_ACCOUNT = [
     nama: "CapCut Pro PC & Mobile",
     kategori: "Video",
     subKategori: "Video Editing",
-    logo: "images/showcase/emosi-5.jpg",
+    logo: "images/canvas/cover.jpg",
     harga: 180000,
     hargaPromo: 45000,
     badge: "🎥 TRENDING",
@@ -118,7 +119,7 @@ const DATABASE_AI_ACCOUNT = [
     nama: "Google Gemini Advanced",
     kategori: "Produktivitas",
     subKategori: "Workspace AI",
-    logo: "images/showcase/emosi-6.jpg",
+    logo: "images/canvas/cover.jpg",
     harga: 300000,
     hargaPromo: 55000,
     badge: "⭐ PREMIUM",
@@ -140,7 +141,7 @@ const DATABASE_AI_ACCOUNT = [
     nama: "Perplexity AI Pro Search",
     kategori: "Produktivitas",
     subKategori: "AI Search Engine",
-    logo: "images/showcase/emosi-7.jpg",
+    logo: "images/canvas/cover.jpg",
     harga: 310000,
     hargaPromo: 60000,
     badge: "🔍 SMART SEARCH",
@@ -162,7 +163,7 @@ const DATABASE_AI_ACCOUNT = [
     nama: "RunwayML Gen-2 Unlimited Video",
     kategori: "Video",
     subKategori: "AI Video Generator",
-    logo: "images/showcase/emosi-8.jpg",
+    logo: "images/canvas/cover.jpg",
     harga: 550000,
     hargaPromo: 120000,
     badge: "🎬 CINEMATIC",
