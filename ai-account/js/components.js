@@ -1,14 +1,14 @@
-// ai-account/js/components.js
-// Factory Reusable UI Components khusus Modul AI Account
+// =========================================================================
+// JIWAS STUDIO — UI COMPONENTS FACTORY (components.js V2.0)
+// =========================================================================
 
 const AiAccountComponents = {
-  // Product Card Component
-  renderProductCard: function (p, onDetailClick) {
+  renderProductCard: function (p) {
     return `
       <div class="ai-card" id="card-${p.id}">
         <div class="ai-card-image-wrap">
           <span class="ai-badge">${p.badge}</span>
-          <img src="${p.logo}" alt="${p.nama}" loading="lazy" onerror="this.onerror=null; this.src='images/showcase/emosi-1.jpg';">
+          <img src="${p.logo}" alt="${p.nama}" loading="lazy" onload="this.classList.add('img-loaded')" onerror="this.onerror=null; this.src='images/velvet/cover.jpg'; this.classList.add('img-loaded');">
         </div>
         <div class="ai-card-body">
           <span class="ai-category-tag">${p.kategori} • ${p.subKategori}</span>
@@ -33,7 +33,6 @@ const AiAccountComponents = {
     `;
   },
 
-  // Category Chip Component
   renderCategoryChip: function (catName, activeCategory) {
     const isActive = catName.toLowerCase() === activeCategory.toLowerCase();
     return `
@@ -43,7 +42,6 @@ const AiAccountComponents = {
     `;
   },
 
-  // Detail Modal Content Component
   renderDetailModalContent: function (p) {
     const faqHTML = p.faq
       .map(
@@ -60,9 +58,9 @@ const AiAccountComponents = {
       <div class="ai-modal-header">
         <button class="ai-modal-close" onclick="AiAccountEngine.closeDetailModal()"><i class="fa-solid fa-xmark"></i></button>
         <div class="ai-modal-branding">
-          <img src="${p.logo}" alt="${p.nama}" class="ai-modal-logo">
+          <img src="${p.logo}" alt="${p.nama}" class="ai-modal-logo" onerror="this.onerror=null; this.src='images/velvet/cover.jpg';">
           <div>
-            <span class="ai-badge" style="position:static; display:inline-block;">${p.badge}</span>
+            <span class="ai-badge" style="position:static; display:inline-block; margin-bottom:4px;">${p.badge}</span>
             <h3 class="ai-modal-title">${p.nama}</h3>
             <span class="ai-category-tag">${p.kategori} • ${p.subKategori}</span>
           </div>
@@ -72,8 +70,8 @@ const AiAccountComponents = {
       <div class="ai-modal-body">
         <div class="ai-modal-price-card">
           <div>
-            <small style="color:var(--text-muted); font-size:0.7rem; display:block;">Harga Flash Sale:</small>
-            <span class="ai-price-promo" style="font-size:1.3rem;">${p.hargaPromoFormatted}</span>
+            <small style="color:var(--text-muted); font-size:0.7rem; display:block;">Harga Promo Resmi:</small>
+            <span class="ai-price-promo" style="font-size:1.25rem;">${p.hargaPromoFormatted}</span>
             <span class="ai-price-normal">${p.hargaFormatted}</span>
           </div>
           <div style="text-align:right;">
@@ -87,9 +85,9 @@ const AiAccountComponents = {
         </div>
 
         <div class="ai-detail-section">
-          <h4><i class="fa-solid fa-user-lock"></i> Jenis Akses & Garansi</h4>
+          <h4><i class="fa-solid fa-user-lock"></i> Tipe Akun & Ketentuan Garansi</h4>
           <p>• <b>Tipe Akun:</b> ${p.jenisAkun}</p>
-          <p>• <b>Garansi Resmi:</b> ${p.garansi}</p>
+          <p>• <b>Masa Garansi:</b> ${p.garansi}</p>
         </div>
 
         <div class="ai-detail-section">
@@ -100,7 +98,7 @@ const AiAccountComponents = {
 
       <div class="ai-modal-footer">
         <a href="${p.linkBeli}" target="_blank" class="btn-hero-primary" style="text-decoration:none; width:100%;">
-          <i class="fa-brands fa-whatsapp"></i> PESAN AKUN SEKARANG VIA WA
+          <i class="fa-brands fa-whatsapp"></i> PESAN AKUN VIA WHATSAPP RESMI
         </a>
       </div>
     `;
