@@ -3,7 +3,8 @@
 // Zero-Failure Cache Architecture • Safe Stale-While-Revalidate
 // =========================================================================
 
-const CACHE_NAME = 'jiwas-atelier-v4.0';
+// Ganti baris ini di sw.js:
+const CACHE_NAME = 'jiwas-atelier-v4.1-bot'; // Ubah versi agar cache lama terhapus otomatis
 
 // Aset lokal wajib (harus sukses di-cache)
 const CORE_LOCAL_ASSETS = [
