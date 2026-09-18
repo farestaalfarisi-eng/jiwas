@@ -97,7 +97,7 @@ const DATABASE_AI_ACCOUNT = [
     nama: "Alight Motion Pro",
     kategori: "Video",
     subKategori: "Motion Graphics",
-    logo: "images/canvas/vision.jpg",
+    logo: "images/canvas/motion.jpg",
     harga: 25000,
     hargaPromo: 10000,
     badge: "⚡ AUTO BOT",
@@ -114,7 +114,7 @@ const DATABASE_AI_ACCOUNT = [
     nama: "Remini AI Photo Enhancer",
     kategori: "Design",
     subKategori: "AI Retouch",
-    logo: "images/canvas/remini.jpg",
+    logo: "images/canvas/remini2.jpg",
     harga: 40000,
     hargaPromo: 18000,
     badge: "⚡ AUTO BOT",
@@ -167,7 +167,7 @@ const DATABASE_AI_ACCOUNT = [
     nama: "Netflix Premium UHD 4K",
     kategori: "Produktivitas",
     subKategori: "Streaming Film",
-    logo: "images/canvas/vf.jpg",
+    logo: "images/canvas/neflix.jpg",
     harga: 50000,
     hargaPromo: 28000,
     badge: "🎬 4K UHD",
@@ -265,7 +265,7 @@ const DATABASE_AI_ACCOUNT = [
     apiConfig: { productId: "VIU PREMIUM", variant: "Default" }
   },
   {
-    id: "inca-bstation",
+    id: "bstation",
     nama: "Bstation (Bilibili) Premium",
     kategori: "Produktivitas",
     subKategori: "Anime HD",
@@ -286,7 +286,7 @@ const DATABASE_AI_ACCOUNT = [
     nama: "WeTV VIP",
     kategori: "Produktivitas",
     subKategori: "Drama & Series",
-    logo: "images/canvas/wf.jpg",
+    logo: "images/canvas/wetv.jpg",
     harga: 30000,
     hargaPromo: 14000,
     badge: "⚡ AUTO BOT",
@@ -299,11 +299,11 @@ const DATABASE_AI_ACCOUNT = [
     apiConfig: { productId: "WE TV", variant: "Default" }
   },
   {
-    id: "inca-visionplus",
+    id: "visionplus",
     nama: "Vision+ Premium",
     kategori: "Produktivitas",
     subKategori: "TV & Live Streaming",
-    logo: "images/canvas/vision.jpg",
+    logo: "images/canvas/vi.jpg",
     harga: 30000,
     hargaPromo: 15000,
     badge: "⚡ AUTO BOT",
@@ -318,11 +318,11 @@ const DATABASE_AI_ACCOUNT = [
 
   // ==================== KATEGORI: TOOLS, VPN & EDUKASI ====================
   {
-    id: "inca-express-vpn",
+    id: "express-vpn",
     nama: "ExpressVPN Premium",
     kategori: "Produktivitas",
     subKategori: "Security & VPN",
-    logo: "images/canvas/vpn.jpg",
+    logo: "images/canvas/expressvpn.jpg",
     harga: 60000,
     hargaPromo: 25000,
     badge: "🔒 SECURE",
@@ -352,7 +352,7 @@ const DATABASE_AI_ACCOUNT = [
     apiConfig: { productId: "HMA VPN", variant: "Default" }
   },
   {
-    id: "inca-zoom-pro",
+    id: "zoom-pro",
     nama: "Zoom Pro Meeting",
     kategori: "Produktivitas",
     subKategori: "Video Conference",
