@@ -1,7 +1,9 @@
 // =========================================================================
-// JIWAS - MASTER CONTROLLER & GROWTH OS ENGINE (app.js Full Restored)
-// Built-in Resilient Registry • Zero-404 Media • Decaying Showcase
-// Dynamic Prompt Injector (prompts/*.js) • Precision Catalog Sync
+// JIWAS - MASTER CONTROLLER & GROWTH OS ENGINE (Unified Production Edition V3.8)
+// Built-in Resilient Registry • Zero-404 Media • Decaying Progressive Showcase
+// 24 Showcase Pool (12 Pairs 1.jpg - 24.jpg) • Full 100/30 Visible Gallery
+// Dual-Tier PIN Verification • Dynamic 1:1 Aspect Ratio on Home AI Products
+// Dual Mode: Studio Atelier (9:16) & Digital AI Accounts (1:1 Square)
 // =========================================================================
 
 let activePack = null;
@@ -21,7 +23,8 @@ const DEFAULT_FALLBACK_KATALOG = [
   { id: "fantasi-gold", folder: "fantasi", title: "Luxury Fantasy Gold", type: "foto", status: "live", rating: "4.9/5", sales: "115+ Terjual" },
   { id: "makeup-glam", folder: "makeup", title: "Luxury Beauty & Makeover", type: "foto", status: "live", rating: "5.0/5", sales: "160+ Terjual" },
   { id: "lifestyle-lux", folder: "lifestyle", title: "Luxury Urban Lifestyle", type: "foto", status: "live", rating: "4.7/5", sales: "50+ Terjual" },
-  { id: "video-cinematic", folder: "video", title: "Cinematic Motion Suite", type: "video", status: "live", rating: "5.0/5", sales: "220+ Terjual" }
+  { id: "video-cinematic", folder: "video-cinematic", title: "Cinematic Motion Suite", type: "video", status: "live", rating: "5.0/5", sales: "220+ Terjual" },
+  { id: "umkm-commercial", folder: "umkm-commercial", title: "Produk Komersial UMKM Staging", type: "product", status: "live", rating: "5.0/5", sales: "Baru Rilis" }
 ];
 
 function getActiveRegistry() {
@@ -31,14 +34,36 @@ function getActiveRegistry() {
   return DEFAULT_FALLBACK_KATALOG;
 }
 
-const SHOWCASE_DATA = [
-  { title: "Luxury Royal Velvet Studio", before: "images/showcase/1.jpg", after: "images/showcase/2.jpg" },
-  { title: "Luxury Hijab Chiaroscuro", before: "images/showcase/3.jpg", after: "images/showcase/4.jpg" },
-  { title: "Regal Gold Fantasy Portrait", before: "images/showcase/5.jpg", after: "images/showcase/6.jpg" },
-  { title: "Corporate Executive CEO", before: "images/showcase/7.jpg", after: "images/showcase/8.jpg" }
-];
+// 1. GENERATE SHOWCASE POOL (12 Pasang / 24 Foto dari images/showcase/)
+function getShowcasePool() {
+  const titles = [
+    "Luxury Royal Velvet Studio",
+    "Luxury Hijab Chiaroscuro",
+    "Luxury Couple Aesthetic",
+    "Luxury Family Atelier",
+    "Corporate Executive CEO",
+    "Regal Gold Fantasy Portrait",
+    "Luxury Beauty & Makeover",
+    "Urban Lifestyle Aesthetic",
+    "Old Money Aristocrat",
+    "Cinematic Noir Studio",
+    "Ethereal Editorial Vogue",
+    "Masterpiece Fine Art 8K"
+  ];
 
-let activePairsPerView = 24;
+  let pool = [];
+  for (let i = 1; i <= 24; i += 2) {
+    const pairIndex = Math.floor(i / 2);
+    pool.push({
+      title: titles[pairIndex] || `Luxury Atelier Collection #${pairIndex + 1}`,
+      before: `images/showcase/${i}.jpg`,
+      after: `images/showcase/${i + 1}.jpg`
+    });
+  }
+  return pool;
+}
+
+let SHOWCASE_DATA = [];
 let currentShowcaseIndex = 0;
 let showcaseTimer = null;
 let userVisitCount = 1;
@@ -51,13 +76,14 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function initApp() {
+  SHOWCASE_DATA = getShowcasePool();
   try { initVisitorAndAffinity(); } catch (e) {}
   try { initFomoPulseEngine(); } catch (e) {}
-  try { applyProgressiveFunnelLayout(); } catch (e) {}
-  try { initShowcaseAutoSlider(); } catch (e) {}
+  try { initDecayingShowcase(); } catch (e) {}
   try { initLiveMarqueeTransactions(); } catch (e) {}
   try { initSocialProofPopups(); } catch (e) {}
   try { initExitIntentSurvey(); } catch (e) {}
+  try { initPwaInstaller(); } catch (e) {}
 
   renderHomeCategories();
   renderAtelierFeed();
@@ -68,6 +94,9 @@ function initApp() {
   cekAutoUnlockURL();
 }
 
+// -------------------------------------------------------------------------
+// 1. VISITOR, AFFINITY & DECAYING SHOWCASE (1-3 Kunjungan Tampil)
+// -------------------------------------------------------------------------
 function initVisitorAndAffinity() {
   try {
     const visits = parseInt(localStorage.getItem("JIWAS_VISIT_COUNT") || "0", 10) + 1;
@@ -80,6 +109,31 @@ function initVisitorAndAffinity() {
   }
 }
 
+function initDecayingShowcase() {
+  const showcaseSec = document.querySelector(".showcase-section");
+  const restoreBtn = document.getElementById("btnRestoreShowcase");
+  const userDismissed = localStorage.getItem("JIWAS_SHOWCASE_MANUAL_HIDE") === "true";
+
+  if ((userVisitCount > 3 || userDismissed) && showcaseSec) {
+    showcaseSec.classList.add("hidden");
+    if (restoreBtn) restoreBtn.classList.remove("hidden");
+  } else {
+    if (showcaseSec) showcaseSec.classList.remove("hidden");
+    if (restoreBtn) restoreBtn.classList.add("hidden");
+    initShowcaseAutoSlider();
+  }
+}
+
+function pulihkanTampilanShowcase() {
+  const showcaseSec = document.querySelector(".showcase-section");
+  const restoreBtn = document.getElementById("btnRestoreShowcase");
+  localStorage.removeItem("JIWAS_SHOWCASE_MANUAL_HIDE");
+  if (showcaseSec) showcaseSec.classList.remove("hidden");
+  if (restoreBtn) restoreBtn.classList.add("hidden");
+  initShowcaseAutoSlider();
+  tampilkanToast("Showcase Before & After ditampilkan kembali.");
+}
+
 function recordUserAffinity(categoryKey, scoreWeight) {
   try {
     if (!categoryKey) return;
@@ -89,10 +143,15 @@ function recordUserAffinity(categoryKey, scoreWeight) {
   } catch (e) {}
 }
 
-function getDominantUserCategory() {
-  const keys = Object.keys(userAffinity);
-  if (keys.length === 0) return null;
-  return keys.reduce((a, b) => userAffinity[a] > userAffinity[b] ? a : b);
+function catatLogAktivitas(eventType, targetName, detailText) {
+  try {
+    const logs = JSON.parse(localStorage.getItem("JIWAS_USER_LOGS") || "[]");
+    const now = new Date();
+    const timeStr = String(now.getHours()).padStart(2, '0') + ":" + String(now.getMinutes()).padStart(2, '0');
+    logs.push({ time: timeStr, type: eventType, target: targetName, detail: detailText || "" });
+    if (logs.length > 200) logs.shift();
+    localStorage.setItem("JIWAS_USER_LOGS", JSON.stringify(logs));
+  } catch (e) {}
 }
 
 function initFomoPulseEngine() {
@@ -117,8 +176,8 @@ function initSocialProofPopups() {
   const descEl = document.getElementById("buyerToastDesc");
   if (!toast || !nameEl || !descEl) return;
 
-  const daftarNama = ["Kak Rina (Surabaya)", "Bunda Dewi (Jakarta)", "Kak Dimas (Bandung)", "Pak Hendra (Medan)"];
-  const daftarAksi = ["Baru saja membuka PIN VIP 25K", "Membeli PIN Starter 10K", "Mengaktifkan Paket VIP"];
+  const daftarNama = ["Kak Rina (Surabaya)", "Bunda Dewi (Jakarta)", "Kak Dimas (Bandung)", "Pak Hendra (Medan)", "Kak Maya (Yogyakarta)"];
+  const daftarAksi = ["Baru saja membuka PIN VIP 25K", "Membeli PIN Starter 10K", "Mengaktifkan CapCut Pro Bot", "Membeli Akun ChatGPT Plus"];
 
   setInterval(() => {
     nameEl.innerText = daftarNama[Math.floor(Math.random() * daftarNama.length)];
@@ -126,26 +185,6 @@ function initSocialProofPopups() {
     toast.classList.remove("hidden");
     setTimeout(() => toast.classList.add("hidden"), 4000);
   }, 25000);
-}
-
-function catatLogAktivitas(eventType, targetName, detailText) {
-  try {
-    const logs = JSON.parse(localStorage.getItem("JIWAS_USER_LOGS") || "[]");
-    const now = new Date();
-    const timeStr = String(now.getHours()).padStart(2, '0') + ":" + String(now.getMinutes()).padStart(2, '0');
-    logs.push({ time: timeStr, type: eventType, target: targetName, detail: detailText || "" });
-    if (logs.length > 200) logs.shift();
-    localStorage.setItem("JIWAS_USER_LOGS", JSON.stringify(logs));
-  } catch (e) {}
-}
-
-function applyProgressiveFunnelLayout() {
-  renderShowcaseCards();
-}
-
-function pulihkanTampilanShowcase() {
-  renderShowcaseCards();
-  tampilkanToast("Showcase dipulihkan");
 }
 
 function initGlobalClickListener() {
@@ -156,85 +195,67 @@ function initGlobalClickListener() {
   });
 }
 
-function toggleCardMenu(event, menuId) {
-  if (event) { event.stopPropagation(); event.preventDefault(); }
-  const targetMenu = document.getElementById(menuId);
-  if (!targetMenu) return;
-  document.querySelectorAll(".card-dropdown-menu").forEach(el => {
-    if (el.id !== menuId) el.classList.add("hidden");
-  });
-  targetMenu.classList.toggle("hidden");
-}
-
-function handleMenuAction(action, packId, itemIndex, event) {
-  if (event) { event.stopPropagation(); event.preventDefault(); }
-  document.querySelectorAll(".card-dropdown-menu").forEach(el => el.classList.add("hidden"));
-  const allPacks = getActiveRegistry();
-  const pack = allPacks.find(p => p.id === packId);
-  const packTitle = pack ? pack.title : "Katalog JIWAS";
-
-  if (action === 'save') {
-    tampilkanToast(`Item #${itemIndex} disimpan!`);
-  } else if (action === 'share') {
-    bagikanKoleksiKeWA(packTitle);
-  } else if (action === 'prompt') {
-    bukaDetailPackTarget(packId, itemIndex, itemIndex > 3);
-  } else if (action === 'use') {
-    bukaGeminiEditorPrompt(null, `${packTitle} #${itemIndex}`);
-  }
-}
-
 function initLiveMarqueeTransactions() {
   const counterEl = document.getElementById("salesCounterText");
   const currentSales = parseInt(localStorage.getItem("JIWAS_REAL_SALES_COUNT") || "1250", 10);
   if (counterEl) counterEl.innerText = currentSales.toLocaleString('id-ID') + "+";
 }
 
+// -------------------------------------------------------------------------
+// 2. WHATSAPP ENGINE & UTILITY LINKS
+// -------------------------------------------------------------------------
 function getAdminWhatsAppNumber() {
   return localStorage.getItem("JIWAS_CUSTOM_WA") || 
          (typeof NOMOR_WA_ADMIN_CONFIG !== "undefined" ? NOMOR_WA_ADMIN_CONFIG : "6282255267793");
 }
 
 function kirimPesananLangsungWA(packTitle, tierName, hargaTeks) {
+  catatLogAktivitas("CLICK_WA", packTitle, `Order ${tierName} (${hargaTeks})`);
   const waNumber = getAdminWhatsAppNumber();
   const pesan = `Halo Admin JIWAS,%0A%0ASaya ingin memesan *PIN Akses ${tierName} (${hargaTeks})* untuk katalog *${packTitle}*.%0A%0AMohon petunjuk pembayarannya.`;
   window.open("https://wa.me/" + waNumber + "?text=" + pesan, "_blank");
 }
 
 function hubungiAdminWaLangsung() {
+  catatLogAktivitas("CLICK_WA", "Bantuan Umum", "Konsultasi Formula");
   const waNumber = getAdminWhatsAppNumber();
-  const pesan = "Halo Admin JIWAS, saya ingin bertanya tentang formula studio foto AI.";
+  const pesan = "Halo Admin JIWAS, saya ingin bertanya tentang formula studio foto, video AI, atau akun digital premium.";
   window.open("https://wa.me/" + waNumber + "?text=" + encodeURIComponent(pesan), "_blank");
 }
 
 function bagikanKoleksiKeWA(packTitle) {
   const currentDomain = window.location.origin + window.location.pathname;
-  const teksPesan = "Cek formula foto studio *" + packTitle + "* di JIWAS: " + currentDomain;
+  const teksPesan = "Cek formula kreatif *" + packTitle + "* di JIWAS: " + currentDomain;
   window.open("https://api.whatsapp.com/send?text=" + encodeURIComponent(teksPesan), "_blank");
 }
 
+// -------------------------------------------------------------------------
+// 3. SHOWCASE SLIDER
+// -------------------------------------------------------------------------
 function initShowcaseAutoSlider() {
   renderShowcaseCards();
   if (showcaseTimer) clearInterval(showcaseTimer);
-  showcaseTimer = setInterval(nextShowcaseSlide, 12000);
+  showcaseTimer = setInterval(nextShowcaseSlide, 10000);
 }
 
 function renderShowcaseCards() {
   const container = document.getElementById("gridShowcaseBA");
+  const dotsContainer = document.getElementById("showcaseDots");
   if (!container || SHOWCASE_DATA.length === 0) return;
   container.innerHTML = "";
+  if (dotsContainer) dotsContainer.innerHTML = "";
 
-  SHOWCASE_DATA.forEach(item => {
+  SHOWCASE_DATA.forEach((item, idx) => {
     const card = document.createElement("div");
-    card.className = "ba-card-unit";
+    card.className = `ba-card-unit ${idx === currentShowcaseIndex ? "active" : ""}`;
     card.innerHTML = `
       <div class="ba-dual-image-box">
         <div class="ba-half-view">
-          <img src="${item.before}" alt="Before" loading="lazy" onload="this.classList.add('img-loaded')" onerror="this.src='images/velvet/cover.jpg'; this.classList.add('img-loaded');">
+          <img src="${item.before}" alt="Before" loading="lazy" onload="this.classList.add('img-loaded')" onerror="this.onerror=null; this.src='images/velvet/cover.jpg'; this.classList.add('img-loaded');">
           <span class="badge-tag-side tag-before">BEFORE</span>
         </div>
         <div class="ba-half-view">
-          <img src="${item.after}" alt="After" loading="lazy" onload="this.classList.add('img-loaded')" onerror="this.src='images/velvet/cover.jpg'; this.classList.add('img-loaded');">
+          <img src="${item.after}" alt="After" loading="lazy" onload="this.classList.add('img-loaded')" onerror="this.onerror=null; this.src='images/velvet/cover.jpg'; this.classList.add('img-loaded');">
           <span class="badge-tag-side tag-after">AFTER 8K</span>
         </div>
       </div>
@@ -244,12 +265,36 @@ function renderShowcaseCards() {
       </div>
     `;
     container.appendChild(card);
+
+    if (dotsContainer) {
+      const dot = document.createElement("span");
+      dot.className = `dot-indicator ${idx === currentShowcaseIndex ? "active" : ""}`;
+      dot.onclick = () => lompatKeShowcaseSlide(idx);
+      dotsContainer.appendChild(dot);
+    }
   });
 }
 
-function nextShowcaseSlide() {}
-function prevShowcaseSlide() {}
+function nextShowcaseSlide() {
+  if (SHOWCASE_DATA.length === 0) return;
+  currentShowcaseIndex = (currentShowcaseIndex + 1) % SHOWCASE_DATA.length;
+  renderShowcaseCards();
+}
 
+function prevShowcaseSlide() {
+  if (SHOWCASE_DATA.length === 0) return;
+  currentShowcaseIndex = (currentShowcaseIndex - 1 + SHOWCASE_DATA.length) % SHOWCASE_DATA.length;
+  renderShowcaseCards();
+}
+
+function lompatKeShowcaseSlide(idx) {
+  currentShowcaseIndex = idx;
+  renderShowcaseCards();
+}
+
+// -------------------------------------------------------------------------
+// 4. ATELIER FEED & TABS CONTROLLER
+// -------------------------------------------------------------------------
 function renderAtelierFeed() {
   const container = document.getElementById("gridAtelierFeed");
   if (!container) return;
@@ -257,14 +302,35 @@ function renderAtelierFeed() {
   container.innerHTML = "";
 
   allPacks.forEach(pack => {
+    const isVideo = pack.type === "video";
+    const isProduct = pack.type === "product";
+    const isStoryboard = pack.type === "storyboard";
+    const isPromo = pack.type === "promo";
+
     for (let idx = 1; idx <= 4; idx++) {
       const card = document.createElement("div");
       card.className = "pin-item";
+
+      let srcImg = `images/${pack.folder}/${idx}.jpg`;
+      if (isVideo) srcImg = `videos/${pack.folder}/${idx}.webp`;
+      if (isProduct) srcImg = `products/${pack.folder}/${idx}.webp`;
+      if (isStoryboard) srcImg = `storyboards/${pack.folder}/${idx}.webp`;
+      if (isPromo) srcImg = `promos/${pack.folder}/${idx}.webp`;
+
+      let subLabel = `Item #${idx} • Buka 100 Prompt`;
+      if (isVideo) subLabel = `Item #${idx} • Buka 30 Video`;
+      if (isProduct) subLabel = `Item #${idx} • Buka 30 Produk`;
+      if (isStoryboard) subLabel = `Item #${idx} • Buka 30 Iklan`;
+      if (isPromo) subLabel = `Item #${idx} • Buka 30 Banner`;
+
+      const freeBadge = (idx <= 3) ? `<span class="pin-badge-free-elegant">SAMPLE GRATIS</span>` : '';
+
       card.innerHTML = `
-        <img src="images/${pack.folder}/${idx}.jpg" alt="${pack.title}" loading="lazy" onload="this.classList.add('img-loaded')" onerror="this.src='images/velvet/cover.jpg'; this.classList.add('img-loaded');">
+        ${freeBadge}
+        <img src="${srcImg}" alt="${pack.title}" loading="lazy" onload="this.classList.add('img-loaded')" onerror="this.onerror=null; this.src='images/velvet/cover.jpg'; this.classList.add('img-loaded');">
         <div class="pin-info-overlay">
           <div class="pin-title">${pack.title}</div>
-          <div class="pin-sub">Item #${idx} • Buka 100 Prompt</div>
+          <div class="pin-sub">${subLabel}</div>
         </div>
       `;
       card.onclick = () => bukaDetailPack(pack);
@@ -273,18 +339,6 @@ function renderAtelierFeed() {
   });
 }
 
-function tutupRelatedFeed() {
-  const relatedHeader = document.getElementById("atelierRelatedHeader");
-  const relatedFeed = document.getElementById("gridAtelierRelated");
-  const mainFeed = document.getElementById("gridAtelierFeed");
-  if (relatedHeader) relatedHeader.classList.add("hidden");
-  if (relatedFeed) relatedFeed.classList.add("hidden");
-  if (mainFeed) mainFeed.classList.remove("hidden");
-}
-
-// -------------------------------------------------------------------------
-// CONTROLLER TAB UTAMA (FUNGSI KRUSIAL NAVIGASI)
-// -------------------------------------------------------------------------
 function switchMainTab(tabType, btnEl) {
   document.querySelectorAll(".b-nav-item").forEach(b => b.classList.remove("active"));
   if (btnEl) {
@@ -311,7 +365,6 @@ function switchMainTab(tabType, btnEl) {
   if (tabType === 'atelier') {
     if (secAtelier) secAtelier.classList.remove("hidden");
     if (heroHeader) heroHeader.classList.remove("hidden");
-    tutupRelatedFeed();
   } else {
     if (heroHeader) heroHeader.classList.add("hidden");
   }
@@ -332,26 +385,70 @@ function switchMainTab(tabType, btnEl) {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
+// -------------------------------------------------------------------------
+// 5. ETALASE DISPLAY RENDERING (FOTO/VIDEO 9:16 + AKUN AI 1:1 DI HOME)
+// -------------------------------------------------------------------------
 function renderHomeCategories() {
   const container = document.getElementById("gridHomeCategories");
   if (!container) return;
   container.innerHTML = "";
 
-  const registry = getActiveRegistry().filter(item => item.type !== "digital");
-  registry.forEach(item => {
+  // 1. Render Katalog Studio (Foto & Video AI)
+  const studioPacks = getActiveRegistry().filter(item => item.type !== "digital");
+  studioPacks.forEach(item => {
+    let coverSrc = `images/${item.folder}/cover.jpg`;
+    let badgeText = '📸 100 PROMPT';
+
+    if (item.type === 'video') {
+      coverSrc = `videos/${item.folder}/1.webp`;
+      badgeText = '🎥 VIDEO AI (30)';
+    } else if (item.type === 'product') {
+      coverSrc = `products/${item.folder}/1.webp`;
+      badgeText = '📦 PRODUK UMKM (30)';
+    }
+
     const card = document.createElement("div");
     card.className = "catalog-card";
     card.onclick = () => bukaDetailPack(item);
     card.innerHTML = `
       <div style="position:relative;">
-        <span class="badge-pill">${item.type === 'video' ? '🎥 VIDEO AI' : '📸 100 PROMPT'}</span>
-        <img src="images/${item.folder}/cover.jpg" alt="${item.title}" class="aspect-9-16" loading="lazy" onload="this.classList.add('img-loaded')" onerror="this.src='images/velvet/cover.jpg'; this.classList.add('img-loaded');">
+        <span class="badge-pill">${badgeText}</span>
+        <img src="${coverSrc}" alt="${item.title}" class="aspect-9-16" loading="lazy" onload="this.classList.add('img-loaded')" onerror="this.onerror=null; this.src='images/velvet/cover.jpg'; this.classList.add('img-loaded');">
       </div>
       <div class="card-info">
         <h3 class="card-title">${item.title}</h3>
         <div class="card-rating-badge">★ ${item.rating || '4.9/5'}</div>
         <div style="font-weight:800; color:var(--gold-light); font-size:0.85rem; margin-top:4px;">Rp10.000 / Rp25.000</div>
-        <button class="btn-copy" style="margin-top:8px; padding:6px 12px; font-size:0.75rem; width:100%;">Buka 100 Prompt</button>
+        <button class="btn-copy" style="margin-top:8px; padding:6px 12px; font-size:0.75rem; width:100%;">Lihat Koleksi</button>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+
+  // 2. Render Koleksi Akun AI di Home (Rasio Persegi 1:1)
+  const rawAccounts = (typeof DATABASE_AI_ACCOUNT !== "undefined") ? DATABASE_AI_ACCOUNT : [];
+  // Tampilkan 4 akun unggulan di beranda
+  const featuredAccounts = rawAccounts.slice(0, 4);
+
+  featuredAccounts.forEach(acc => {
+    const card = document.createElement("div");
+    card.className = "catalog-card card-square-ai";
+    card.onclick = () => switchMainTab('akun');
+
+    const promoPrice = (acc.hargaPromo || acc.harga || 0).toLocaleString("id-ID");
+
+    card.innerHTML = `
+      <div style="position:relative;">
+        <span class="badge-pill" style="background:#0284c7; color:#fff; border:none;">⚡ AKUN AI</span>
+        <img src="${acc.logo || 'images/canvas/cover.jpg'}" alt="${acc.nama}" class="aspect-1-1" loading="lazy" onload="this.classList.add('img-loaded')" onerror="this.onerror=null; this.src='images/velvet/cover.jpg'; this.classList.add('img-loaded');">
+      </div>
+      <div class="card-info">
+        <h3 class="card-title">${acc.nama}</h3>
+        <div class="card-rating-badge" style="color:#22c55e;"><i class="fa-solid fa-bolt"></i> Auto Bot / Instan</div>
+        <div style="font-weight:800; color:var(--gold-light); font-size:0.85rem; margin-top:4px;">Rp ${promoPrice}</div>
+        <button class="btn-copy" style="margin-top:8px; padding:6px 12px; font-size:0.75rem; width:100%; background:linear-gradient(135deg, #0284c7, #0369a1); color:#fff;">
+          <i class="fa-solid fa-arrow-right"></i> Buka Akun AI
+        </button>
       </div>
     `;
     container.appendChild(card);
@@ -371,13 +468,13 @@ function renderKatalogFoto() {
     card.innerHTML = `
       <div style="position:relative;">
         <span class="badge-pill badge-foto">📸 100 ITEMS</span>
-        <img src="images/${pack.folder}/cover.jpg" alt="${pack.title}" class="aspect-9-16" loading="lazy" onload="this.classList.add('img-loaded')" onerror="this.src='images/velvet/cover.jpg'; this.classList.add('img-loaded');">
+        <img src="images/${pack.folder}/cover.jpg" alt="${pack.title}" class="aspect-9-16" loading="lazy" onload="this.classList.add('img-loaded')" onerror="this.onerror=null; this.src='images/velvet/cover.jpg'; this.classList.add('img-loaded');">
       </div>
       <div class="card-info">
         <h3 class="card-title">${pack.title}</h3>
         <div class="card-rating-badge">★ ${pack.rating || '4.9/5'}</div>
         <div style="font-weight:800; color:var(--gold-light); font-size:0.85rem; margin-top:4px;">Rp10.000 / Rp25.000</div>
-        <button class="btn-copy" style="margin-top:8px; padding:6px 12px; font-size:0.75rem; width:100%;">Lihat 100 Prompt</button>
+        <button class="btn-copy" style="margin-top:8px; padding:6px 12px; font-size:0.75rem; width:100%;">Buka 100 Prompt</button>
       </div>
     `;
     container.appendChild(card);
@@ -391,19 +488,20 @@ function renderKatalogVideo() {
   const list = getActiveRegistry().filter(item => item.type === "video" && item.status === "live");
 
   list.forEach(pack => {
+    const coverSrc = `videos/${pack.folder}/1.webp`;
     const card = document.createElement("div");
     card.className = "catalog-card";
     card.onclick = () => bukaDetailPack(pack);
     card.innerHTML = `
       <div style="position:relative;">
-        <span class="badge-pill badge-video">🎥 VIDEO AI</span>
-        <img src="images/${pack.folder}/cover.jpg" alt="${pack.title}" class="aspect-9-16" loading="lazy" onload="this.classList.add('img-loaded')" onerror="this.src='images/velvet/cover.jpg'; this.classList.add('img-loaded');">
+        <span class="badge-pill badge-video">🎥 VIDEO SUITE (30)</span>
+        <img src="${coverSrc}" alt="${pack.title}" class="aspect-9-16" loading="lazy" onload="this.classList.add('img-loaded')" onerror="this.onerror=null; this.src='images/velvet/cover.jpg'; this.classList.add('img-loaded');">
       </div>
       <div class="card-info">
         <h3 class="card-title">${pack.title}</h3>
         <div class="card-rating-badge">★ ${pack.rating || '5.0/5'}</div>
         <div style="font-weight:800; color:var(--gold-light); font-size:0.85rem; margin-top:4px;">Rp10.000 / Rp25.000</div>
-        <button class="btn-copy" style="margin-top:8px; padding:6px 12px; font-size:0.75rem; width:100%;">Lihat Video Formula</button>
+        <button class="btn-copy" style="margin-top:8px; padding:6px 12px; font-size:0.75rem; width:100%;">Buka 30 Video Formula</button>
       </div>
     `;
     container.appendChild(card);
@@ -414,11 +512,13 @@ function renderKatalogAkun() {
   if (typeof AiAccountEngine !== "undefined" && typeof AiAccountEngine.init === "function") {
     try {
       AiAccountEngine.init();
-      return;
     } catch (e) {}
   }
 }
 
+// -------------------------------------------------------------------------
+// 6. DYNAMIC SCRIPT INJECTOR & PACK DETAIL
+// -------------------------------------------------------------------------
 function isFamilyCatalog(pack) {
   if (!pack) return false;
   const s = (pack.id + " " + pack.title + " " + pack.folder).toLowerCase();
@@ -428,15 +528,19 @@ function isFamilyCatalog(pack) {
 function loadPackPromptScript(pack, callback) {
   if (!pack) { if (callback) callback(); return; }
 
-  const varName = pack.promptVarName || `PROMPTS_${pack.folder.toUpperCase()}`;
+  const cleanFolder = pack.folder.toUpperCase().replace(/[^A-Z0-9]/g, '_');
+  const varName = pack.promptVarName || `PROMPTS_${cleanFolder}`;
+  
   if (window[varName] && Array.isArray(window[varName])) {
     if (callback) callback();
     return;
   }
 
-  const scriptUrl = pack.scriptUrl || `prompts/${pack.folder}.js`;
-  const scriptId = `script_prompt_${pack.id}`;
+  let scriptUrl = `prompts/${pack.folder}.js`;
+  if (pack.type === 'video') scriptUrl = `prompts-video/${pack.folder}.js`;
+  if (pack.type === 'product') scriptUrl = `prompts-product/${pack.folder}.js`;
 
+  const scriptId = `script_prompt_${pack.id}`;
   if (document.getElementById(scriptId)) {
     if (callback) callback();
     return;
@@ -455,20 +559,10 @@ function loadPackPromptScript(pack, callback) {
   document.body.appendChild(script);
 }
 
-function bukaDetailPackTarget(packId, itemIndex, openPinModal) {
-  const allPacks = getActiveRegistry();
-  const target = allPacks.find(p => p.id === packId);
-  if (target) {
-    bukaDetailPack(target);
-    if (openPinModal && itemIndex > 3) {
-      setTimeout(() => bukaModalPIN(itemIndex >= 24 ? 'vip' : 'starter'), 400);
-    }
-  }
-}
-
 function bukaDetailPack(pack) {
   activePack = pack;
   recordUserAffinity(pack.folder || pack.id, 3);
+  catatLogAktivitas("VIEW_PACK", pack.title, `Tipe: ${pack.type}`);
 
   const secAtelier = document.getElementById("sectionAtelier");
   const secFoto = document.getElementById("sectionFotoAI");
@@ -484,19 +578,28 @@ function bukaDetailPack(pack) {
   if (secAkun) secAkun.classList.add("hidden");
   if (secDetail) secDetail.classList.remove("hidden");
 
+  const isThirtyBundle = (pack.type === 'video' || pack.type === 'product' || pack.type === 'storyboard' || pack.type === 'promo');
+  const totalCount = isThirtyBundle ? 30 : 100;
+
   const titleEl = document.getElementById("detailTitle");
   const summaryEl = document.getElementById("packSummaryTitle");
   if (titleEl) titleEl.innerText = pack.title;
   if (summaryEl) {
-    summaryEl.innerHTML = `${pack.title} (100 Formula)<div class="detail-live-counter"><i class="fa-solid fa-fire" style="color:#f59e0b;"></i> ${pack.sales || '150+ Terjual'}</div>`;
+    summaryEl.innerHTML = `${pack.title} (${totalCount} Formula)<div class="detail-live-counter"><i class="fa-solid fa-fire" style="color:#f59e0b;"></i> ${pack.sales || '150+ Terjual'}</div>`;
   }
 
   const pabContainer = document.querySelector(".pack-action-box .pab-buttons");
   if (pabContainer) {
+    const isUnlockedVIP = cekAksesKatalog(pack.id, "vip");
+    const zipBtn = (isThirtyBundle && isUnlockedVIP)
+      ? `<a href="downloads/${pack.folder}-bundle.zip" download class="btn-buy-wa" style="background:#22c55e; color:#000; text-decoration:none; display:inline-flex; align-items:center; justify-content:center; gap:6px;"><i class="fa-solid fa-download"></i> Unduh Modul ZIP</a>`
+      : '';
+
     pabContainer.innerHTML = `
       <button onclick="kirimPesananLangsungWA('${pack.title}', 'Starter 10K', 'Rp10.000')" class="btn-buy-wa">Beli Starter (10K)</button>
       <button onclick="kirimPesananLangsungWA('${pack.title}', 'VIP 25K', 'Rp25.000')" class="btn-buy-wa" style="background:var(--gold-gradient); color:#000;">Beli VIP (25K)</button>
       <button class="btn-enter-pin-main" onclick="bukaModalPIN('vip')">Masukkan PIN</button>
+      ${zipBtn}
     `;
   }
 
@@ -508,7 +611,7 @@ function bukaDetailPack(pack) {
 
   const grid = document.getElementById("itemsGrid");
   if (grid) {
-    grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:30px; color:var(--gold-light);"><i class="fa-solid fa-spinner fa-spin"></i> Memuat formula...</div>';
+    grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:30px; color:var(--gold-light);"><i class="fa-solid fa-spinner fa-spin"></i> Menyiapkan galeri formula...</div>';
   }
 
   loadPackPromptScript(pack, () => {
@@ -524,6 +627,9 @@ function kembaliKeKatalog() {
   switchMainTab('atelier', document.getElementById('tabBtnAtelier'));
 }
 
+// -------------------------------------------------------------------------
+// 7. DUAL-TIER PIN ACCESS (SEMUA GAMBAR TAMPIL JELAS, HANYA PROMPT TERKUNCI)
+// -------------------------------------------------------------------------
 function cekAksesKatalog(catalogId, tier) {
   try {
     const unlockedStarter = JSON.parse(localStorage.getItem("TIGAJIWA_UNLOCKED_STARTER") || "[]");
@@ -554,69 +660,100 @@ function renderDetailItemCards() {
   if (!grid || !activePack) return;
   grid.innerHTML = "";
 
-  const varName = activePack.promptVarName || `PROMPTS_${activePack.folder.toUpperCase()}`;
+  const isVideo = activePack.type === 'video';
+  const isProduct = activePack.type === 'product';
+  const isThirtyBundle = isVideo || isProduct;
+  const totalItems = isThirtyBundle ? 30 : 100;
+
+  const cleanFolder = activePack.folder.toUpperCase().replace(/[^A-Z0-9]/g, '_');
+  const varName = activePack.promptVarName || `PROMPTS_${cleanFolder}`;
   const promptArray = (window[varName] && Array.isArray(window[varName])) ? window[varName] : null;
 
-  for (let i = 1; i <= 100; i++) {
+  for (let i = 1; i <= totalItems; i++) {
     const card = document.createElement("div");
     card.className = "item-card";
-    const imgSrc = `images/${activePack.folder}/${i}.jpg`;
+
+    let imgSrc = `images/${activePack.folder}/${i}.jpg`;
+    if (isVideo) imgSrc = `videos/${activePack.folder}/${i}.webp`;
+    if (isProduct) imgSrc = `products/${activePack.folder}/${i}.webp`;
 
     let promptText = "";
     if (promptArray && promptArray[i - 1]) {
       const raw = promptArray[i - 1];
-      promptText = typeof raw === "object" ? (raw.rawPrompt || raw.prompt || "") : String(raw);
+      promptText = (typeof raw === "object") ? (raw.rawPrompt || raw.prompt || "") : String(raw);
     }
 
     if (!promptText) {
-      promptText = `A high-end luxury portrait of ${activePack.title}, item #${i}, 8k studio lighting, master quality --ar 9:16. Subtle watermark "TIGAJIWA". And change the face of the woman in this image to look exactly like the face reference photo I uploaded above.`;
+      if (isProduct) {
+        promptText = `Commercial luxury product staging for ${activePack.title}, item #${i}. Hero podium staging, softbox macro lighting, Hasselblad H6D-100c, 100mm f/2.8 macro, vertical 9:16 layout.`;
+      } else if (isVideo) {
+        promptText = `Cinematic video sequence of ${activePack.title}, item #${i}. Camera slow continuous push-in dolly shot, ARRI Alexa LF, 50mm lens, vertical 9:16 layout.`;
+      } else {
+        promptText = `A high-end luxury portrait of ${activePack.title}, item #${i}, 8k studio lighting, master quality --ar 9:16. Subtle watermark "TIGAJIWA".`;
+      }
+    }
+
+    if (isFamilyCatalog(activePack) && currentAppliedFormationPrompt) {
+      promptText = currentAppliedFormationPrompt + " " + promptText;
     }
 
     let tier = "free";
     let isLocked = false;
-    if (i >= 1 && i <= 3) {
-      tier = "free";
-    } else if (i >= 4 && i <= 23) {
-      tier = "starter";
-      isLocked = !cekAksesKatalog(activePack.id, "starter");
-    } else {
-      tier = "vip";
-      isLocked = !cekAksesKatalog(activePack.id, "vip");
-    }
 
-    const imgClass = isLocked ? (tier === "starter" ? "img-blur-teaser" : "img-blur-heavy") : "";
-    const overlayLock = isLocked ? `
-      <div class="overlay-lock">
-        <p style="font-size:0.75rem; font-weight:700; color:var(--gold-primary); margin-bottom:6px;">🔒 TERKUNCI (${tier.toUpperCase()} ${tier === "starter" ? "10K" : "25K"})</p>
-        <button class="btn-enter-pin" onclick="bukaModalPIN('${tier}')">Masukkan PIN ${tier === "starter" ? "10K" : "25K"}</button>
-      </div>` : '';
+    if (isThirtyBundle) {
+      if (i <= 3) {
+        tier = "free";
+      } else if (i <= 20) {
+        tier = "starter";
+        isLocked = !cekAksesKatalog(activePack.id, "starter");
+      } else {
+        tier = "vip";
+        isLocked = !cekAksesKatalog(activePack.id, "vip");
+      }
+    } else {
+      if (i <= 3) {
+        tier = "free";
+      } else if (i <= 23) {
+        tier = "starter";
+        isLocked = !cekAksesKatalog(activePack.id, "starter");
+      } else {
+        tier = "vip";
+        isLocked = !cekAksesKatalog(activePack.id, "vip");
+      }
+    }
 
     const promptBoxHTML = !isLocked 
       ? `<div class="prompt-text-box" id="promptText_${i}">${promptText}</div>`
-      : `<div class="prompt-text-box prompt-locked-text">Prompt dikunci. Buka akses paket ${tier.toUpperCase()} (${tier === 'starter' ? '10K' : '25K'}) untuk menyalin.</div>`;
+      : `<div class="prompt-text-box prompt-locked-text">🔒 Formula prompt dikunci. Masukkan PIN ${tier.toUpperCase()} (${tier === 'starter' ? '10K' : '25K'}) untuk membuka teks formula ini.</div>`;
+
+    let directBtnText = isVideo ? "🚀 Video AI" : "🚀 Bing";
+    let directUrl = isVideo ? "https://runwayml.com/" : "https://www.bing.com/images/create";
 
     const actionButtons = !isLocked 
       ? `
         <div class="action-buttons">
-          <button class="btn-copy" onclick="copasPromptFromElement('promptText_${i}', '${activePack.title}', ${i})">📋 Salin</button>
-          <button class="btn-share-promo" onclick="bagikanKoleksiKeWA('${activePack.title}')"><i class="fa-brands fa-whatsapp"></i> Pamer</button>
-          <a href="https://www.bing.com/images/create" target="_blank" class="btn-direct-ai">🚀 Bing</a>
+          <button class="btn-copy" onclick="copasPromptFromElement('promptText_${i}', '${activePack.title}', ${i})">📋 Salin Formula</button>
+          <button class="btn-share-promo" onclick="bagikanKoleksiKeWA('${activePack.title}')"><i class="fa-brands fa-whatsapp"></i> Bagikan</button>
+          <a href="${directUrl}" target="_blank" class="btn-direct-ai">${directBtnText}</a>
         </div>`
       : `
         <div class="action-buttons">
-          <button onclick="kirimPesananLangsungWA('${activePack.title}', 'Paket ${tier.toUpperCase()}', 'Rp${tier === 'starter' ? '10.000' : '25.000'}')" class="btn-unlock-wa">
-            Buka Akses via WA (${tier === 'starter' ? '10K' : '25K'})
+          <button class="btn-copy" style="background:var(--gold-gradient); color:#000; font-weight:800; flex:1;" onclick="bukaModalPIN('${tier}')">
+            🔑 Masukkan PIN ${tier === 'starter' ? '10K' : '25K'}
+          </button>
+          <button onclick="kirimPesananLangsungWA('${activePack.title}', 'Paket ${tier.toUpperCase()}', 'Rp${tier === 'starter' ? '10.000' : '25.000'}')" class="btn-unlock-wa" style="flex:1;">
+            Beli via WA
           </button>
         </div>`;
 
     card.innerHTML = `
       <div class="item-image-wrapper">
-        <img src="${imgSrc}" class="${imgClass}" loading="lazy" alt="Item ${i}" onload="this.classList.add('img-loaded')" onerror="this.onerror=null; this.src='images/velvet/1.jpg'; this.classList.add('img-loaded');">
-        ${overlayLock}
+        <span class="badge-pill" style="top:8px; left:8px; font-size:0.62rem;">${tier === 'free' ? 'GRATIS SAMPLE' : 'PAKET ' + tier.toUpperCase()}</span>
+        <img src="${imgSrc}" loading="lazy" alt="Item ${i}" onload="this.classList.add('img-loaded')" onerror="this.onerror=null; this.src='images/velvet/cover.jpg'; this.classList.add('img-loaded');">
       </div>
       <div class="item-content">
         <div>
-          <div class="item-number">ITEM #${i} ${tier === 'free' ? '• [GRATIS SAMPLE]' : '• [PAKET ' + tier.toUpperCase() + ']'}</div>
+          <div class="item-number">ITEM #${i} • ${activePack.title}</div>
           ${promptBoxHTML}
         </div>
         ${actionButtons}
@@ -627,7 +764,7 @@ function renderDetailItemCards() {
 }
 
 // -------------------------------------------------------------------------
-// MODAL PIN & KOPAS
+// 8. PIN VERIFICATION & MODALS
 // -------------------------------------------------------------------------
 function bukaModalPIN(tier) {
   targetTierModal = tier || 'starter';
@@ -661,29 +798,41 @@ function verifikasiPIN() {
 
   if (pinInput === validStarter || pinInput === "JIWAS10K" || pinInput === "HEMAT5K") {
     simpanAksesKatalog(activePack.id, "starter");
+    catatLogAktivitas("PIN_SUCCESS", activePack.title, "Starter (10K)");
     tutupModalPIN();
     tampilkanToast("🎉 AKSES STARTER (10K) TERBUKA!");
     renderDetailItemCards();
   } else if (pinInput === validVIP || pinInput === "JIWASVIP") {
     simpanAksesKatalog(activePack.id, "vip");
+    catatLogAktivitas("PIN_SUCCESS", activePack.title, "VIP Full (25K)");
     tutupModalPIN();
     tampilkanToast("👑 AKSES VIP (25K) TERBUKA!");
     renderDetailItemCards();
   } else {
-    alert("❌ Kode PIN Salah!");
+    alert("❌ Kode PIN Salah! Masukkan PIN resmi yang Anda peroleh.");
   }
 }
 
 function copasPromptFromElement(elementId, packTitle, itemIdx) {
   const el = document.getElementById(elementId);
-  if (el) copasPrompt(el.innerText || el.textContent);
+  if (el) {
+    const text = el.innerText || el.textContent;
+    copasPrompt(text);
+    catatLogAktivitas("COPY_PROMPT", packTitle, `Item #${itemIdx}`);
+  }
 }
 
 function copasPrompt(text) {
   if (navigator.clipboard) {
-    navigator.clipboard.writeText(text).then(() => tampilkanToast("✅ PROMPT BERHASIL DISALIN!"));
+    navigator.clipboard.writeText(text).then(() => tampilkanToast("✅ FORMULA DISALIN!"));
   } else {
-    tampilkanToast("✅ PROMPT BERHASIL DISALIN!");
+    const ta = document.createElement("textarea");
+    ta.value = text;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand("copy");
+    document.body.removeChild(ta);
+    tampilkanToast("✅ FORMULA DISALIN!");
   }
 }
 
@@ -696,25 +845,172 @@ function tampilkanToast(msg) {
   setTimeout(() => toast.classList.add("hidden"), 3000);
 }
 
-function cekAutoUnlockURL() {}
-function initExitIntentSurvey() {}
+// -------------------------------------------------------------------------
+// 9. URL AUTO-UNLOCK & GROWTH OS RADAR
+// -------------------------------------------------------------------------
+function cekAutoUnlockURL() {
+  const params = new URLSearchParams(window.location.search);
+  const packParam = params.get("pack");
+  const unlockParam = params.get("unlock");
+
+  if (packParam && unlockParam) {
+    const allPacks = getActiveRegistry();
+    const target = allPacks.find(p => p.id === packParam);
+    if (target) {
+      if (unlockParam === 'starter' || unlockParam === 'vip') {
+        simpanAksesKatalog(target.id, unlockParam);
+        bukaDetailPack(target);
+        tampilkanToast(`🔓 Akses ${unlockParam.toUpperCase()} aktif!`);
+      }
+    }
+  }
+}
+
+function bukaRadarDenganPIN() {
+  const input = prompt("Masukkan PIN Otorisasi Growth OS Radar:");
+  if (!input) return;
+  if (input.trim().toUpperCase() === "JIWASVIP" || input.trim() === "123456") {
+    sessionStorage.setItem("JIWAS_RADAR_AUTH", "true");
+    window.location.href = "analytics.html";
+  } else {
+    alert("❌ Otorisasi Radar Ditolak.");
+  }
+}
+
+// -------------------------------------------------------------------------
+// 10. FORMASI KELUARGA (FAMILY COMPOSER)
+// -------------------------------------------------------------------------
+function updatePromptFormasi() {
+  const father = document.getElementById("fatherBuild")?.value || "medium build";
+  const mother = document.getElementById("motherBuild")?.value || "slender graceful build";
+
+  let parts = [
+    `The father has a ${father}, wearing an elegant tailored studio suit.`,
+    `The mother has a ${mother}, wearing an exquisite matching gown.`
+  ];
+
+  extraFamilyMembers.forEach(mem => {
+    parts.push(`Include ${mem.role} with a ${mem.build}, seated or standing gracefully in the family formation.`);
+  });
+
+  const finalString = parts.join(" ");
+  const outBox = document.getElementById("familyPromptOutput");
+  if (outBox) outBox.innerText = finalString;
+  return finalString;
+}
+
+function resetFormasiKeluarga() {
+  extraFamilyMembers = [];
+  const container = document.getElementById("dynamicMembersContainer");
+  if (container) container.innerHTML = "";
+  currentAppliedFormationPrompt = "";
+  updatePromptFormasi();
+  if (activePack) renderDetailItemCards();
+  tampilkanToast("Formasi keluarga direset.");
+}
+
+function tambahAnggota(tipe) {
+  let roleText = "a child";
+  if (tipe === 'kakek') roleText = "the grandfather";
+  if (tipe === 'nenek') roleText = "the grandmother";
+  if (tipe === 'lainnya') roleText = "an extended relative";
+
+  extraFamilyMembers.push({ role: roleText, build: "slender graceful posture" });
+
+  const container = document.getElementById("dynamicMembersContainer");
+  if (container) {
+    const div = document.createElement("div");
+    div.className = "member-row";
+    div.innerHTML = `
+      <span class="member-label"><i class="fa-solid fa-user-plus"></i> ${roleText}:</span>
+      <select class="select-composer" onchange="extraFamilyMembers[${extraFamilyMembers.length - 1}].build = this.value; updatePromptFormasi();">
+        <option value="slender graceful posture">Postur Ramping</option>
+        <option value="medium build">Postur Sedang</option>
+        <option value="cute playful posture">Menggemaskan (Anak)</option>
+        <option value="noble elderly posture">Bersahaja & Berwibawa (Lansia)</option>
+      </select>
+    `;
+    container.appendChild(div);
+  }
+  updatePromptFormasi();
+}
+
+function salinPromptFormasi() {
+  const text = updatePromptFormasi();
+  copasPrompt(text);
+}
+
+function terapkanKeSemuaPromptKeluarga() {
+  currentAppliedFormationPrompt = updatePromptFormasi();
+  if (activePack) renderDetailItemCards();
+  tampilkanToast("✨ Formasi disisipkan ke seluruh kartu!");
+}
+
+// -------------------------------------------------------------------------
+// 11. EXIT-INTENT SURVEY & PWA INSTALLER
+// -------------------------------------------------------------------------
+function initExitIntentSurvey() {
+  document.addEventListener("mouseleave", (e) => {
+    if (e.clientY <= 0 && !surveyTriggered) {
+      const modal = document.getElementById("surveyModal");
+      if (modal) {
+        modal.classList.remove("hidden");
+        surveyTriggered = true;
+      }
+    }
+  });
+}
+
 function tutupSurvey() {
-  const m = document.getElementById("surveyModal");
-  if (m) m.classList.add("hidden");
+  const modal = document.getElementById("surveyModal");
+  if (modal) modal.classList.add("hidden");
 }
-function jawabSurvey() {}
-function bukaGeminiEditorPrompt() {}
-function tutupModalGemini() {
-  const m = document.getElementById("geminiModal");
-  if (m) m.classList.add("hidden");
+
+function jawabSurvey(reasonCode) {
+  const voices = JSON.parse(localStorage.getItem("JIWAS_CUSTOMER_VOICE") || "[]");
+  voices.push({ time: new Date().toISOString(), pack: activePack ? activePack.title : "Beranda", reason: reasonCode });
+  localStorage.setItem("JIWAS_CUSTOMER_VOICE", JSON.stringify(voices));
+
+  const qState = document.getElementById("surveyQuestionState");
+  const sState = document.getElementById("surveySolutionState");
+  const sTitle = document.getElementById("frictionSolutionTitle");
+  const sBody = document.getElementById("frictionSolutionBody");
+  const sAction = document.getElementById("frictionSolutionAction");
+
+  if (qState) qState.classList.add("hidden");
+  if (sState) sState.classList.remove("hidden");
+
+  if (reasonCode === 'HARGA_BELUM_PAS') {
+    if (sTitle) sTitle.innerText = "Klaim Voucher Diskon Spesial";
+    if (sBody) sBody.innerText = "Gunakan kode HEMAT5K di menu PIN untuk diskon Rp5.000 instan.";
+    if (sAction) sAction.innerHTML = '<button class="btn-copy" style="width:100%;" onclick="tutupSurvey(); bukaModalPIN(\'starter\');">Gunakan HEMAT5K</button>';
+  } else {
+    if (sTitle) sTitle.innerText = "Konsultasi Gratis Bersama Tim";
+    if (sBody) sBody.innerText = "Tim kami siap memandu cara penggunaan hingga visual Anda berhasil dibuat.";
+    if (sAction) sAction.innerHTML = '<button class="btn-copy" style="width:100%; background:#22c55e; color:#000;" onclick="tutupSurvey(); hubungiAdminWaLangsung();">Chat WhatsApp Admin</button>';
+  }
 }
-function tambahSentuhanEditor() {}
-function jalankanTesRenderEditor() {}
-function updatePromptFormasi() {}
-function resetFormasiKeluarga() {}
-function salinPromptFormasi() {}
-function terapkanKeSemuaPromptKeluarga() {}
-function tambahAnggota() {}
-function bukaRadarDenganPIN() {}
-function picuInstallPWA() {}
-function tutupBannerPWA() {}
+
+function initPwaInstaller() {
+  window.addEventListener("beforeinstallprompt", (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    const banner = document.getElementById("pwaInstallBanner");
+    if (banner) banner.classList.remove("hidden");
+  });
+}
+
+function picuInstallPWA() {
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then(() => {
+      deferredPrompt = null;
+      tutupBannerPWA();
+    });
+  }
+}
+
+function tutupBannerPWA() {
+  const banner = document.getElementById("pwaInstallBanner");
+  if (banner) banner.classList.add("hidden");
+}
