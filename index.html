@@ -55,7 +55,7 @@
 
   <main class="container">
 
-    <!-- 2. BRAND HERO HEADER (Hanya aktif di Tab Atelier) -->
+    <!-- 2. BRAND HERO HEADER -->
     <header class="atelier-hero-compact" id="atelierMainHeader">
       <div class="brand-badge-pill" onclick="bukaRadarDenganPIN()" style="cursor:pointer;" title="Klik untuk Buka Radar">
         <i class="fa-solid fa-satellite-dish"></i> GROWTH OS RADAR
@@ -72,7 +72,7 @@
     <!-- 3. TAB 1: ATELIER (UTAMA) -->
     <section id="sectionAtelier">
       
-      <!-- SHOWCASE BEFORE & AFTER (DECAYING PROGRESSIVE) -->
+      <!-- SHOWCASE BEFORE & AFTER -->
       <section class="showcase-section" style="margin-bottom:24px;">
         <div class="hero-box" style="text-align:center; margin-bottom:14px;">
           <span class="hero-badge">TRANSFORMASI ATELIER</span>
@@ -96,6 +96,26 @@
           <h2 class="hero-title" style="font-size:1.15rem;">Katalog Studio Pilihan</h2>
         </div>
         <div class="grid-catalog" id="gridHomeCategories"></div>
+      </section>
+
+      <!-- ETALASE RESMI DIGITAL AI & AKUN INCA DI HOME -->
+      <hr class="section-divider">
+
+      <section id="atelierDigitalAiSection" style="margin-bottom:28px;">
+        <div class="hero-box" style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:14px;">
+          <div>
+            <span class="hero-badge" style="background:rgba(56,189,248,0.15); color:#38bdf8; border:1px solid #38bdf8;">
+              <i class="fa-solid fa-robot"></i> OFFICIAL AI & DIGITAL STORE
+            </span>
+            <h2 class="hero-title" style="font-size:1.15rem;">Akun AI & Layanan Digital Instan</h2>
+            <p class="brand-tagline">Aktivasi otomatis detik ini juga terhubung langsung via gateway H2H.</p>
+          </div>
+          <button class="btn-copy" style="font-size:0.7rem; padding:4px 10px;" onclick="switchMainTab('akun', document.getElementById('tabBtnAkun'))">
+            Lihat Semua <i class="fa-solid fa-arrow-right"></i>
+          </button>
+        </div>
+
+        <div class="grid-catalog" id="gridHomeDigitalAi"></div>
       </section>
 
       <hr class="section-divider">
@@ -180,7 +200,7 @@
       <div class="grid-catalog" id="gridVideoKatalog"></div>
     </section>
 
-    <!-- 6. TAB 4: AKUN AI & ASSET (TERINTEGRASI LENGKAP) -->
+    <!-- 6. TAB 4: AKUN AI & ASSET (OFFICIAL STORE) -->
     <section id="sectionAkunAI" class="hidden">
       <div class="hero-box" style="margin-bottom:14px;">
         <span class="hero-badge">OFFICIAL AI STORE</span>
@@ -191,7 +211,7 @@
       <div class="ai-account-wrapper">
         <div class="ai-search-box">
           <i class="fa-solid fa-magnifying-glass ai-search-icon"></i>
-          <input type="text" class="ai-search-input" placeholder="Cari akun ChatGPT, Midjourney, Canva, Perplexity..." oninput="AiAccountEngine.handleSearch(this.value)">
+          <input type="text" class="ai-search-input" placeholder="Cari akun ChatGPT, Gemini, Canva, Netflix, CapCut..." oninput="AiAccountEngine.handleSearch(this.value)">
         </div>
 
         <div class="ai-categories-scroll" id="aiCategoriesContainer"></div>
@@ -351,31 +371,6 @@
     </div>
   </div>
 
-  <!-- MODAL GEMINI EDITOR -->
-  <div id="geminiModal" class="modal-overlay hidden">
-    <div class="modal-content" style="max-width:440px; text-align:left;">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-        <h3 style="font-family:'Cinzel', serif; color:var(--gold-light); font-size:0.95rem;">Gemini Studio Editor</h3>
-        <button onclick="tutupModalGemini()" style="background:none; border:none; color:#fff; cursor:pointer;"><i class="fa-solid fa-xmark"></i></button>
-      </div>
-      <p id="geminiEngineStatus" style="font-size:0.72rem; color:var(--accent-cyan); margin-bottom:8px;"></p>
-      <textarea id="geminiPromptInput" style="width:100%; height:90px; background:#0a0a0f; border:1px solid var(--card-border); color:#fff; border-radius:6px; padding:8px; font-size:0.75rem; resize:none; outline:none;"></textarea>
-      
-      <div style="display:flex; gap:6px; margin:8px 0; flex-wrap:wrap;">
-        <button class="btn-copy" style="font-size:0.65rem; padding:3px 8px;" onclick="tambahSentuhanEditor('Cinematic Lighting')">+ Softbox Light</button>
-        <button class="btn-copy" style="font-size:0.65rem; padding:3px 8px;" onclick="tambahSentuhanEditor('Hasselblad H6D 85mm')">+ Lens 85mm</button>
-        <button class="btn-copy" style="font-size:0.65rem; padding:3px 8px;" onclick="tambahSentuhanEditor('Hyperrealistic Skin Texture')">+ Micro Skin</button>
-      </div>
-
-      <div id="geminiOutput" class="gemini-result-box"></div>
-
-      <div style="display:flex; justify-content:flex-end; gap:6px; margin-top:10px;">
-        <button class="btn-copy btn-cancel" onclick="tutupModalGemini()">Tutup</button>
-        <button class="btn-copy" style="background:#2563eb; color:#fff; border-color:#3b82f6;" onclick="jalankanTesRenderEditor()"><i class="fa-solid fa-wand-magic-sparkles"></i> Render Uji Coba</button>
-      </div>
-    </div>
-  </div>
-
   <!-- MODAL EXIT-INTENT SURVEY -->
   <div id="surveyModal" class="modal-overlay hidden">
     <div class="modal-content" style="max-width:360px;">
@@ -414,13 +409,14 @@
     </div>
   </aside>
 
-  <!-- MASTER SCRIPTS (URUTAN DEPENDENSI WAJIB) -->
+<!-- MASTER SCRIPTS (URUTAN WAJIB) -->
   <script src="config-pin.js"></script>
   <script src="data.js"></script>
-  <script src="database.js"></script>
-  <script src="supplier-connector.js"></script>
-  <script src="components.js"></script>
-  <script src="ai-account-app.js"></script>
-  <script src="app.js"></script>
+  <script src="showcase-data.js"></script>
+  <script src="database.js?v=2"></script>
+  <script src="supplier-connector.js?v=2"></script>
+  <script src="components.js?v=2"></script>
+  <script src="ai-account-app.js?v=2"></script>
+  <script src="app.js?v=2"></script>
 </body>
 </html>
