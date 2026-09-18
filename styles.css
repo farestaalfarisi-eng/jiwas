@@ -1,9 +1,9 @@
 /* =========================================================================
-   JIWAS — MASTER STYLESHEET (styles.css V18.0 Full Master Shimmer Edition)
+   JIWAS — MASTER STYLESHEET (styles.css V20.0 Full Master Edition)
    Theme: Dark Luxury & Gold Atelier • Grid 9:16 Pinterest Strict Ratio
+   AI Account Store Ratio 1:1 Square (Home & Digital AI Tabs)
    Anti-Stretching • 2-Column Luxury Mobile Layout • Family Formation Studio
    Zero-Black Screen Skeleton Shimmer & Image Fade-In Transition
-   Integrated AI Account Store & Supplier Connector
    Curated & Designed for JIWAS Atelier by Sahabat Kaya
    ========================================================================= */
 
@@ -53,6 +53,7 @@ body {
    ------------------------------------------------------------------------- */
 .item-image-wrapper,
 .aspect-9-16,
+.aspect-1-1,
 .pin-item,
 .ba-half-view,
 .ai-card-image-wrap {
@@ -380,6 +381,7 @@ body {
   align-items: center;
   justify-content: center;
   transition: var(--transition-fast);
+  flex-shrink: 0;
 }
 
 .btn-slider-arrow:hover {
@@ -393,6 +395,14 @@ body {
   justify-content: center;
   gap: 8px;
   min-height: 24px;
+  max-width: 280px;
+  overflow-x: auto;
+  padding: 4px;
+  scrollbar-width: none;
+}
+
+.slider-dots-container::-webkit-scrollbar {
+  display: none;
 }
 
 .dot-indicator {
@@ -403,6 +413,7 @@ body {
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   border: 1px solid transparent;
+  flex-shrink: 0;
 }
 
 .dot-indicator:hover {
@@ -490,61 +501,8 @@ body {
   color: var(--text-muted);
 }
 
-.card-menu-container {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  z-index: 3;
-}
-
-.btn-three-dots {
-  background: rgba(0, 0, 0, 0.65);
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  color: #fff;
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.card-dropdown-menu {
-  position: absolute;
-  top: 32px;
-  right: 0;
-  background: #181824;
-  border: 1px solid var(--card-border);
-  border-radius: 8px;
-  padding: 4px;
-  width: 130px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.8);
-}
-
-.dropdown-item {
-  width: 100%;
-  background: transparent;
-  border: none;
-  color: var(--text-main);
-  padding: 8px 10px;
-  text-align: left;
-  font-size: 0.72rem;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  cursor: pointer;
-  border-radius: 4px;
-}
-
-.dropdown-item:hover {
-  background: rgba(212, 175, 55, 0.15);
-  color: var(--gold-light);
-}
-
 /* -------------------------------------------------------------------------
-   5. GRID KATALOG (2 KOLOM ELEGAN)
+   5. GRID KATALOG (DUAL-RATIO SUPPORT: 9:16 & 1:1)
    ------------------------------------------------------------------------- */
 .grid-catalog {
   display: grid;
@@ -593,6 +551,25 @@ body {
   display: block;
 }
 
+/* RASIO 1:1 KHUSUS KARTU AKUN AI DI MENU HOME */
+.aspect-1-1 {
+  width: 100%;
+  aspect-ratio: 1 / 1 !important;
+  height: auto;
+  object-fit: cover;
+  display: block;
+  background: #111116;
+  overflow: hidden;
+}
+
+.catalog-card.card-square-ai {
+  align-self: start;
+}
+
+.catalog-card.card-square-ai .aspect-1-1 {
+  aspect-ratio: 1 / 1 !important;
+}
+
 .img-blur-teaser { filter: blur(7px); }
 .img-blur-heavy { filter: blur(14px); }
 
@@ -629,10 +606,8 @@ body {
   border-radius: 20px;
   z-index: 1;
 }
-.badge-rank-gold { background: var(--gold-gradient); color: #000; font-weight: 800; border: none; }
-.badge-rank-blue { background: #2563eb; color: #fff; border: none; }
+.badge-foto { background: rgba(0, 0, 0, 0.8); color: var(--gold-light); }
 .badge-video { background: rgba(168, 85, 247, 0.9); color: #fff; border: none; }
-.badge-app { background: rgba(56, 189, 248, 0.9); color: #000; font-weight: 800; border: none; }
 
 /* -------------------------------------------------------------------------
    6. PANDUAN ACCORDION
@@ -713,7 +688,7 @@ body {
 }
 
 /* -------------------------------------------------------------------------
-   7. DETAIL PACK & FAMILY COMPOSER
+   7. DETAIL PACK & FAMILY COMPOSER (GALERI 100/30 PROMPT)
    ------------------------------------------------------------------------- */
 .detail-header {
   display: flex;
@@ -850,7 +825,7 @@ body {
   color: #fff;
 }
 
-.select-composer, .input-composer {
+.select-composer {
   background: #0b0b10;
   border: 1px solid var(--card-border);
   color: #fff;
@@ -860,7 +835,7 @@ body {
   outline: none;
 }
 
-.select-composer:focus, .input-composer:focus {
+.select-composer:focus {
   border-color: var(--gold-primary);
 }
 
@@ -868,39 +843,6 @@ body {
   display: flex;
   flex-direction: column;
   gap: 8px;
-}
-
-.dynamic-member-card {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: #151520;
-  border: 1px dashed rgba(212, 175, 55, 0.3);
-  padding: 8px 12px;
-  border-radius: 6px;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.dynamic-member-inputs {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.btn-remove-member {
-  background: transparent;
-  border: none;
-  color: var(--accent-red);
-  cursor: pointer;
-  padding: 4px 8px;
-  font-size: 0.85rem;
-  transition: transform 0.2s;
-}
-
-.btn-remove-member:hover {
-  transform: scale(1.15);
 }
 
 .add-member-buttons {
@@ -1012,29 +954,6 @@ body {
   display: block;
 }
 
-.overlay-lock {
-  position: absolute;
-  inset: 0;
-  background: rgba(10, 10, 14, 0.88);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 10px;
-  text-align: center;
-}
-
-.btn-enter-pin {
-  background: var(--gold-gradient);
-  color: #000;
-  border: none;
-  font-size: 0.7rem;
-  font-weight: 800;
-  padding: 6px 10px;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
 .item-content {
   padding: 10px;
   display: flex;
@@ -1068,7 +987,7 @@ body {
 
 .action-buttons {
   display: flex;
-  gap: 4px;
+  gap: 6px;
   margin-top: 10px;
   flex-wrap: wrap;
 }
@@ -1085,6 +1004,7 @@ body {
   text-decoration: none;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 4px;
 }
 
@@ -1097,13 +1017,11 @@ body {
   background: var(--accent-green);
   color: #fff;
   border: none;
-  width: 100%;
-  justify-content: center;
-  padding: 8px;
+  padding: 6px 8px;
 }
 
 /* -------------------------------------------------------------------------
-   8. MODUL AI ACCOUNT ATELIER
+   8. MODUL DIGITAL AI & AKUN (RASIO 1:1 SQUARE MASTER)
    ------------------------------------------------------------------------- */
 .ai-account-wrapper {
   margin-top: 10px;
@@ -1193,16 +1111,19 @@ body {
   flex-direction: column;
 }
 
+/* RASIO PERSEGI 1:1 KHUSUS KARTU AKUN AI */
 .ai-card-image-wrap {
   position: relative;
   width: 100%;
-  aspect-ratio: 9 / 16;
+  aspect-ratio: 1 / 1 !important;
   background: #111116;
+  overflow: hidden;
 }
 
 .ai-card-image-wrap img {
   width: 100%;
   height: 100%;
+  aspect-ratio: 1 / 1 !important;
   object-fit: cover;
   display: block;
 }
@@ -1298,18 +1219,6 @@ body {
 }
 
 /* Modal Detail AI */
-.ai-modal-container {
-  background: #13131a;
-  border: 1px solid var(--card-border);
-  border-radius: var(--radius-lg);
-  padding: 20px;
-  width: 100%;
-  max-width: 440px;
-  max-height: 85vh;
-  overflow-y: auto;
-  color: #fff;
-}
-
 .ai-modal-header {
   position: relative;
   margin-bottom: 14px;
@@ -1656,20 +1565,6 @@ body {
   background: #1c1c24;
   border-color: rgba(255,255,255,0.1);
   color: var(--text-muted);
-}
-
-.gemini-result-box {
-  background: #09090d;
-  border: 1px solid rgba(255,255,255,0.06);
-  border-radius: 8px;
-  padding: 12px;
-  font-size: 0.75rem;
-  color: #e2e8f0;
-  max-height: 200px;
-  overflow-y: auto;
-  text-align: left;
-  line-height: 1.4;
-  margin-top: 10px;
 }
 
 footer {
