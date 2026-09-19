@@ -60,7 +60,7 @@
       <div class="brand-badge-pill" onclick="bukaRadarDenganPIN()" style="cursor:pointer;" title="Klik untuk Buka Radar">
         <i class="fa-solid fa-satellite-dish"></i> GROWTH OS RADAR
       </div>
-      <h1 class="brand-title-gold">JIWAS</h1>
+      <h1 class="brand-title-gold" title="Akses Cepat Admin: Ketuk 3x Cepat atau Tahan 1.5 Detik">JIWAS</h1>
       <p class="brand-statement">“Mengubah foto biasa menjadi potret bernilai seni tinggi sekelas atelier bangsawan.”</p>
       <div class="hero-feature-chips">
         <span><i class="fa-solid fa-sparkles"></i> 100 Formula Siap Pakai</span>
@@ -72,6 +72,13 @@
     <!-- 3. TAB 1: ATELIER (UTAMA) -->
     <section id="sectionAtelier">
       
+      <!-- TOMBOL PULIHKAN SHOWCASE (POSISI DI ATAS SEBELUM SHOWCASE) -->
+      <div style="text-align:center; margin: 4px 0 14px;">
+        <button id="btnRestoreShowcase" onclick="pulihkanTampilanShowcase()" class="btn-text-restore hidden">
+          ↺ Tampilkan Kembali Showcase Transformasi
+        </button>
+      </div>
+
       <!-- SHOWCASE BEFORE & AFTER -->
       <section class="showcase-section" style="margin-bottom:24px;">
         <div class="hero-box" style="text-align:center; margin-bottom:14px;">
@@ -89,6 +96,35 @@
         </div>
       </section>
 
+      <!-- MESIN PENCARI PINTEREST SIMETRIS DI TENGAH (SHOW FIRST, SEARCH SECOND) -->
+      <section class="atelier-search-section">
+        <div class="search-pill-container">
+          <i class="fa-solid fa-magnifying-glass search-icon-gold"></i>
+          <input 
+            type="text" 
+            id="globalAtelierSearch" 
+            class="search-pill-input" 
+            placeholder="Cari formula atelier: Hijab, Velvet, Keluarga, CEO, Video..."
+            oninput="handleLiveAtelierSearch(this.value)"
+            autocomplete="off"
+          >
+          <button id="btnClearGlobalSearch" class="btn-clear-search hidden" onclick="resetLiveAtelierSearch()" aria-label="Bersihkan">
+            <i class="fa-solid fa-circle-xmark"></i>
+          </button>
+        </div>
+
+        <!-- QUICK FILTER CHIPS SIMETRIS -->
+        <div class="search-quick-tags">
+          <button class="quick-tag-chip active" onclick="filterByQuickChip('all', this)">Semua</button>
+          <button class="quick-tag-chip" onclick="filterByQuickChip('keluarga', this)">#Keluarga</button>
+          <button class="quick-tag-chip" onclick="filterByQuickChip('hijab', this)">#Hijab</button>
+          <button class="quick-tag-chip" onclick="filterByQuickChip('ceo', this)">#CEO</button>
+          <button class="quick-tag-chip" onclick="filterByQuickChip('velvet', this)">#Velvet</button>
+          <button class="quick-tag-chip" onclick="filterByQuickChip('video', this)">#VideoAI</button>
+          <button class="quick-tag-chip" onclick="filterByQuickChip('akun', this)">#AkunAI</button>
+        </div>
+      </section>
+
       <!-- KATEGORI ETALASE RINGKAS -->
       <section id="atelierCategoriesSection" class="category-section" style="margin-bottom:24px;">
         <div class="hero-box" style="margin-bottom:12px;">
@@ -98,7 +134,7 @@
         <div class="grid-catalog" id="gridHomeCategories"></div>
       </section>
 
-      <!-- ETALASE RESMI DIGITAL AI & AKUN INCA DI HOME -->
+      <!-- ETALASE RESMI DIGITAL AI & AKUN DI HOME -->
       <hr class="section-divider">
 
       <section id="atelierDigitalAiSection" style="margin-bottom:28px;">
@@ -119,13 +155,6 @@
       </section>
 
       <hr class="section-divider">
-
-      <!-- TOMBOL PULIHKAN SHOWCASE -->
-      <div style="text-align:center; margin: 8px 0 16px;">
-        <button id="btnRestoreShowcase" onclick="pulihkanTampilanShowcase()" class="btn-text-restore hidden">
-          ↺ Tampilkan Kembali Showcase Transformasi
-        </button>
-      </div>
 
       <!-- PINTEREST MASONRY FEED -->
       <section id="atelierFeedSection">
@@ -238,7 +267,7 @@
         <div class="pab-buttons"></div>
       </div>
 
-      <!-- GENERATOR FORMASI ANGGOTA KELUARGA -->
+      <!-- GENERATOR FORMASI ANGGOTA KELUARGA (LENGKAP: POSTUR, UMUR, TINGGI) -->
       <div id="familyFormationComposer" class="family-composer-box" style="display:none;">
         <div class="composer-header">
           <div>
@@ -409,7 +438,7 @@
     </div>
   </aside>
 
-<!-- MASTER SCRIPTS (URUTAN WAJIB) -->
+  <!-- MASTER SCRIPTS (URUTAN WAJIB) -->
   <script src="config-pin.js"></script>
   <script src="data.js"></script>
   <script src="showcase-data.js"></script>
