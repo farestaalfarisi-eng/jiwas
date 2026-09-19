@@ -601,15 +601,38 @@
   <script>
     const ENGINE_API_URL = "http://localhost:3000";
 
+    // Fallback cadangan jika data.js lambat atau belum terdefinisi
+    const FALLBACK_KATALOG_SAFE = [
+      { id: "velvet-lux", title: "Luxury Royal Velvet Studio", type: "foto" },
+      { id: "hijab-lux", title: "Luxury Hijab Collection", type: "foto" },
+      { id: "couple-cinematic", title: "Luxury Couple Cinematic", type: "foto" },
+      { id: "family-lux", title: "Luxury Family Collection", type: "foto" },
+      { id: "family02-lux", title: "Luxury Family Collection Vol.02", type: "foto" },
+      { id: "family03-lux", title: "Luxury Family Collection Vol.03", type: "foto" },
+      { id: "ceo-lux", title: "Luxury CEO & Corporate Executive", type: "foto" },
+      { id: "fantasi-gold", title: "Luxury Fantasy Gold", type: "foto" },
+      { id: "makeup-glam", title: "Luxury Beauty & Makeover", type: "foto" },
+      { id: "lifestyle-lux", title: "Luxury Urban Lifestyle", type: "foto" },
+      { id: "video-cinematic", title: "Cinematic Motion Suite", type: "video" },
+      { id: "umkm-commercial", title: "Produk Komersial UMKM Staging", type: "product" }
+    ];
+
+    function getRegistryPacksSafe() {
+      if (typeof KATALOG_REGISTRY !== "undefined" && Array.isArray(KATALOG_REGISTRY) && KATALOG_REGISTRY.length > 0) {
+        return KATALOG_REGISTRY;
+      }
+      return FALLBACK_KATALOG_SAFE;
+    }
+
     document.addEventListener("DOMContentLoaded", () => {
-      renderDashboardAnalytics();
-      renderPinManager();
-      renderGrowthOS();
+      try { renderDashboardAnalytics(); } catch(e) { console.warn("Analytics error:", e); }
+      try { renderPinManager(); } catch(e) { console.warn("PIN Manager error:", e); }
+      try { renderGrowthOS(); } catch(e) { console.warn("Growth OS error:", e); }
 
       const isLocalHost = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
       if (isLocalHost) {
+        // Panggil satu kali secara aman tanpa spamming interval
         sinkronkanEngineManual();
-        setInterval(sinkronkanEngineManual, 8000);
       } else {
         const ind = document.getElementById("engineStatusIndicator");
         if (ind) ind.innerHTML = '<i class="fa-solid fa-cloud" style="color:var(--accent-cyan);"></i> CLOUD READY';
@@ -625,7 +648,7 @@
       if (btnEl) btnEl.classList.add("active");
 
       if (sheetId === 'growthTab') {
-        renderGrowthOS();
+        try { renderGrowthOS(); } catch(e) {}
       }
     }
 
@@ -647,8 +670,13 @@
       if (!tbody) return;
       tbody.innerHTML = "";
 
-      const packs = (typeof KATALOG_REGISTRY !== "undefined" && Array.isArray(KATALOG_REGISTRY)) ? KATALOG_REGISTRY : [];
-      const customPins = JSON.parse(localStorage.getItem("JIWAS_CUSTOM_PINS") || "{}");
+      const packs = getRegistryPacksSafe();
+      let customPins = {};
+      try {
+        customPins = JSON.parse(localStorage.getItem("JIWAS_CUSTOM_PINS") || "{}");
+      } catch (e) {
+        customPins = {};
+      }
 
       packs.forEach(pack => {
         if (pack.type === "digital") return;
@@ -709,7 +737,7 @@ Selamat berkreasi di JIWAS! 🚀`;
       const waInput = document.getElementById("adminWaInput").value.trim();
       if (waInput) localStorage.setItem("JIWAS_CUSTOM_WA", waInput);
 
-      const packs = (typeof KATALOG_REGISTRY !== "undefined" && Array.isArray(KATALOG_REGISTRY)) ? KATALOG_REGISTRY : [];
+      const packs = getRegistryPacksSafe();
       let customPins = {};
 
       packs.forEach(pack => {
@@ -738,20 +766,21 @@ Selamat berkreasi di JIWAS! 🚀`;
     }
 
     async function sinkronkanEngineManual() {
-      const isLocalHost = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
-      if (!isLocalHost) {
-        tampilkanToastRadar("ℹ️ Engine ATM berjalan di server cloud/lokal.");
-        return;
-      }
-
+      const ind = document.getElementById("engineStatusIndicator");
       try {
-        const res = await fetch(`${ENGINE_API_URL}/api/analytics/feed`);
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 2000); // Batasi timeout 2 detik
+
+        const res = await fetch(`${ENGINE_API_URL}/api/analytics/feed`, { signal: controller.signal });
+        clearTimeout(timeoutId);
+
+        if (!res.ok) throw new Error("Status " + res.status);
         const data = await res.json();
 
         document.getElementById("engineTotalJobs").innerText = data.totalJobs || 0;
         document.getElementById("engineTotalRendered").innerText = data.totalRendered || 0;
         document.getElementById("engineTotalValuation").innerText = 'Rp ' + (data.totalValue || 0).toLocaleString('id-ID');
-        document.getElementById("engineStatusIndicator").innerHTML = '<i class="fa-solid fa-circle-dot" style="color:#10b981;"></i> AKTIF';
+        if (ind) ind.innerHTML = '<i class="fa-solid fa-circle-dot" style="color:#10b981;"></i> AKTIF';
 
         const tbody = document.getElementById("engineActivityTableBody");
         if (data.recentLogs && data.recentLogs.length > 0) {
@@ -768,14 +797,20 @@ Selamat berkreasi di JIWAS! 🚀`;
           });
         }
       } catch (err) {
-        document.getElementById("engineStatusIndicator").innerHTML = '<i class="fa-solid fa-circle-dot" style="color:#94a3b8;"></i> STANDBY';
+        if (ind) ind.innerHTML = '<i class="fa-solid fa-circle-dot" style="color:#94a3b8;"></i> STANDBY';
       }
     }
 
     function renderDashboardAnalytics() {
-      const visits = localStorage.getItem("JIWAS_VISIT_COUNT") || "0";
-      const logs = JSON.parse(localStorage.getItem("JIWAS_USER_LOGS") || "[]");
-      const affinity = JSON.parse(localStorage.getItem("JIWAS_USER_AFFINITY") || "{}");
+      let visits = "0";
+      let logs = [];
+      let affinity = {};
+
+      try {
+        visits = localStorage.getItem("JIWAS_VISIT_COUNT") || "0";
+        logs = JSON.parse(localStorage.getItem("JIWAS_USER_LOGS") || "[]");
+        affinity = JSON.parse(localStorage.getItem("JIWAS_USER_AFFINITY") || "{}");
+      } catch(e) {}
 
       let copyCount = 0;
       let leadCount = 0;
@@ -829,14 +864,21 @@ Selamat berkreasi di JIWAS! 🚀`;
 
     // LEMBAR 4: JIWAS GROWTH OS
     function renderGrowthOS() {
-      const logs = JSON.parse(localStorage.getItem("JIWAS_USER_LOGS") || "[]");
-      const visits = parseInt(localStorage.getItem("JIWAS_VISIT_COUNT") || "1", 10);
-      const unlockedStarter = JSON.parse(localStorage.getItem("TIGAJIWA_UNLOCKED_STARTER") || "[]");
-      const unlockedVIP = JSON.parse(localStorage.getItem("TIGAJIWA_UNLOCKED_VIP") || "[]");
+      let logs = [];
+      let visits = 1;
+      let unlockedStarter = [];
+      let unlockedVIP = [];
+
+      try {
+        logs = JSON.parse(localStorage.getItem("JIWAS_USER_LOGS") || "[]");
+        visits = parseInt(localStorage.getItem("JIWAS_VISIT_COUNT") || "1", 10);
+        unlockedStarter = JSON.parse(localStorage.getItem("TIGAJIWA_UNLOCKED_STARTER") || "[]");
+        unlockedVIP = JSON.parse(localStorage.getItem("TIGAJIWA_UNLOCKED_VIP") || "[]");
+      } catch(e) {}
 
       const packSelect = document.getElementById("creativePackSelect");
       if (packSelect && packSelect.children.length === 0) {
-        const packs = (typeof KATALOG_REGISTRY !== "undefined" && Array.isArray(KATALOG_REGISTRY)) ? KATALOG_REGISTRY : [];
+        const packs = getRegistryPacksSafe();
         packs.forEach(p => {
           if (p.type !== "digital") {
             const opt = document.createElement("option");
@@ -918,7 +960,7 @@ Selamat berkreasi di JIWAS! 🚀`;
       // Diagnostics Table
       const diagBody = document.getElementById("growthDiagnosticTableBody");
       if (diagBody) {
-        const packs = (typeof KATALOG_REGISTRY !== "undefined" && Array.isArray(KATALOG_REGISTRY)) ? KATALOG_REGISTRY : [];
+        const packs = getRegistryPacksSafe();
         diagBody.innerHTML = "";
 
         let hasData = false;
@@ -964,7 +1006,11 @@ Selamat berkreasi di JIWAS! 🚀`;
       }
 
       // UTM Channel Attribution Table
-      const utmObj = JSON.parse(sessionStorage.getItem("JIWAS_ACTIVE_UTM") || "{}");
+      let utmObj = {};
+      try {
+        utmObj = JSON.parse(sessionStorage.getItem("JIWAS_ACTIVE_UTM") || "{}");
+      } catch(e) {}
+
       const chBody = document.getElementById("growthChannelTableBody");
       if (chBody) {
         const channelName = utmObj.utm_source || "Direct (Organik)";
@@ -980,7 +1026,11 @@ Selamat berkreasi di JIWAS! 🚀`;
       // Customer Voice Table
       const voiceBody = document.getElementById("customerVoiceTableBody");
       if (voiceBody) {
-        const voices = JSON.parse(localStorage.getItem("JIWAS_CUSTOMER_VOICE") || "[]");
+        let voices = [];
+        try {
+          voices = JSON.parse(localStorage.getItem("JIWAS_CUSTOMER_VOICE") || "[]");
+        } catch(e) {}
+
         if (voices.length === 0) {
           voiceBody.innerHTML = '<tr><td colspan="3" style="text-align:center; color:var(--text-muted);">Belum ada kendala yang disampaikan pengunjung.</td></tr>';
         } else {
