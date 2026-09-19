@@ -1,9 +1,11 @@
 // =========================================================================
-// JIWAS - MASTER CONTROLLER & GROWTH OS ENGINE (Unified Production Edition V3.8)
+// JIWAS - MASTER CONTROLLER & GROWTH OS ENGINE (Unified Production Edition V3.9)
 // Built-in Resilient Registry • Zero-404 Media • Decaying Progressive Showcase
 // 24 Showcase Pool (12 Pairs 1.jpg - 24.jpg) • Full 100/30 Visible Gallery
 // Dual-Tier PIN Verification • Dynamic 1:1 Aspect Ratio on Home AI Products
 // Dual Mode: Studio Atelier (9:16) & Digital AI Accounts (1:1 Square)
+// Pinterest-Style Symmetrical Search • Invisible Admin Doorway
+// Enhanced Family Formation Composer (Age, Relative Height, Body Proportion)
 // =========================================================================
 
 let activePack = null;
@@ -84,6 +86,7 @@ function initApp() {
   try { initSocialProofPopups(); } catch (e) {}
   try { initExitIntentSurvey(); } catch (e) {}
   try { initPwaInstaller(); } catch (e) {}
+  try { initInvisibleAdminDoorway(); } catch (e) {}
 
   renderHomeCategories();
   renderAtelierFeed();
@@ -427,7 +430,6 @@ function renderHomeCategories() {
 
   // 2. Render Koleksi Akun AI di Home (Rasio Persegi 1:1)
   const rawAccounts = (typeof DATABASE_AI_ACCOUNT !== "undefined") ? DATABASE_AI_ACCOUNT : [];
-  // Tampilkan 4 akun unggulan di beranda
   const featuredAccounts = rawAccounts.slice(0, 4);
 
   featuredAccounts.forEach(acc => {
@@ -877,9 +879,8 @@ function bukaRadarDenganPIN() {
   }
 }
 
-
 // -------------------------------------------------------------------------
-// 10. FORMASI KELUARGA (FAMILY COMPOSER LENGKAP: UMUR, TINGGI & POSTUR)
+// 10. FORMASI KELUARGA LENGKAP: UMUR, TINGGI & POSTUR (FAMILY COMPOSER)
 // -------------------------------------------------------------------------
 function updatePromptFormasi() {
   const father = document.getElementById("fatherBuild")?.value || "medium build";
@@ -892,7 +893,6 @@ function updatePromptFormasi() {
 
   extraFamilyMembers.forEach(mem => {
     if (mem.type === 'anak') {
-      // Menyusun deskripsi detail anak: umur, postur/berat badan, dan tinggi
       parts.push(`Include ${mem.gender}, around ${mem.age} old, ${mem.height}, with a ${mem.build}, standing or seated harmoniously with the parents.`);
     } else {
       parts.push(`Include ${mem.role} with a ${mem.build}, seated or standing gracefully in the family formation.`);
@@ -922,12 +922,11 @@ function tambahAnggota(tipe) {
   const memberIndex = extraFamilyMembers.length;
 
   if (tipe === 'anak') {
-    // Data default untuk anggota anak
     const childObj = {
       type: 'anak',
       gender: 'a young boy',
-      age: '5 years',
-      height: 'waist-height standing next to parents',
+      age: '5-7 years old',
+      height: 'waist-height of parents',
       build: 'slender healthy posture'
     };
     extraFamilyMembers.push(childObj);
@@ -935,7 +934,7 @@ function tambahAnggota(tipe) {
     const div = document.createElement("div");
     div.className = "member-row member-child-row";
     div.id = `memberRow_${memberIndex}`;
-    div.style.cssText = "display: flex; gap: 6px; flex-wrap: wrap; align-items: center; background: #0e0e15; padding: 8px; border-radius: 6px; border: 1px solid rgba(212,175,55,0.15); margin-bottom: 6px;";
+    div.style.cssText = "display:flex; gap:6px; flex-wrap:wrap; align-items:center; background:#0e0e15; padding:8px; border-radius:6px; border:1px solid rgba(212,175,55,0.15); margin-bottom:6px;";
 
     div.innerHTML = `
       <span class="member-label" style="min-width:70px;"><i class="fa-solid fa-child"></i> Anak:</span>
@@ -970,7 +969,7 @@ function tambahAnggota(tipe) {
         <option value="shoulder-height of parents">Hampir Setinggi Bahu</option>
       </select>
 
-      <!-- Postur / Bentuk Badan (Berat Badan AI) -->
+      <!-- Postur / Berat Badan AI -->
       <select class="select-composer" onchange="updateMemberChild(${memberIndex}, 'build', this.value)">
         <option value="slender healthy posture" selected>Ramping Sehat</option>
         <option value="chubby adorable cheeks and build">Gembul / Berisi Lucu</option>
@@ -982,7 +981,6 @@ function tambahAnggota(tipe) {
     container.appendChild(div);
 
   } else {
-    // Anggota selain anak (Kakek, Nenek, Kerabat)
     let roleText = "the grandfather";
     if (tipe === 'nenek') roleText = "the grandmother";
     if (tipe === 'lainnya') roleText = "an extended relative";
@@ -1013,7 +1011,16 @@ function updateMemberChild(index, field, value) {
   }
 }
 
+function salinPromptFormasi() {
+  const text = updatePromptFormasi();
+  copasPrompt(text);
+}
 
+function terapkanKeSemuaPromptKeluarga() {
+  currentAppliedFormationPrompt = updatePromptFormasi();
+  if (activePack) renderDetailItemCards();
+  tampilkanToast("✨ Formasi disisipkan ke seluruh kartu!");
+}
 
 // -------------------------------------------------------------------------
 // 11. EXIT-INTENT SURVEY & PWA INSTALLER
@@ -1082,4 +1089,101 @@ function picuInstallPWA() {
 function tutupBannerPWA() {
   const banner = document.getElementById("pwaInstallBanner");
   if (banner) banner.classList.add("hidden");
+}
+
+// -------------------------------------------------------------------------
+// 12. PINTEREST-STYLE LIVE SEARCH & INVISIBLE ADMIN DOORWAY
+// -------------------------------------------------------------------------
+function handleLiveAtelierSearch(keyword) {
+  const cleanKey = (keyword || "").toLowerCase().trim();
+  const clearBtn = document.getElementById("btnClearGlobalSearch");
+  if (clearBtn) {
+    clearBtn.classList.toggle("hidden", cleanKey.length === 0);
+  }
+
+  // 1. Filter Katalog Studio di Beranda
+  const studioCards = document.querySelectorAll("#gridHomeCategories .catalog-card");
+  studioCards.forEach(card => {
+    const text = card.innerText.toLowerCase();
+    const isMatch = cleanKey === "" || text.includes(cleanKey);
+    card.style.display = isMatch ? "" : "none";
+  });
+
+  // 2. Filter Atelier Feed (Pinterest Pin-Items)
+  const pinItems = document.querySelectorAll("#gridAtelierFeed .pin-item");
+  pinItems.forEach(item => {
+    const text = item.innerText.toLowerCase();
+    const isMatch = cleanKey === "" || text.includes(cleanKey);
+    item.style.display = isMatch ? "" : "none";
+  });
+}
+
+function resetLiveAtelierSearch() {
+  const input = document.getElementById("globalAtelierSearch");
+  if (input) {
+    input.value = "";
+    handleLiveAtelierSearch("");
+  }
+}
+
+function filterByQuickChip(categoryTag, btnEl) {
+  document.querySelectorAll(".quick-tag-chip").forEach(c => c.classList.remove("active"));
+  if (btnEl) btnEl.classList.add("active");
+
+  const input = document.getElementById("globalAtelierSearch");
+  
+  if (categoryTag === 'all') {
+    if (input) input.value = "";
+    handleLiveAtelierSearch("");
+    return;
+  }
+
+  if (categoryTag === 'akun') {
+    switchMainTab('akun');
+    return;
+  }
+
+  const tagMap = {
+    'keluarga': 'family',
+    'hijab': 'hijab',
+    'ceo': 'ceo',
+    'velvet': 'velvet',
+    'video': 'video'
+  };
+
+  const searchKeyword = tagMap[categoryTag] || categoryTag;
+  if (input) input.value = searchKeyword;
+  handleLiveAtelierSearch(searchKeyword);
+}
+
+function initInvisibleAdminDoorway() {
+  const brandTitle = document.querySelector(".brand-title-gold");
+  if (!brandTitle) return;
+
+  // Metode 1: Triple-Click Cepat (Desktop / Mobile Click)
+  let clickCount = 0;
+  let clickTimer = null;
+
+  brandTitle.addEventListener("click", () => {
+    clickCount++;
+    if (clickCount === 1) {
+      clickTimer = setTimeout(() => { clickCount = 0; }, 700);
+    } else if (clickCount === 3) {
+      clearTimeout(clickTimer);
+      clickCount = 0;
+      bukaRadarDenganPIN();
+    }
+  });
+
+  // Metode 2: Tahan (Long-Press) 1.5 Detik di Layar Sentuh HP
+  let pressTimer = null;
+  brandTitle.addEventListener("touchstart", () => {
+    pressTimer = setTimeout(() => {
+      bukaRadarDenganPIN();
+    }, 1500);
+  }, { passive: true });
+
+  brandTitle.addEventListener("touchend", () => {
+    if (pressTimer) clearTimeout(pressTimer);
+  });
 }
