@@ -221,6 +221,57 @@
     }
     .toast-radar.hidden { display: none; }
 
+    /* STYLES KHUSUS WHATSAPP 1 PINTU */
+    .wa-control-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    @media (max-width: 850px) {
+      .wa-control-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .wa-preview-box {
+      background: #09090d;
+      border: 1px solid #22c55e;
+      border-radius: 8px;
+      padding: 12px;
+      font-family: monospace;
+      font-size: 0.78rem;
+      color: #e2e8f0;
+      white-space: pre-wrap;
+      word-break: break-word;
+      min-height: 140px;
+      max-height: 220px;
+      overflow-y: auto;
+    }
+
+    .btn-send-wa {
+      background: #22c55e;
+      color: #000;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      text-decoration: none;
+      width: 100%;
+      margin-top: 8px;
+      transition: all 0.2s ease;
+    }
+    .btn-send-wa:hover {
+      background: #16a34a;
+      color: #fff;
+    }
+
     /* STYLES KHUSUS LEMBAR 4: GROWTH OS */
     .growth-layout-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
     @media(max-width: 800px) { .growth-layout-2 { grid-template-columns: 1fr; } }
@@ -315,18 +366,66 @@
       </div>
     </div>
 
-    <!-- LEMBAR 2: MASTER PIN & GENERATOR BALASAN WA -->
+    <!-- LEMBAR 2: MASTER PIN & KONTROL SATU PINTU WHATSAPP -->
     <div id="pinTab" class="sheet-content">
+      
+      <!-- WA CONTROL DISPATCH PANEL (SATU PINTU) -->
+      <div class="panel-box" style="border: 1px solid #22c55e; background: linear-gradient(135deg, rgba(34,197,94,0.06), rgba(18,18,24,0.95));">
+        <div class="panel-title" style="color: #4ade80;">
+          <span><i class="fa-brands fa-whatsapp"></i> KONTROL SATU PINTU: GENERATOR BALASAN & DISPATCH WA</span>
+          <span style="font-size:0.7rem; color:var(--text-muted);">Langsung kirim ke pembeli via WhatsApp Web</span>
+        </div>
+
+        <div class="wa-control-grid">
+          <!-- Sisi Kiri: Form Generator Cepat -->
+          <div>
+            <div style="margin-bottom:10px;">
+              <label style="font-size:0.75rem; font-weight:700; color:var(--gold-light); display:block; margin-bottom:4px;">Nomor Pembeli (Opsional / dengan 62):</label>
+              <input type="text" id="targetBuyerPhone" class="input-growth" style="width:100%;" placeholder="Contoh: 6281234567890">
+            </div>
+
+            <div style="margin-bottom:10px;">
+              <label style="font-size:0.75rem; font-weight:700; color:var(--gold-light); display:block; margin-bottom:4px;">Pilih Katalog Pembeli:</label>
+              <select id="waQuickPackSelect" class="input-growth" style="width:100%;" onchange="updateLiveWAPreview()"></select>
+            </div>
+
+            <div style="margin-bottom:12px;">
+              <label style="font-size:0.75rem; font-weight:700; color:var(--gold-light); display:block; margin-bottom:4px;">Pilih Paket Pembelian:</label>
+              <select id="waQuickTierSelect" class="input-growth" style="width:100%;" onchange="updateLiveWAPreview()">
+                <option value="starter">Paket Starter (10K) - 20 Prompt</option>
+                <option value="vip" selected>Paket VIP (25K) - Full 100 Prompt</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Sisi Kanan: Live Preview & Action Button -->
+          <div>
+            <label style="font-size:0.75rem; font-weight:700; color:#4ade80; display:block; margin-bottom:4px;">Preview Pesan WhatsApp:</label>
+            <div class="wa-preview-box" id="waMessageLivePreview">Menyiapkan pesan konfirmasi...</div>
+            
+            <div style="display:flex; gap:8px; margin-top:8px;">
+              <button class="btn-action" style="flex:1;" onclick="salinLiveWAPreview()">
+                <i class="fa-solid fa-copy"></i> Salin Teks
+              </button>
+              <button class="btn-send-wa" style="flex:1.2; margin-top:0;" onclick="bukaDirectWhatsApp()">
+                <i class="fa-brands fa-whatsapp"></i> Buka Chat WA
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MASTER TABLE PIN & CONFIG ADMIN -->
       <div class="panel-box">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:10px;">
-          <h2 class="panel-title"><i class="fa-solid fa-sliders"></i> Master PIN & Generator Pesan WA</h2>
+          <h2 class="panel-title"><i class="fa-solid fa-sliders"></i> Master Database PIN & Nomor Admin</h2>
           <button class="btn-action" onclick="simpanSemuaPIN()"><i class="fa-solid fa-floppy-disk"></i> Simpan Seluruh PIN</button>
         </div>
 
         <div style="background:#161620; padding:12px; border-radius:8px; margin-bottom:14px; display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
-          <label style="font-size:0.8rem; font-weight:700; color:var(--gold-light);"><i class="fa-brands fa-whatsapp"></i> Nomor WhatsApp Admin:</label>
+          <label style="font-size:0.8rem; font-weight:700; color:var(--gold-light);"><i class="fa-brands fa-whatsapp"></i> Nomor WhatsApp Admin Toko:</label>
           <input type="text" id="adminWaInput" class="input-pin" style="width:190px;" placeholder="6281234567890">
-          <span style="font-size:0.7rem; color:var(--text-muted);">*Nomor tujuan pembeli saat klik beli paket</span>
+          <span style="font-size:0.7rem; color:var(--text-muted);">*Nomor tujuan penerima saat pembeli klik tombol beli di etalase</span>
         </div>
 
         <div class="search-filter-box">
@@ -347,6 +446,7 @@
           </table>
         </div>
       </div>
+
     </div>
 
     <!-- LEMBAR 3: MONITOR PRODUKSI ENGINE AI -->
@@ -601,7 +701,7 @@
   <script>
     const ENGINE_API_URL = "http://localhost:3000";
 
-    // Fallback cadangan jika data.js lambat atau belum terdefinisi
+    // Fallback cadangan resilien jika data.js lambat dimuat
     const FALLBACK_KATALOG_SAFE = [
       { id: "velvet-lux", title: "Luxury Royal Velvet Studio", type: "foto" },
       { id: "hijab-lux", title: "Luxury Hijab Collection", type: "foto" },
@@ -627,11 +727,11 @@
     document.addEventListener("DOMContentLoaded", () => {
       try { renderDashboardAnalytics(); } catch(e) { console.warn("Analytics error:", e); }
       try { renderPinManager(); } catch(e) { console.warn("PIN Manager error:", e); }
+      try { populateQuickPackDropdown(); } catch(e) { console.warn("Dropdown error:", e); }
       try { renderGrowthOS(); } catch(e) { console.warn("Growth OS error:", e); }
 
       const isLocalHost = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
       if (isLocalHost) {
-        // Panggil satu kali secara aman tanpa spamming interval
         sinkronkanEngineManual();
       } else {
         const ind = document.getElementById("engineStatusIndicator");
@@ -649,6 +749,8 @@
 
       if (sheetId === 'growthTab') {
         try { renderGrowthOS(); } catch(e) {}
+      } else if (sheetId === 'pinTab') {
+        try { populateQuickPackDropdown(); } catch(e) {}
       }
     }
 
@@ -660,6 +762,87 @@
       });
     }
 
+    // -------------------------------------------------------------------------
+    // WHATSAPP 1 PINTU ENGINE & GENERATOR
+    // -------------------------------------------------------------------------
+    function populateQuickPackDropdown() {
+      const select = document.getElementById("waQuickPackSelect");
+      if (!select) return;
+      if (select.children.length === 0) {
+        const packs = getRegistryPacksSafe();
+        packs.forEach(p => {
+          if (p.type !== "digital") {
+            const opt = document.createElement("option");
+            opt.value = p.id;
+            opt.innerText = p.title;
+            select.appendChild(opt);
+          }
+        });
+      }
+      updateLiveWAPreview();
+    }
+
+    function updateLiveWAPreview() {
+      const packId = document.getElementById("waQuickPackSelect")?.value;
+      const tier = document.getElementById("waQuickTierSelect")?.value || "vip";
+      const previewBox = document.getElementById("waMessageLivePreview");
+      if (!packId || !previewBox) return;
+
+      const packs = getRegistryPacksSafe();
+      const targetPack = packs.find(p => p.id === packId);
+      const packTitle = targetPack ? targetPack.title : "Katalog Atelier";
+
+      let pinVal = "";
+      const customPins = JSON.parse(localStorage.getItem("JIWAS_CUSTOM_PINS") || "{}");
+      if (customPins[packId]) {
+        pinVal = tier === "vip" ? customPins[packId].pin25k : customPins[packId].pin10k;
+      }
+      if (!pinVal) {
+        const tierKey = tier === "vip" ? `pin25k_${packId}` : `pin10k_${packId}`;
+        pinVal = document.getElementById(tierKey)?.value.trim().toUpperCase() || (tier === "vip" ? `${packId.toUpperCase()}VIP25` : `${packId.toUpperCase()}10K`);
+      }
+
+      const tierLabel = tier === "vip" ? "VIP Full (25K)" : "Starter (10K)";
+      const currentOrigin = window.location.origin;
+      let pathRoot = window.location.pathname.replace("analytics.html", "index.html");
+      const magicLink = `${currentOrigin}${pathRoot}?pack=${packId}&unlock=${tier}&pin=${pinVal}`;
+
+      const template = `Terima kasih banyak Kak! Pembayaran untuk *${packTitle}* (${tierLabel}) telah kami terima.
+
+✨ *KLIK LINK INI UNTUK LANGSUNG MEMBUKA FORMULA:*
+👉 ${magicLink}
+
+*(Klik tautan di atas, seluruh formula otomatis terbuka tanpa repot ketik PIN)*
+
+Kode PIN Cadangan: *${pinVal}*
+Selamat berkreasi di JIWAS Atelier! 🚀`;
+
+      previewBox.innerText = template;
+    }
+
+    function salinLiveWAPreview() {
+      const text = document.getElementById("waMessageLivePreview")?.innerText;
+      if (!text) return;
+      navigator.clipboard.writeText(text).then(() => {
+        tampilkanToastRadar("📋 Pesan balasan WhatsApp berhasil disalin!");
+      });
+    }
+
+    function bukaDirectWhatsApp() {
+      const text = document.getElementById("waMessageLivePreview")?.innerText;
+      const rawPhone = document.getElementById("targetBuyerPhone")?.value.replace(/[^0-9]/g, '');
+      if (!text) return;
+
+      let url = `https://wa.me/?text=${encodeURIComponent(text)}`;
+      if (rawPhone && rawPhone.length > 5) {
+        url = `https://wa.me/${rawPhone}?text=${encodeURIComponent(text)}`;
+      }
+      window.open(url, "_blank");
+    }
+
+    // -------------------------------------------------------------------------
+    // MASTER PIN MANAGER TABLE
+    // -------------------------------------------------------------------------
     function renderPinManager() {
       const waInput = document.getElementById("adminWaInput");
       const currentWa = localStorage.getItem("JIWAS_CUSTOM_WA") || 
@@ -694,13 +877,13 @@
             <span style="font-size:0.68rem; color:var(--text-muted);">ID: <code>${pack.id}</code></span>
           </td>
           <td>
-            <input type="text" class="input-pin" id="pin10k_${pack.id}" value="${val10k}"><br>
+            <input type="text" class="input-pin" id="pin10k_${pack.id}" value="${val10k}" oninput="updateLiveWAPreview()"><br>
             <button class="btn-quick-copy" onclick="salinTemplateBalasan('${pack.title}', 'Starter (10K)', '${pack.id}', 'pin10k')">
               <i class="fa-solid fa-copy"></i> Salin Link Buka 10K
             </button>
           </td>
           <td>
-            <input type="text" class="input-pin" id="pin25k_${pack.id}" value="${val25k}"><br>
+            <input type="text" class="input-pin" id="pin25k_${pack.id}" value="${val25k}" oninput="updateLiveWAPreview()"><br>
             <button class="btn-quick-copy btn-quick-copy-vip" onclick="salinTemplateBalasan('${pack.title}', 'VIP (25K)', '${pack.id}', 'pin25k')">
               <i class="fa-solid fa-copy"></i> Salin Link Buka 25K
             </button>
@@ -753,7 +936,8 @@ Selamat berkreasi di JIWAS! 🚀`;
       });
 
       localStorage.setItem("JIWAS_CUSTOM_PINS", JSON.stringify(customPins));
-      tampilkanToastRadar("✅ Seluruh PIN berhasil diperbarui!");
+      updateLiveWAPreview();
+      tampilkanToastRadar("✅ Seluruh PIN & WhatsApp Dispatch berhasil diperbarui!");
     }
 
     function tampilkanToastRadar(msg) {
@@ -769,7 +953,7 @@ Selamat berkreasi di JIWAS! 🚀`;
       const ind = document.getElementById("engineStatusIndicator");
       try {
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 2000); // Batasi timeout 2 detik
+        const timeoutId = setTimeout(() => controller.abort(), 2000);
 
         const res = await fetch(`${ENGINE_API_URL}/api/analytics/feed`, { signal: controller.signal });
         clearTimeout(timeoutId);
@@ -862,7 +1046,9 @@ Selamat berkreasi di JIWAS! 🚀`;
       }
     }
 
+    // -------------------------------------------------------------------------
     // LEMBAR 4: JIWAS GROWTH OS
+    // -------------------------------------------------------------------------
     function renderGrowthOS() {
       let logs = [];
       let visits = 1;
