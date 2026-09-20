@@ -1,0 +1,14 @@
+{
+  "name": "jiwas-store",
+  "version": "1.0.0",
+  "description": "JIWAS Digital Store Platform",
+  "main": "index.html",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2"
+  }
+}
