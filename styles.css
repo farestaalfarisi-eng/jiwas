@@ -1594,3 +1594,98 @@ footer {
 .hidden {
   display: none !important;
 }
+
+
+/* -------------------------------------------------------------------------
+   ATELIER CENTER SEARCH ENGINE & QUICK CHIPS (PINTEREST CAPSULE LUXURY)
+   ------------------------------------------------------------------------- */
+.atelier-search-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 18px auto 26px;
+  width: 100%;
+  max-width: 640px;
+  padding: 0 4px;
+}
+
+.search-pill-container {
+  position: relative;
+  width: 100%;
+}
+
+.search-pill-container i.search-icon-gold {
+  position: absolute;
+  left: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--gold-primary);
+  font-size: 0.95rem;
+  pointer-events: none;
+}
+
+.search-pill-input {
+  width: 100%;
+  background: rgba(18, 18, 24, 0.88);
+  border: 1px solid var(--card-border);
+  color: #fff;
+  padding: 13px 44px 13px 46px;
+  border-radius: 30px;
+  font-size: 0.84rem;
+  outline: none;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  transition: all 0.3s ease;
+}
+
+.search-pill-input:focus {
+  border-color: var(--gold-primary);
+  box-shadow: 0 0 16px rgba(212, 175, 55, 0.25);
+  background: #151520;
+}
+
+.search-pill-input::placeholder {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+}
+
+.btn-clear-search {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  cursor: pointer;
+  padding: 6px;
+}
+.btn-clear-search:hover { color: #fff; }
+
+.search-quick-tags {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.quick-tag-chip {
+  background: #14141c;
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  color: var(--text-muted);
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.quick-tag-chip:hover,
+.quick-tag-chip.active {
+  background: var(--gold-gradient);
+  color: #000;
+  border-color: transparent;
+  box-shadow: 0 2px 8px rgba(212, 175, 55, 0.3);
+}
