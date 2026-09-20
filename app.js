@@ -1,11 +1,11 @@
 // =========================================================================
-// JIWAS - MASTER CONTROLLER & GROWTH OS ENGINE (Unified Production Edition V3.9)
-// Built-in Resilient Registry • Zero-404 Media • Decaying Progressive Showcase
-// 24 Showcase Pool (12 Pairs 1.jpg - 24.jpg) • Full 100/30 Visible Gallery
-// Dual-Tier PIN Verification • Dynamic 1:1 Aspect Ratio on Home AI Products
-// Dual Mode: Studio Atelier (9:16) & Digital AI Accounts (1:1 Square)
-// Pinterest-Style Symmetrical Search • Invisible Admin Doorway
-// Enhanced Family Formation Composer (Age, Relative Height, Body Proportion)
+// JIWAS - MASTER CONTROLLER & GROWTH OS ENGINE (Full Master Edition V5.2 - Restored)
+// Theme: Dark Luxury & Gold Atelier • Strict 9:16 Ratio & 1:1 Digital Store
+// Core Brand: Family Atelier Collection Top Priority
+// Cashflow Engine: Live H2H Inca Store Integration (Real-time Stock)
+// Media Engine: Full MP4 Native Support for Video Suites & 1:1 AI Accounts
+// Dual-Tier PIN Verification • Dynamic Script Injector • Family Formation Composer
+// Curated & Designed for JIWAS Atelier by Sahabat Kaya
 // =========================================================================
 
 let activePack = null;
@@ -14,19 +14,29 @@ let extraFamilyMembers = [];
 let currentAppliedFormationPrompt = "";
 const loadedPromptScripts = new Set();
 
+// -------------------------------------------------------------------------
+// REGISTRY UTAMA DENGAN PRIORITAS KOLEKSI KELUARGA DI PALING ATAS
+// -------------------------------------------------------------------------
 const DEFAULT_FALLBACK_KATALOG = [
-  { id: "velvet-lux", folder: "velvet", title: "Luxury Royal Velvet Studio", type: "foto", status: "live", rating: "4.9/5", sales: "180+ Terjual" },
-  { id: "hijab-lux", folder: "hijab", title: "Luxury Hijab Collection", type: "foto", status: "live", rating: "5.0/5", sales: "210+ Terjual" },
-  { id: "couple-cinematic", folder: "couple", title: "Luxury Couple Cinematic", type: "foto", status: "live", rating: "4.8/5", sales: "95+ Terjual" },
+  // 1. Pilar Utama (Core Brand): Koleksi Studio Keluarga Bangsawan
   { id: "family-lux", folder: "family", title: "Luxury Family Collection", type: "foto", status: "live", rating: "5.0/5", sales: "200+ Terjual" },
   { id: "family02-lux", folder: "family02", title: "Luxury Family Collection Vol.02", type: "foto", status: "live", rating: "4.9/5", sales: "85+ Terjual" },
   { id: "family03-lux", folder: "family03", title: "Luxury Family Collection Vol.03", type: "foto", status: "live", rating: "4.8/5", sales: "70+ Terjual" },
+
+  // 2. Koleksi Studio Foto & Akademis
+  { id: "sekolah-yearbook", folder: "sekolah", title: "Yearbook & Formal Identity Studio", type: "foto", status: "live", rating: "5.0/5", sales: "Baru Rilis" },
+  { id: "retouch-restoration", folder: "retouch", title: "ID Photo & Beauty Restoration", type: "foto", status: "live", rating: "4.9/5", sales: "Baru Rilis" },
+  { id: "velvet-lux", folder: "velvet", title: "Luxury Royal Velvet Studio", type: "foto", status: "live", rating: "4.9/5", sales: "180+ Terjual" },
+  { id: "hijab-lux", folder: "hijab", title: "Luxury Hijab Collection", type: "foto", status: "live", rating: "5.0/5", sales: "210+ Terjual" },
+  { id: "couple-cinematic", folder: "couple", title: "Luxury Couple Cinematic", type: "foto", status: "live", rating: "4.8/5", sales: "95+ Terjual" },
   { id: "ceo-lux", folder: "ceo", title: "Luxury CEO & Corporate Executive", type: "foto", status: "live", rating: "4.9/5", sales: "140+ Terjual" },
   { id: "fantasi-gold", folder: "fantasi", title: "Luxury Fantasy Gold", type: "foto", status: "live", rating: "4.9/5", sales: "115+ Terjual" },
   { id: "makeup-glam", folder: "makeup", title: "Luxury Beauty & Makeover", type: "foto", status: "live", rating: "5.0/5", sales: "160+ Terjual" },
   { id: "lifestyle-lux", folder: "lifestyle", title: "Luxury Urban Lifestyle", type: "foto", status: "live", rating: "4.7/5", sales: "50+ Terjual" },
-  { id: "video-cinematic", folder: "video-cinematic", title: "Cinematic Motion Suite", type: "video", status: "live", rating: "5.0/5", sales: "220+ Terjual" },
-  { id: "umkm-commercial", folder: "umkm-commercial", title: "Produk Komersial UMKM Staging", type: "product", status: "live", rating: "5.0/5", sales: "Baru Rilis" }
+
+  // 3. Koleksi Video & Komersial UMKM
+  { id: "video-cinematic", folder: "video", title: "Cinematic Motion Suite", type: "video", status: "live", rating: "5.0/5", sales: "220+ Terjual" },
+  { id: "umkm-commercial", folder: "umkm", title: "Commercial UMKM & Product Studio", type: "foto", status: "live", rating: "5.0/5", sales: "Baru Rilis" }
 ];
 
 function getActiveRegistry() {
@@ -36,7 +46,16 @@ function getActiveRegistry() {
   return DEFAULT_FALLBACK_KATALOG;
 }
 
-// 1. GENERATE SHOWCASE POOL (12 Pasang / 24 Foto dari images/showcase/)
+function getDatabaseAkun() {
+  if (typeof DATABASE_AI_ACCOUNT !== "undefined" && Array.isArray(DATABASE_AI_ACCOUNT) && DATABASE_AI_ACCOUNT.length > 0) {
+    return DATABASE_AI_ACCOUNT;
+  }
+  return [];
+}
+
+// -------------------------------------------------------------------------
+// SHOWCASE POOL SELECTION (12 Pasang / 24 Aset Foto)
+// -------------------------------------------------------------------------
 function getShowcasePool() {
   const titles = [
     "Luxury Royal Velvet Studio",
@@ -73,6 +92,9 @@ let userAffinity = {};
 let surveyTriggered = false;
 let deferredPrompt = null;
 
+// -------------------------------------------------------------------------
+// INITIALIZATION APP
+// -------------------------------------------------------------------------
 document.addEventListener("DOMContentLoaded", () => {
   initApp();
 });
@@ -88,7 +110,12 @@ function initApp() {
   try { initPwaInstaller(); } catch (e) {}
   try { initInvisibleAdminDoorway(); } catch (e) {}
 
+  // Sinkronkan stok H2H Inca Store secara langsung saat web dimuat
+  sinkronkanStokIncaRealtime();
+
+  // Render komponen utama
   renderHomeCategories();
+  renderHomeDigitalAi();
   renderAtelierFeed();
   renderKatalogFoto();
   renderKatalogVideo();
@@ -98,7 +125,56 @@ function initApp() {
 }
 
 // -------------------------------------------------------------------------
-// 1. VISITOR, AFFINITY & DECAYING SHOWCASE (1-3 Kunjungan Tampil)
+// 1. SINKRONISASI STOK INCA STORE REAL-TIME KE DATABASE RUNTIME
+// -------------------------------------------------------------------------
+async function sinkronkanStokIncaRealtime() {
+  const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+  const LIVE_URL = isLocal ? "http://localhost:3000/api/live-stock" : "/api/live-stock";
+
+  try {
+    const res = await fetch(LIVE_URL);
+    if (!res.ok) return;
+    const result = await res.json();
+
+    if (!result.success || !Array.isArray(result.products)) return;
+    if (typeof DATABASE_AI_ACCOUNT === "undefined") return;
+
+    result.products.forEach(remoteItem => {
+      const localItem = DATABASE_AI_ACCOUNT.find(item =>
+        item.apiConfig && (
+          String(item.apiConfig.productId).toLowerCase() === String(remoteItem.id || "").toLowerCase() ||
+          String(item.apiConfig.productId).toLowerCase() === String(remoteItem.name || "").toLowerCase() ||
+          String(item.nama).toLowerCase().includes(String(remoteItem.name || "").toLowerCase())
+        )
+      );
+
+      if (localItem && remoteItem.variants && Array.isArray(remoteItem.variants)) {
+        localItem.variants = remoteItem.variants.map(rv => {
+          const cost = Number(rv.price || rv.cost || 0);
+          return {
+            name: rv.name,
+            cost: cost,
+            price: rv.selling_price || (cost > 10000 ? cost + 15000 : cost + 6000),
+            stock: Number(rv.stock || 0),
+            ready: Number(rv.stock || 0) > 0
+          };
+        });
+      }
+    });
+
+    renderHomeDigitalAi();
+    if (typeof AiAccountEngine !== "undefined" && typeof AiAccountEngine.renderCatalog === "function") {
+      AiAccountEngine.renderCatalog();
+    } else {
+      renderKatalogAkun();
+    }
+  } catch (err) {
+    console.warn("[LIVE STOCK]: Server gateway belum aktif. Menggunakan basis data lokal.", err);
+  }
+}
+
+// -------------------------------------------------------------------------
+// 2. VISITOR, AFFINITY & DECAYING SHOWCASE
 // -------------------------------------------------------------------------
 function initVisitorAndAffinity() {
   try {
@@ -180,7 +256,7 @@ function initSocialProofPopups() {
   if (!toast || !nameEl || !descEl) return;
 
   const daftarNama = ["Kak Rina (Surabaya)", "Bunda Dewi (Jakarta)", "Kak Dimas (Bandung)", "Pak Hendra (Medan)", "Kak Maya (Yogyakarta)"];
-  const daftarAksi = ["Baru saja membuka PIN VIP 25K", "Membeli PIN Starter 10K", "Mengaktifkan CapCut Pro Bot", "Membeli Akun ChatGPT Plus"];
+  const daftarAksi = ["Baru saja membuka PIN VIP 25K", "Membeli PIN Starter 10K", "Mengaktifkan CapCut Pro Bot", "Membeli Canva Pro 1 Bulan"];
 
   setInterval(() => {
     nameEl.innerText = daftarNama[Math.floor(Math.random() * daftarNama.length)];
@@ -205,7 +281,7 @@ function initLiveMarqueeTransactions() {
 }
 
 // -------------------------------------------------------------------------
-// 2. WHATSAPP ENGINE & UTILITY LINKS
+// 3. WHATSAPP & UTILITY ROUTING
 // -------------------------------------------------------------------------
 function getAdminWhatsAppNumber() {
   return localStorage.getItem("JIWAS_CUSTOM_WA") || 
@@ -233,7 +309,7 @@ function bagikanKoleksiKeWA(packTitle) {
 }
 
 // -------------------------------------------------------------------------
-// 3. SHOWCASE SLIDER
+// 4. SHOWCASE BEFORE & AFTER SLIDER
 // -------------------------------------------------------------------------
 function initShowcaseAutoSlider() {
   renderShowcaseCards();
@@ -296,7 +372,7 @@ function lompatKeShowcaseSlide(idx) {
 }
 
 // -------------------------------------------------------------------------
-// 4. ATELIER FEED & TABS CONTROLLER
+// 5. ATELIER FEED & TABS CONTROLLER
 // -------------------------------------------------------------------------
 function renderAtelierFeed() {
   const container = document.getElementById("gridAtelierFeed");
@@ -307,30 +383,38 @@ function renderAtelierFeed() {
   allPacks.forEach(pack => {
     const isVideo = pack.type === "video";
     const isProduct = pack.type === "product";
-    const isStoryboard = pack.type === "storyboard";
-    const isPromo = pack.type === "promo";
 
     for (let idx = 1; idx <= 4; idx++) {
       const card = document.createElement("div");
       card.className = "pin-item";
 
-      let srcImg = `images/${pack.folder}/${idx}.jpg`;
-      if (isVideo) srcImg = `videos/${pack.folder}/${idx}.webp`;
-      if (isProduct) srcImg = `products/${pack.folder}/${idx}.webp`;
-      if (isStoryboard) srcImg = `storyboards/${pack.folder}/${idx}.webp`;
-      if (isPromo) srcImg = `promos/${pack.folder}/${idx}.webp`;
-
       let subLabel = `Item #${idx} • Buka 100 Prompt`;
       if (isVideo) subLabel = `Item #${idx} • Buka 30 Video`;
       if (isProduct) subLabel = `Item #${idx} • Buka 30 Produk`;
-      if (isStoryboard) subLabel = `Item #${idx} • Buka 30 Iklan`;
-      if (isPromo) subLabel = `Item #${idx} • Buka 30 Banner`;
 
       const freeBadge = (idx <= 3) ? `<span class="pin-badge-free-elegant">SAMPLE GRATIS</span>` : '';
 
+      let mediaElementHTML = "";
+      if (isVideo) {
+        mediaElementHTML = `
+          <video 
+            src="videos/${pack.folder}/${idx}.mp4" 
+            class="aspect-9-16" 
+            autoplay loop muted playsinline 
+            style="width:100%; object-fit:cover; display:block;"
+            onloadeddata="this.classList.add('img-loaded')"
+          ></video>
+        `;
+      } else {
+        let srcImg = `images/${pack.folder}/${idx}.jpg`;
+        mediaElementHTML = `
+          <img src="${srcImg}" alt="${pack.title}" loading="lazy" onload="this.classList.add('img-loaded')" onerror="this.onerror=null; this.src='images/velvet/cover.jpg'; this.classList.add('img-loaded');">
+        `;
+      }
+
       card.innerHTML = `
         ${freeBadge}
-        <img src="${srcImg}" alt="${pack.title}" loading="lazy" onload="this.classList.add('img-loaded')" onerror="this.onerror=null; this.src='images/velvet/cover.jpg'; this.classList.add('img-loaded');">
+        ${mediaElementHTML}
         <div class="pin-info-overlay">
           <div class="pin-title">${pack.title}</div>
           <div class="pin-sub">${subLabel}</div>
@@ -389,25 +473,34 @@ function switchMainTab(tabType, btnEl) {
 }
 
 // -------------------------------------------------------------------------
-// 5. ETALASE DISPLAY RENDERING (FOTO/VIDEO 9:16 + AKUN AI 1:1 DI HOME)
+// 6. ETALASE DISPLAY RENDERING (9:16 STUDIO & 1:1 SQUARE DIGITAL AKUN)
 // -------------------------------------------------------------------------
 function renderHomeCategories() {
   const container = document.getElementById("gridHomeCategories");
   if (!container) return;
   container.innerHTML = "";
 
-  // 1. Render Katalog Studio (Foto & Video AI)
-  const studioPacks = getActiveRegistry().filter(item => item.type !== "digital");
+  const studioPacks = getActiveRegistry().filter(item => item.type !== "digital" && item.status === "live");
   studioPacks.forEach(item => {
-    let coverSrc = `images/${item.folder}/cover.jpg`;
     let badgeText = '📸 100 PROMPT';
+    let mediaDisplayHTML = "";
 
     if (item.type === 'video') {
-      coverSrc = `videos/${item.folder}/1.webp`;
       badgeText = '🎥 VIDEO AI (30)';
-    } else if (item.type === 'product') {
-      coverSrc = `products/${item.folder}/1.webp`;
-      badgeText = '📦 PRODUK UMKM (30)';
+      mediaDisplayHTML = `
+        <video 
+          src="videos/${item.folder}/1.mp4" 
+          class="aspect-9-16" 
+          autoplay loop muted playsinline 
+          style="width:100%; object-fit:cover; display:block;"
+          onloadeddata="this.classList.add('img-loaded')"
+        ></video>
+      `;
+    } else {
+      let coverSrc = item.coverUrl || `images/${item.folder}/cover.jpg`;
+      mediaDisplayHTML = `
+        <img src="${coverSrc}" alt="${item.title}" class="aspect-9-16" loading="lazy" onload="this.classList.add('img-loaded')" onerror="this.onerror=null; this.src='images/velvet/cover.jpg'; this.classList.add('img-loaded');">
+      `;
     }
 
     const card = document.createElement("div");
@@ -416,7 +509,7 @@ function renderHomeCategories() {
     card.innerHTML = `
       <div style="position:relative;">
         <span class="badge-pill">${badgeText}</span>
-        <img src="${coverSrc}" alt="${item.title}" class="aspect-9-16" loading="lazy" onload="this.classList.add('img-loaded')" onerror="this.onerror=null; this.src='images/velvet/cover.jpg'; this.classList.add('img-loaded');">
+        ${mediaDisplayHTML}
       </div>
       <div class="card-info">
         <h3 class="card-title">${item.title}</h3>
@@ -427,29 +520,54 @@ function renderHomeCategories() {
     `;
     container.appendChild(card);
   });
+}
 
-  // 2. Render Koleksi Akun AI di Home (Rasio Persegi 1:1)
-  const rawAccounts = (typeof DATABASE_AI_ACCOUNT !== "undefined") ? DATABASE_AI_ACCOUNT : [];
-  const featuredAccounts = rawAccounts.slice(0, 4);
+// Render Beranda Digital AI: Versi Tertata Bagus dengan Integrasi Auto-Bot & Cover Asli
+function renderHomeDigitalAi() {
+  const container = document.getElementById("gridHomeDigitalAi");
+  if (!container) return;
+  container.innerHTML = "";
 
-  featuredAccounts.forEach(acc => {
+  const rawAccounts = getDatabaseAkun();
+  const featured = rawAccounts.slice(0, 4);
+
+  featured.forEach(acc => {
     const card = document.createElement("div");
     card.className = "catalog-card card-square-ai";
-    card.onclick = () => switchMainTab('akun');
 
-    const promoPrice = (acc.hargaPromo || acc.harga || 0).toLocaleString("id-ID");
+    let stockNotice = '<span style="color:#22c55e;"><i class="fa-solid fa-bolt"></i> Siap Pakai Instan</span>';
+    if (acc.variants && acc.variants.length > 0) {
+      const activeTotal = acc.variants.reduce((total, v) => total + (v.stock || 0), 0);
+      if (activeTotal > 0) {
+        stockNotice = `<span style="color:#22c55e;"><i class="fa-solid fa-bolt"></i> Ready Stok (${activeTotal})</span>`;
+      } else {
+        stockNotice = `<span style="color:#ef4444;"><i class="fa-solid fa-clock"></i> Cek Ketersediaan</span>`;
+      }
+    }
+
+    const priceNum = (acc.hargaPromo || acc.harga || 0).toLocaleString("id-ID");
+
+    // Otomatis memilih gambar dari properti logo atau folder images/canvas/
+    let imgSrc = acc.logo || acc.cover || `images/canvas/${acc.id || 'canva'}.jpg`;
+
+    // Tombol aksi: prioritaskan SupplierConnector jika tersedia, fallback ke WA
+    let actionBtnOnClick = (typeof SupplierConnector !== "undefined" && typeof SupplierConnector.prosesPembelianAkun === "function")
+      ? `SupplierConnector.prosesPembelianAkun('${acc.id}')`
+      : `kirimPesananLangsungWA('${acc.nama}', 'Aktivasi Digital', 'Rp ${priceNum}')`;
 
     card.innerHTML = `
       <div style="position:relative;">
-        <span class="badge-pill" style="background:#0284c7; color:#fff; border:none;">⚡ AKUN AI</span>
-        <img src="${acc.logo || 'images/canvas/cover.jpg'}" alt="${acc.nama}" class="aspect-1-1" loading="lazy" onload="this.classList.add('img-loaded')" onerror="this.onerror=null; this.src='images/velvet/cover.jpg'; this.classList.add('img-loaded');">
+        <span class="badge-pill" style="background:#0284c7; color:#fff; border:none;">${acc.badge || '⚡ AUTO BOT'}</span>
+        <img src="${imgSrc}" alt="${acc.nama}" class="aspect-1-1" loading="lazy" onload="this.classList.add('img-loaded')" onerror="this.onerror=null; this.src='images/canvas/canva.jpg'; this.classList.add('img-loaded');">
       </div>
       <div class="card-info">
-        <h3 class="card-title">${acc.nama}</h3>
-        <div class="card-rating-badge" style="color:#22c55e;"><i class="fa-solid fa-bolt"></i> Auto Bot / Instan</div>
-        <div style="font-weight:800; color:var(--gold-light); font-size:0.85rem; margin-top:4px;">Rp ${promoPrice}</div>
-        <button class="btn-copy" style="margin-top:8px; padding:6px 12px; font-size:0.75rem; width:100%; background:linear-gradient(135deg, #0284c7, #0369a1); color:#fff;">
-          <i class="fa-solid fa-arrow-right"></i> Buka Akun AI
+        <div>
+          <h3 class="card-title">${acc.nama}</h3>
+          <div class="card-rating-badge">${stockNotice}</div>
+          <div style="font-weight:800; color:var(--gold-light); font-size:0.85rem; margin-top:4px;">Rp ${priceNum}</div>
+        </div>
+        <button class="btn-copy" style="margin-top:8px; padding:6px 12px; font-size:0.75rem; width:100%; background:linear-gradient(135deg, #0284c7, #0369a1); color:#fff;" onclick="${actionBtnOnClick}">
+          <i class="fa-solid fa-cart-shopping"></i> Beli Otomatis
         </button>
       </div>
     `;
@@ -467,10 +585,12 @@ function renderKatalogFoto() {
     const card = document.createElement("div");
     card.className = "catalog-card";
     card.onclick = () => bukaDetailPack(pack);
+    const coverSrc = pack.coverUrl || `images/${pack.folder}/cover.jpg`;
+
     card.innerHTML = `
       <div style="position:relative;">
         <span class="badge-pill badge-foto">📸 100 ITEMS</span>
-        <img src="images/${pack.folder}/cover.jpg" alt="${pack.title}" class="aspect-9-16" loading="lazy" onload="this.classList.add('img-loaded')" onerror="this.onerror=null; this.src='images/velvet/cover.jpg'; this.classList.add('img-loaded');">
+        <img src="${coverSrc}" alt="${pack.title}" class="aspect-9-16" loading="lazy" onload="this.classList.add('img-loaded')" onerror="this.onerror=null; this.src='images/velvet/cover.jpg'; this.classList.add('img-loaded');">
       </div>
       <div class="card-info">
         <h3 class="card-title">${pack.title}</h3>
@@ -490,14 +610,20 @@ function renderKatalogVideo() {
   const list = getActiveRegistry().filter(item => item.type === "video" && item.status === "live");
 
   list.forEach(pack => {
-    const coverSrc = `videos/${pack.folder}/1.webp`;
+    const videoSrc = `videos/${pack.folder}/1.mp4`;
     const card = document.createElement("div");
     card.className = "catalog-card";
     card.onclick = () => bukaDetailPack(pack);
     card.innerHTML = `
       <div style="position:relative;">
         <span class="badge-pill badge-video">🎥 VIDEO SUITE (30)</span>
-        <img src="${coverSrc}" alt="${pack.title}" class="aspect-9-16" loading="lazy" onload="this.classList.add('img-loaded')" onerror="this.onerror=null; this.src='images/velvet/cover.jpg'; this.classList.add('img-loaded');">
+        <video 
+          src="${videoSrc}" 
+          class="aspect-9-16" 
+          autoplay loop muted playsinline 
+          style="width:100%; object-fit:cover; display:block;"
+          onloadeddata="this.classList.add('img-loaded')"
+        ></video>
       </div>
       <div class="card-info">
         <h3 class="card-title">${pack.title}</h3>
@@ -510,16 +636,97 @@ function renderKatalogVideo() {
   });
 }
 
+// Render Tab Akun AI: Menggunakan AiAccountEngine jika ada, dengan fallback bersih sesuai cover canvas masing-masing
 function renderKatalogAkun() {
-  if (typeof AiAccountEngine !== "undefined" && typeof AiAccountEngine.init === "function") {
+  if (typeof AiAccountEngine !== "undefined") {
     try {
-      AiAccountEngine.init();
+      if (typeof AiAccountEngine.renderCatalog === "function") {
+        AiAccountEngine.renderCatalog();
+        return;
+      } else if (typeof AiAccountEngine.init === "function") {
+        AiAccountEngine.init();
+        return;
+      }
     } catch (e) {}
   }
+
+  const container = document.getElementById("gridAkunKatalog") || document.getElementById("gridAkunAI");
+  if (!container) return;
+  container.innerHTML = "";
+
+  const accounts = getDatabaseAkun();
+
+  if (accounts.length === 0) {
+    const digitalFromRegistry = getActiveRegistry().filter(item => item.type === "digital");
+    if (digitalFromRegistry.length === 0) {
+      container.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:30px; color:#888;">Belum ada akun AI yang tersedia saat ini.</div>';
+      return;
+    }
+
+    digitalFromRegistry.forEach(acc => {
+      const card = document.createElement("div");
+      card.className = "catalog-card card-square-ai";
+      const coverImg = acc.coverUrl || `images/canvas/${acc.folder || 'canva'}.jpg`;
+
+      card.innerHTML = `
+        <div style="position:relative;">
+          <span class="badge-pill" style="background:#0284c7; color:#fff; border:none;">⚡ RESMI</span>
+          <img src="${coverImg}" alt="${acc.title}" class="aspect-1-1" loading="lazy" onerror="this.onerror=null; this.src='images/canvas/canva.jpg';">
+        </div>
+        <div class="card-info">
+          <h3 class="card-title">${acc.title}</h3>
+          <p style="font-size:0.75rem; color:#aaa; margin:4px 0;">${acc.description || ''}</p>
+          <div style="font-weight:800; color:var(--gold-light); font-size:0.85rem; margin-top:4px;">${acc.priceText || 'Rp35.000'}</div>
+          <button class="btn-copy" style="margin-top:8px; padding:6px 12px; font-size:0.75rem; width:100%; background:linear-gradient(135deg, #0284c7, #0369a1); color:#fff;" onclick="kirimPesananLangsungWA('${acc.title}', 'Akun AI', '${acc.priceText || 'Rp35.000'}')">
+            <i class="fa-brands fa-whatsapp"></i> Pesan via WA
+          </button>
+        </div>
+      `;
+      container.appendChild(card);
+    });
+    return;
+  }
+
+  accounts.forEach(acc => {
+    const card = document.createElement("div");
+    card.className = "catalog-card card-square-ai";
+
+    let stockText = "Ready Stok";
+    if (acc.variants && acc.variants.length > 0) {
+      const totalStok = acc.variants.reduce((accStok, v) => accStok + (v.stock || 0), 0);
+      stockText = totalStok > 0 ? `Ready (${totalStok} akun)` : "Pre-Order";
+    }
+
+    const priceNum = (acc.hargaPromo || acc.harga || 0).toLocaleString("id-ID");
+    const imgSrc = acc.logo || acc.cover || `images/canvas/${acc.id || 'canva'}.jpg`;
+
+    let actionBtnOnClick = (typeof SupplierConnector !== "undefined" && typeof SupplierConnector.prosesPembelianAkun === "function")
+      ? `SupplierConnector.prosesPembelianAkun('${acc.id}')`
+      : `kirimPesananLangsungWA('${acc.nama}', 'Aktivasi Digital', 'Rp ${priceNum}')`;
+
+    card.innerHTML = `
+      <div style="position:relative;">
+        <span class="badge-pill" style="background:#0284c7; color:#fff; border:none;">${acc.badge || '⚡ RESMI'}</span>
+        <img src="${imgSrc}" alt="${acc.nama}" class="aspect-1-1" loading="lazy" onload="this.classList.add('img-loaded')" onerror="this.onerror=null; this.src='images/canvas/canva.jpg'; this.classList.add('img-loaded');">
+      </div>
+      <div class="card-info">
+        <div>
+          <h3 class="card-title">${acc.nama}</h3>
+          <div class="card-rating-badge" style="color:#38bdf8;"><i class="fa-solid fa-check-circle"></i> ${stockText}</div>
+          <div style="font-size:0.75rem; color:#9ca3af; margin:4px 0; line-height:1.3;">${acc.deskripsiSingkat || ''}</div>
+          <div style="font-weight:800; color:var(--gold-light); font-size:0.88rem; margin-top:6px;">Rp ${priceNum}</div>
+        </div>
+        <button class="btn-copy" style="margin-top:8px; padding:7px 12px; font-size:0.75rem; width:100%; background:linear-gradient(135deg, #0284c7, #0369a1); color:#fff;" onclick="${actionBtnOnClick}">
+          <i class="fa-solid fa-cart-shopping"></i> Beli Sekarang
+        </button>
+      </div>
+    `;
+    container.appendChild(card);
+  });
 }
 
 // -------------------------------------------------------------------------
-// 6. DYNAMIC SCRIPT INJECTOR & PACK DETAIL
+// 7. DETAIL PACK & DYNAMIC PROMPT SCRIPT INJECTOR
 // -------------------------------------------------------------------------
 function isFamilyCatalog(pack) {
   if (!pack) return false;
@@ -538,9 +745,7 @@ function loadPackPromptScript(pack, callback) {
     return;
   }
 
-  let scriptUrl = `prompts/${pack.folder}.js`;
-  if (pack.type === 'video') scriptUrl = `prompts-video/${pack.folder}.js`;
-  if (pack.type === 'product') scriptUrl = `prompts-product/${pack.folder}.js`;
+  let scriptUrl = pack.scriptUrl || `prompts/${pack.folder}.js`;
 
   const scriptId = `script_prompt_${pack.id}`;
   if (document.getElementById(scriptId)) {
@@ -580,7 +785,7 @@ function bukaDetailPack(pack) {
   if (secAkun) secAkun.classList.add("hidden");
   if (secDetail) secDetail.classList.remove("hidden");
 
-  const isThirtyBundle = (pack.type === 'video' || pack.type === 'product' || pack.type === 'storyboard' || pack.type === 'promo');
+  const isThirtyBundle = (pack.type === 'video');
   const totalCount = isThirtyBundle ? 30 : 100;
 
   const titleEl = document.getElementById("detailTitle");
@@ -630,7 +835,7 @@ function kembaliKeKatalog() {
 }
 
 // -------------------------------------------------------------------------
-// 7. DUAL-TIER PIN ACCESS (SEMUA GAMBAR TAMPIL JELAS, HANYA PROMPT TERKUNCI)
+// 8. DUAL-TIER PIN ACCESS SYSTEM
 // -------------------------------------------------------------------------
 function cekAksesKatalog(catalogId, tier) {
   try {
@@ -663,9 +868,7 @@ function renderDetailItemCards() {
   grid.innerHTML = "";
 
   const isVideo = activePack.type === 'video';
-  const isProduct = activePack.type === 'product';
-  const isThirtyBundle = isVideo || isProduct;
-  const totalItems = isThirtyBundle ? 30 : 100;
+  const totalItems = isVideo ? 30 : 100;
 
   const cleanFolder = activePack.folder.toUpperCase().replace(/[^A-Z0-9]/g, '_');
   const varName = activePack.promptVarName || `PROMPTS_${cleanFolder}`;
@@ -675,9 +878,22 @@ function renderDetailItemCards() {
     const card = document.createElement("div");
     card.className = "item-card";
 
-    let imgSrc = `images/${activePack.folder}/${i}.jpg`;
-    if (isVideo) imgSrc = `videos/${activePack.folder}/${i}.webp`;
-    if (isProduct) imgSrc = `products/${activePack.folder}/${i}.webp`;
+    let mediaHTML = "";
+    if (isVideo) {
+      mediaHTML = `
+        <video 
+          src="videos/${activePack.folder}/${i}.mp4" 
+          autoplay loop muted playsinline 
+          style="width:100%; height:100%; object-fit:cover; display:block;"
+          onloadeddata="this.classList.add('img-loaded')"
+        ></video>
+      `;
+    } else {
+      let imgSrc = `images/${activePack.folder}/${i}.jpg`;
+      mediaHTML = `
+        <img src="${imgSrc}" loading="lazy" alt="Item ${i}" onload="this.classList.add('img-loaded')" onerror="this.onerror=null; this.src='images/velvet/cover.jpg'; this.classList.add('img-loaded');">
+      `;
+    }
 
     let promptText = "";
     if (promptArray && promptArray[i - 1]) {
@@ -686,12 +902,10 @@ function renderDetailItemCards() {
     }
 
     if (!promptText) {
-      if (isProduct) {
-        promptText = `Commercial luxury product staging for ${activePack.title}, item #${i}. Hero podium staging, softbox macro lighting, Hasselblad H6D-100c, 100mm f/2.8 macro, vertical 9:16 layout.`;
-      } else if (isVideo) {
-        promptText = `Cinematic video sequence of ${activePack.title}, item #${i}. Camera slow continuous push-in dolly shot, ARRI Alexa LF, 50mm lens, vertical 9:16 layout.`;
+      if (isVideo) {
+        promptText = `Cinematic video sequence of ${activePack.title}, item #${i}. Camera slow continuous push-in dolly shot, ARRI Alexa LF, 50mm anamorphic lens, vertical 9:16 layout.`;
       } else {
-        promptText = `A high-end luxury portrait of ${activePack.title}, item #${i}, 8k studio lighting, master quality --ar 9:16. Subtle watermark "TIGAJIWA".`;
+        promptText = `A high-end luxury portrait of ${activePack.title}, item #${i}, 8k studio lighting, master quality --ar 9:16. Subtle watermark "JIWAS".`;
       }
     }
 
@@ -702,7 +916,7 @@ function renderDetailItemCards() {
     let tier = "free";
     let isLocked = false;
 
-    if (isThirtyBundle) {
+    if (isVideo) {
       if (i <= 3) {
         tier = "free";
       } else if (i <= 20) {
@@ -751,7 +965,7 @@ function renderDetailItemCards() {
     card.innerHTML = `
       <div class="item-image-wrapper">
         <span class="badge-pill" style="top:8px; left:8px; font-size:0.62rem;">${tier === 'free' ? 'GRATIS SAMPLE' : 'PAKET ' + tier.toUpperCase()}</span>
-        <img src="${imgSrc}" loading="lazy" alt="Item ${i}" onload="this.classList.add('img-loaded')" onerror="this.onerror=null; this.src='images/velvet/cover.jpg'; this.classList.add('img-loaded');">
+        ${mediaHTML}
       </div>
       <div class="item-content">
         <div>
@@ -766,7 +980,7 @@ function renderDetailItemCards() {
 }
 
 // -------------------------------------------------------------------------
-// 8. PIN VERIFICATION & MODALS
+// 9. MODAL INPUT & VERIFIKASI PIN
 // -------------------------------------------------------------------------
 function bukaModalPIN(tier) {
   targetTierModal = tier || 'starter';
@@ -848,7 +1062,7 @@ function tampilkanToast(msg) {
 }
 
 // -------------------------------------------------------------------------
-// 9. URL AUTO-UNLOCK & GROWTH OS RADAR
+// 10. URL AUTO-UNLOCK & GROWTH OS RADAR
 // -------------------------------------------------------------------------
 function cekAutoUnlockURL() {
   const params = new URLSearchParams(window.location.search);
@@ -880,7 +1094,7 @@ function bukaRadarDenganPIN() {
 }
 
 // -------------------------------------------------------------------------
-// 10. FORMASI KELUARGA LENGKAP: UMUR, TINGGI & POSTUR (FAMILY COMPOSER)
+// 11. FAMILY FORMATION COMPOSER
 // -------------------------------------------------------------------------
 function updatePromptFormasi() {
   const father = document.getElementById("fatherBuild")?.value || "medium build";
@@ -939,7 +1153,6 @@ function tambahAnggota(tipe) {
     div.innerHTML = `
       <span class="member-label" style="min-width:70px;"><i class="fa-solid fa-child"></i> Anak:</span>
       
-      <!-- Jenis Kelamin -->
       <select class="select-composer" onchange="updateMemberChild(${memberIndex}, 'gender', this.value)">
         <option value="a young boy">Anak Laki-laki</option>
         <option value="a young girl">Anak Perempuan</option>
@@ -949,7 +1162,6 @@ function tambahAnggota(tipe) {
         <option value="a teenage girl">Remaja Perempuan</option>
       </select>
 
-      <!-- Umur -->
       <select class="select-composer" onchange="updateMemberChild(${memberIndex}, 'age', this.value)">
         <option value="6 months old (in arms)">6 Bulan (Digendong)</option>
         <option value="1-2 years old (toddler)">1–2 Tahun (Balita)</option>
@@ -960,7 +1172,6 @@ function tambahAnggota(tipe) {
         <option value="14-17 years old">14–17 Tahun (Remaja)</option>
       </select>
 
-      <!-- Tinggi Relatif -->
       <select class="select-composer" onchange="updateMemberChild(${memberIndex}, 'height', this.value)">
         <option value="held gently in mother's arms">Digendong Ibu/Ayah</option>
         <option value="knee-height of parents">Setinggi Lutut Orang Tua</option>
@@ -969,7 +1180,6 @@ function tambahAnggota(tipe) {
         <option value="shoulder-height of parents">Hampir Setinggi Bahu</option>
       </select>
 
-      <!-- Postur / Berat Badan AI -->
       <select class="select-composer" onchange="updateMemberChild(${memberIndex}, 'build', this.value)">
         <option value="slender healthy posture" selected>Ramping Sehat</option>
         <option value="chubby adorable cheeks and build">Gembul / Berisi Lucu</option>
@@ -979,7 +1189,6 @@ function tambahAnggota(tipe) {
       </select>
     `;
     container.appendChild(div);
-
   } else {
     let roleText = "the grandfather";
     if (tipe === 'nenek') roleText = "the grandmother";
@@ -1023,7 +1232,7 @@ function terapkanKeSemuaPromptKeluarga() {
 }
 
 // -------------------------------------------------------------------------
-// 11. EXIT-INTENT SURVEY & PWA INSTALLER
+// 12. EXIT-INTENT SURVEY & PWA INSTALLER
 // -------------------------------------------------------------------------
 function initExitIntentSurvey() {
   document.addEventListener("mouseleave", (e) => {
@@ -1092,7 +1301,7 @@ function tutupBannerPWA() {
 }
 
 // -------------------------------------------------------------------------
-// 12. PINTEREST-STYLE LIVE SEARCH & INVISIBLE ADMIN DOORWAY
+// 13. PINTEREST SIMETRIS LIVE SEARCH & INVISIBLE ADMIN DOORWAY
 // -------------------------------------------------------------------------
 function handleLiveAtelierSearch(keyword) {
   const cleanKey = (keyword || "").toLowerCase().trim();
@@ -1101,7 +1310,6 @@ function handleLiveAtelierSearch(keyword) {
     clearBtn.classList.toggle("hidden", cleanKey.length === 0);
   }
 
-  // 1. Filter Katalog Studio di Beranda
   const studioCards = document.querySelectorAll("#gridHomeCategories .catalog-card");
   studioCards.forEach(card => {
     const text = card.innerText.toLowerCase();
@@ -1109,7 +1317,6 @@ function handleLiveAtelierSearch(keyword) {
     card.style.display = isMatch ? "" : "none";
   });
 
-  // 2. Filter Atelier Feed (Pinterest Pin-Items)
   const pinItems = document.querySelectorAll("#gridAtelierFeed .pin-item");
   pinItems.forEach(item => {
     const text = item.innerText.toLowerCase();
@@ -1160,7 +1367,6 @@ function initInvisibleAdminDoorway() {
   const brandTitle = document.querySelector(".brand-title-gold");
   if (!brandTitle) return;
 
-  // Metode 1: Triple-Click Cepat (Desktop / Mobile Click)
   let clickCount = 0;
   let clickTimer = null;
 
@@ -1175,7 +1381,6 @@ function initInvisibleAdminDoorway() {
     }
   });
 
-  // Metode 2: Tahan (Long-Press) 1.5 Detik di Layar Sentuh HP
   let pressTimer = null;
   brandTitle.addEventListener("touchstart", () => {
     pressTimer = setTimeout(() => {
