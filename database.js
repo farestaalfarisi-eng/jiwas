@@ -80,7 +80,7 @@ const DATABASE_AI_ACCOUNT = [
     nama: "CapCut Basic Hemat",
     kategori: "Video",
     subKategori: "Video Editing",
-    logo: "images/canvas/capcut.jpg",
+   logo: "images/canvas/capcut.jpg",
     harga: 15000,
     hargaPromo: 5000,
     badge: "⚡ AUTO BOT",
