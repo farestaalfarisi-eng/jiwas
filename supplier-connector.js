@@ -5,7 +5,7 @@
 
 const SupplierConnector = {
   // Ganti dengan nomor WhatsApp aktif admin (format: 628xxx tanpa tanda + atau spasi)
-  ADMIN_WA: "6281234567890",
+  ADMIN_WA: "6282255267793",
 
   // Nama brand toko untuk header format pesan
   STORE_NAME: "JIWAS ATELIER DIGITAL STORE",
