@@ -300,7 +300,7 @@ function initLiveMarqueeTransactions() {
 // -------------------------------------------------------------------------
 function getAdminWhatsAppNumber() {
   return localStorage.getItem("JIWAS_CUSTOM_WA") || 
-         (typeof NOMOR_WA_ADMIN_CONFIG !== "undefined" ? NOMOR_WA_ADMIN_CONFIG : "6282255267793");
+         (typeof NOMOR_WA_ADMIN_CONFIG !== "undefined" ? NOMOR_WA_ADMIN_CONFIG : "6285181780429");
 }
 
 function kirimPesananLangsungWA(packTitle, tierName, hargaTeks) {
@@ -552,25 +552,27 @@ function renderHomeDigitalAi() {
     const imgSrc = acc.logo || acc.cover || `images/canvas/${acc.id || 'canva'}.jpg`;
     const vList = acc.variants || [];
 
-    let variantButtonsHTML = "";
+   let variantButtonsHTML = "";
     if (vList.length > 0) {
       variantButtonsHTML = `
         <div style="display:flex; gap:6px; margin:8px 0;">
-          ${vList.map((v, i) => `
-            <button class="btn-quick-copy" style="flex:1; justify-content:center; padding:5px 2px; font-size:0.68rem; ${i === 0 ? 'border-color:#38bdf8; color:#38bdf8;' : 'border-color:var(--gold-primary); color:var(--gold-light);'}" 
-              onclick="eksekusiOrderAkun('${acc.id}', '${v.name}')">
-              ${v.name}<br><strong>Rp${Number(v.price).toLocaleString('id-ID')}</strong>
-            </button>
-          `).join("")}
+          ${vList.map((v, i) => {
+            const isOutOfStock = v.stock === 0 || v.ready === false;
+            if (isOutOfStock) {
+              return `
+                <button class="btn-quick-copy btn-out-of-stock" disabled>
+                  ${v.name}<br><strong>Habis</strong>
+                </button>
+              `;
+            }
+            return `
+              <button class="btn-quick-copy" style="flex:1; justify-content:center; padding:5px 2px; font-size:0.68rem; ${i === 0 ? 'border-color:#38bdf8; color:#38bdf8;' : 'border-color:var(--gold-primary); color:var(--gold-light);'}" 
+                onclick="eksekusiOrderAkun('${acc.id}', '${v.name}')">
+                ${v.name}<br><strong>Rp${Number(v.price).toLocaleString('id-ID')}</strong>
+              </button>
+            `;
+          }).join("")}
         </div>
-      `;
-    } else {
-      const priceNum = (acc.hargaPromo || acc.harga || 0).toLocaleString("id-ID");
-      variantButtonsHTML = `
-        <div style="font-weight:800; color:var(--gold-light); font-size:0.85rem; margin-top:4px;">Rp ${priceNum}</div>
-        <button class="btn-copy" style="margin-top:8px; padding:6px 12px; font-size:0.75rem; width:100%; background:linear-gradient(135deg, #0284c7, #0369a1); color:#fff;" onclick="eksekusiOrderAkun('${acc.id}', 'Default')">
-          <i class="fa-solid fa-cart-shopping"></i> Beli Otomatis
-        </button>
       `;
     }
 
@@ -671,26 +673,27 @@ function renderKatalogAkun() {
     const imgSrc = acc.logo || acc.cover || `images/canvas/${acc.id || 'canva'}.jpg`;
     const vList = acc.variants || [];
 
-    let variantButtonsHTML = "";
+   let variantButtonsHTML = "";
     if (vList.length > 0) {
       variantButtonsHTML = `
-        <div style="display:flex; gap:6px; margin:10px 0 6px;">
-          ${vList.map((v, i) => `
-            <button class="btn-quick-copy" style="flex:1; justify-content:center; padding:6px 4px; font-size:0.7rem; ${i === 0 ? 'border-color:#38bdf8; color:#38bdf8;' : 'border-color:var(--gold-primary); color:var(--gold-light);'}" 
-              onclick="eksekusiOrderAkun('${acc.id}', '${v.name}')">
-              ${v.name}<br><strong>Rp${Number(v.price).toLocaleString('id-ID')}</strong>
-            </button>
-          `).join("")}
+        <div style="display:flex; gap:6px; margin:8px 0;">
+          ${vList.map((v, i) => {
+            const isOutOfStock = v.stock === 0 || v.ready === false;
+            if (isOutOfStock) {
+              return `
+                <button class="btn-quick-copy btn-out-of-stock" disabled>
+                  ${v.name}<br><strong>Habis</strong>
+                </button>
+              `;
+            }
+            return `
+              <button class="btn-quick-copy" style="flex:1; justify-content:center; padding:5px 2px; font-size:0.68rem; ${i === 0 ? 'border-color:#38bdf8; color:#38bdf8;' : 'border-color:var(--gold-primary); color:var(--gold-light);'}" 
+                onclick="eksekusiOrderAkun('${acc.id}', '${v.name}')">
+                ${v.name}<br><strong>Rp${Number(v.price).toLocaleString('id-ID')}</strong>
+              </button>
+            `;
+          }).join("")}
         </div>
-      `;
-    } else {
-      const priceNum = (acc.hargaPromo || acc.harga || 0).toLocaleString("id-ID");
-      variantButtonsHTML = `
-        <div style="font-weight:800; color:var(--gold-light); font-size:0.88rem; margin:8px 0 4px;">Rp ${priceNum}</div>
-        <button class="btn-copy" style="width:100%; padding:7px 12px; font-size:0.75rem; background:linear-gradient(135deg, #0284c7, #0369a1); color:#fff;" 
-          onclick="eksekusiOrderAkun('${acc.id}', 'Default')">
-          <i class="fa-solid fa-cart-shopping"></i> Beli Sekarang
-        </button>
       `;
     }
 
