@@ -17,12 +17,9 @@ const loadedPromptScripts = new Set();
 // 1. REGISTRY UTAMA KATALOG ATELIER
 // -------------------------------------------------------------------------
 const DEFAULT_FALLBACK_KATALOG = [
-  // Pilar Utama: Koleksi Studio Keluarga Bangsawan
   { id: "family-lux", folder: "family", title: "Luxury Family Collection", type: "foto", status: "live", rating: "5.0/5", sales: "200+ Terjual" },
   { id: "family02-lux", folder: "family02", title: "Luxury Family Collection Vol.02", type: "foto", status: "live", rating: "4.9/5", sales: "85+ Terjual" },
   { id: "family03-lux", folder: "family03", title: "Luxury Family Collection Vol.03", type: "foto", status: "live", rating: "4.8/5", sales: "70+ Terjual" },
-
-  // Koleksi Studio Foto & Akademis
   { id: "sekolah-yearbook", folder: "sekolah", title: "Yearbook & Formal Identity Studio", type: "foto", status: "live", rating: "5.0/5", sales: "Baru Rilis" },
   { id: "retouch-restoration", folder: "retouch", title: "ID Photo & Beauty Restoration", type: "foto", status: "live", rating: "4.9/5", sales: "Baru Rilis" },
   { id: "velvet-lux", folder: "velvet", title: "Luxury Royal Velvet Studio", type: "foto", status: "live", rating: "4.9/5", sales: "180+ Terjual" },
@@ -32,8 +29,6 @@ const DEFAULT_FALLBACK_KATALOG = [
   { id: "fantasi-gold", folder: "fantasi", title: "Luxury Fantasy Gold", type: "foto", status: "live", rating: "4.9/5", sales: "115+ Terjual" },
   { id: "makeup-glam", folder: "makeup", title: "Luxury Beauty & Makeover", type: "foto", status: "live", rating: "5.0/5", sales: "160+ Terjual" },
   { id: "lifestyle-lux", folder: "lifestyle", title: "Luxury Urban Lifestyle", type: "foto", status: "live", rating: "4.7/5", sales: "50+ Terjual" },
-
-  // Koleksi Video & Komersial UMKM
   { id: "video-cinematic", folder: "video", title: "Cinematic Motion Suite", type: "video", status: "live", rating: "5.0/5", sales: "220+ Terjual" },
   { id: "umkm-commercial", folder: "umkm", title: "Commercial UMKM & Product Studio", type: "foto", status: "live", rating: "5.0/5", sales: "Baru Rilis" }
 ];
@@ -45,7 +40,6 @@ function getActiveRegistry() {
   return DEFAULT_FALLBACK_KATALOG;
 }
 
-// Mengambil database produk AI (Prioritas Lembar 5 Admin -> database.js)
 function getDatabaseAkun() {
   try {
     const customAi = localStorage.getItem("JIWAS_AI_PRODUCTS_OVERRIDE");
@@ -122,10 +116,9 @@ function initApp() {
   try { initPwaInstaller(); } catch (e) {}
   try { initInvisibleAdminDoorway(); } catch (e) {}
 
-  // Sinkronkan stok H2H Inca jika gateway aktif
+  sinkronkanKatalogOnline();
   sinkronkanStokIncaRealtime();
 
-  // Render komponen utama
   renderHomeCategories();
   renderHomeDigitalAi();
   renderAtelierFeed();
@@ -137,8 +130,23 @@ function initApp() {
 }
 
 // -------------------------------------------------------------------------
-// 4. SINKRONISASI STOK LIVE (INCA STORE)
+// 4. SINKRONISASI SERVER KATALOG & STOK LIVE
 // -------------------------------------------------------------------------
+async function sinkronkanKatalogOnline() {
+  try {
+    const res = await fetch('/api/products');
+    if (!res.ok) return;
+    const data = await res.json();
+    if (data.success && Array.isArray(data.products) && data.products.length > 0) {
+      localStorage.setItem("JIWAS_AI_PRODUCTS_OVERRIDE", JSON.stringify(data.products));
+      renderHomeDigitalAi();
+      renderKatalogAkun();
+    }
+  } catch (e) {
+    // Mode offline / fallback bawaan
+  }
+}
+
 async function sinkronkanStokIncaRealtime() {
   const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
   const LIVE_URL = isLocal ? "http://localhost:3001/api/live-stock" : "/api/live-stock";
@@ -529,7 +537,6 @@ function renderHomeCategories() {
   });
 }
 
-// Render Beranda Digital AI: 4 Akun Pilihan dengan Tombol Varian
 function renderHomeDigitalAi() {
   const container = document.getElementById("gridHomeDigitalAi");
   if (!container) return;
@@ -645,7 +652,6 @@ function renderKatalogVideo() {
   });
 }
 
-// Render Tab Akun AI: Tampil Penuh dengan Pilihan Varian Durasi 7 Hari & 30 Hari
 function renderKatalogAkun() {
   const container = document.getElementById("aiAccountCatalogGrid") || document.getElementById("gridAkunKatalog") || document.getElementById("gridAkunAI");
   if (!container) return;
@@ -1053,7 +1059,7 @@ function tampilkanToast(msg) {
 }
 
 // -------------------------------------------------------------------------
-// 13. URL AUTO-UNLOCK & RADAR COMMAND DOORWAY (PROTECTED)
+// 13. URL AUTO-UNLOCK & RADAR COMMAND DOORWAY (TERLINDUNGI)
 // -------------------------------------------------------------------------
 function cekAutoUnlockURL() {
   const params = new URLSearchParams(window.location.search);
@@ -1077,7 +1083,6 @@ function bukaRadarDenganPIN() {
   const input = prompt("Masukkan Kunci Otorisasi Command Center:");
   if (!input) return;
   
-  // Kunci akses terenkripsi sesi lokal
   if (input.trim().toUpperCase() === "JIWASVIP" || input.trim() === "ATELIER2026") {
     sessionStorage.setItem("JIWAS_RADAR_AUTH", "true");
     window.location.href = "analytics.html";
