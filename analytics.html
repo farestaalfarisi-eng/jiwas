@@ -192,6 +192,7 @@
       align-items: center;
       gap: 4px;
       text-decoration: none;
+      transition: all 0.2s ease;
     }
     .btn-quick-copy-vip {
       border-color: var(--gold-primary);
@@ -285,6 +286,44 @@
     }
     .tag-leak { background: rgba(239, 68, 68, 0.2); color: var(--accent-red); padding: 2px 6px; border-radius: 4px; font-weight: 700; font-size: 0.68rem; }
     .tag-pass { background: rgba(34, 197, 94, 0.2); color: var(--accent-green); padding: 2px 6px; border-radius: 4px; font-weight: 700; font-size: 0.68rem; }
+
+    /* STATUS STOK & TOMBOL ABU-ABU */
+    .btn-quick-copy:disabled,
+    .btn-action:disabled,
+    .btn-disabled-stock {
+      background: #2a2a34 !important;
+      color: #64748b !important;
+      border-color: #3f3f50 !important;
+      cursor: not-allowed !important;
+      pointer-events: none;
+      opacity: 0.55;
+    }
+
+    .badge-stok-habis {
+      background: rgba(239, 68, 68, 0.15);
+      color: #ef4444;
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-weight: 800;
+      font-size: 0.68rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .badge-stok-ready {
+      background: rgba(34, 197, 94, 0.12);
+      color: #4ade80;
+      border: 1px solid rgba(34, 197, 94, 0.3);
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-weight: 700;
+      font-size: 0.72rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
   </style>
 </head>
 <body>
@@ -423,8 +462,8 @@
         </div>
 
         <div class="search-filter-box">
-          <i class="fa-solid fa-magnifying-glass" style="color:var(--text-muted); font-size:0.8rem;"></i>
-          <input type="text" id="searchPinInput" onkeyup="filterTabelPIN()" placeholder="Cari nama atau ID katalog...">
+          <i class="fa-solid fa-magnifying-glass" style="color:var(--text-muted); font-size:0.8rem; cursor:pointer;" onclick="filterTabelPIN()"></i>
+          <input type="text" id="searchPinInput" oninput="filterTabelPIN()" placeholder="Cari nama atau ID katalog...">
         </div>
 
         <div style="overflow-x:auto;">
@@ -843,8 +882,8 @@
         </div>
 
         <div class="search-filter-box">
-          <i class="fa-solid fa-magnifying-glass" style="color:var(--text-muted); font-size:0.8rem;"></i>
-          <input type="text" id="searchAiProdInput" onkeyup="filterTabelAiProduct()" placeholder="Cari nama akun atau vendor...">
+          <i class="fa-solid fa-magnifying-glass" style="color:var(--text-muted); font-size:0.8rem; cursor:pointer;" onclick="filterTabelAiProduct()"></i>
+          <input type="text" id="searchAiProdInput" oninput="filterTabelAiProduct()" placeholder="Cari nama akun atau vendor...">
         </div>
 
         <div style="overflow-x:auto;">
@@ -856,8 +895,8 @@
                 <th>Nama Produk & Tipe</th>
                 <th>Varian & Harga Jual Eceran</th>
                 <th>Margin Rata-rata</th>
-                <th>Stok</th>
-                <th style="text-align:right;">Aksi</th>
+                <th>Sisa Stok</th>
+                <th style="text-align:right;">Aksi & Pembelian</th>
               </tr>
             </thead>
             <tbody id="aiProductsTableBody">
@@ -953,10 +992,14 @@
     }
 
     function filterTabelPIN() {
-      const input = document.getElementById("searchPinInput").value.toLowerCase();
+      const inputEl = document.getElementById("searchPinInput");
+      if (!inputEl) return;
+      const q = inputEl.value.toLowerCase().trim();
       const rows = document.querySelectorAll("#pinTableBody tr");
       rows.forEach(row => {
-        row.style.display = row.innerText.toLowerCase().includes(input) ? "" : "none";
+        if (row.cells.length <= 1) return;
+        const rowText = row.textContent.toLowerCase();
+        row.style.display = (q === "" || rowText.includes(q)) ? "" : "none";
       });
     }
 
@@ -1020,7 +1063,15 @@
     function bukaDirectWhatsApp() {
       const text = document.getElementById("waMessageLivePreview")?.innerText;
       const rawPhone = document.getElementById("targetBuyerPhone")?.value.replace(/[^0-9]/g, '');
+      const packId = document.getElementById("waQuickPackSelect")?.value;
       if (!text) return;
+
+      // Jika produk AI terdaftar di Lembar 5, potong stok otomatis saat admin buka chat WA pesanan
+      const products = getMasterAiProducts();
+      const targetIdx = products.findIndex(p => p.id === packId || p.nama.toLowerCase().includes((packId || "").toLowerCase()));
+      if (targetIdx !== -1) {
+        kurangiStokProdukAI(targetIdx);
+      }
 
       let url = `https://wa.me/?text=${encodeURIComponent(text)}`;
       if (rawPhone && rawPhone.length > 5) {
@@ -1090,6 +1141,7 @@
         `;
         tbody.appendChild(tr);
       });
+      filterTabelPIN();
     }
 
     function salinTemplateBalasan(packTitle, tierName, packId, inputKey) {
@@ -1580,7 +1632,7 @@
             garansi: p.garansi || "Full Garansi Sesuai Durasi",
             faq: p.faq || [],
             aktif: true,
-            stok: 10
+            stok: p.stok !== undefined ? p.stok : 5
           };
         });
       }
@@ -1635,6 +1687,35 @@
       }
     }
 
+    // Mengurangi stok produk AI dan mengubah tombol jadi abu-abu jika stok 0
+    function kurangiStokProdukAI(idx) {
+      const products = getMasterAiProducts();
+      if (!products[idx]) return;
+
+      let stokSekarang = parseInt(products[idx].stok, 10);
+      if (isNaN(stokSekarang)) stokSekarang = 0;
+
+      if (stokSekarang <= 0) {
+        tampilkanToastRadar(`⚠️ Stok ${products[idx].nama} sudah habis!`);
+        return;
+      }
+
+      products[idx].stok = stokSekarang - 1;
+
+      // Jika stok habis, nonaktifkan otomatis penayangan di etalase
+      if (products[idx].stok === 0) {
+        products[idx].aktif = false;
+      }
+
+      saveMasterAiProducts(products);
+
+      if (products[idx].stok === 0) {
+        tampilkanToastRadar(`🚨 Stok ${products[idx].nama} habis! Menu dinonaktifkan.`);
+      } else {
+        tampilkanToastRadar(`✅ Transaksi dicatat! Sisa stok ${products[idx].nama}: ${products[idx].stok}`);
+      }
+    }
+
     function renderTabelAiProducts() {
       const products = getMasterAiProducts();
       const tbody = document.getElementById("aiProductsTableBody");
@@ -1656,6 +1737,9 @@
         const isAktif = p.aktif !== false;
         if (isAktif) totalAktif++;
 
+        const sisaStok = parseInt(p.stok, 10) || 0;
+        const isHabis = sisaStok <= 0;
+
         let vBadges = "";
         let avgMarginItem = 0;
 
@@ -1674,13 +1758,22 @@
         }
 
         totalMargin += avgMarginItem;
-        totalStok += (p.stok || 0);
+        totalStok += sisaStok;
 
         const badgeVendor = p.vendor === "FINSHOP" 
           ? '<span style="background:rgba(245,158,11,0.2); color:#f59e0b; padding:2px 6px; border-radius:4px; font-weight:700; font-size:0.68rem;">FINSHOP</span>'
           : '<span style="background:rgba(56,189,248,0.2); color:#38bdf8; padding:2px 6px; border-radius:4px; font-weight:700; font-size:0.68rem;">INCA STORE</span>';
 
+        // Tampilan informasi sisa stok & badge
+        const stokDisplay = isHabis
+          ? '<span class="badge-stok-habis"><i class="fa-solid fa-circle-exclamation"></i> KOSONG</span>'
+          : `<span class="badge-stok-ready"><i class="fa-solid fa-boxes-stacked"></i> ${sisaStok} Ready</span>`;
+
         const tr = document.createElement("tr");
+        if (isHabis) {
+          tr.style.opacity = "0.78";
+        }
+
         tr.innerHTML = `
           <td>
             <input type="checkbox" ${isAktif ? 'checked' : ''} title="Tampilkan di Etalase Toko" onchange="toggleStatusProduk(${idx}, this.checked)">
@@ -1692,13 +1785,19 @@
           </td>
           <td>${vBadges}</td>
           <td style="color:#22c55e; font-weight:700;">+Rp ${avgMarginItem.toLocaleString('id-ID')}</td>
-          <td>${p.stok || 0}</td>
+          <td>${stokDisplay}</td>
           <td style="text-align:right;">
             <div style="display:inline-flex; gap:6px;">
-              <button class="btn-quick-copy" onclick="editProdukAI(${idx})">
+              <button class="btn-quick-copy ${isHabis ? 'btn-disabled-stock' : ''}" 
+                      ${isHabis ? 'disabled' : ''} 
+                      onclick="kurangiStokProdukAI(${idx})" 
+                      title="${isHabis ? 'Stok telah habis' : 'Catat Penjualan (-1 Stok)'}">
+                <i class="fa-solid fa-cart-shopping"></i> Beli
+              </button>
+              <button class="btn-quick-copy" onclick="editProdukAI(${idx})" title="Edit Detail & Stok">
                 <i class="fa-solid fa-pen"></i>
               </button>
-              <button class="btn-quick-copy" onclick="hapusProdukAI(${idx})" style="border-color:#ef4444; color:#ef4444;">
+              <button class="btn-quick-copy" onclick="hapusProdukAI(${idx})" style="border-color:#ef4444; color:#ef4444;" title="Hapus Produk">
                 <i class="fa-solid fa-trash"></i>
               </button>
             </div>
@@ -1716,6 +1815,9 @@
       if (statAktif) statAktif.innerText = totalAktif;
       if (statMargin) statMargin.innerText = totalProduk > 0 ? 'Rp ' + Math.round(totalMargin / totalProduk).toLocaleString('id-ID') : 'Rp 0';
       if (statStok) statStok.innerText = totalStok;
+
+      // Jalankan filter jika ada kata kunci pencarian yang sedang aktif
+      filterTabelAiProduct();
     }
 
     function simpanProdukAI(e) {
@@ -1729,7 +1831,7 @@
       const jenisAkun = document.getElementById("prodJenisAkun").value;
       const deskripsi = document.getElementById("prodDeskripsi").value.trim();
       const logo = document.getElementById("prodLogo").value.trim() || "images/canvas/canva.jpg";
-      const stok = parseInt(document.getElementById("prodStok").value, 10) || 5;
+      const stok = parseInt(document.getElementById("prodStok").value, 10) || 0;
       const garansi = document.getElementById("prodGaransi").value.trim() || "Full Garansi Sesuai Durasi";
 
       // Parsing FAQ (Format: Tanya? | Jawab. || Tanya? | Jawab.)
@@ -1788,7 +1890,7 @@
         faq: parsedFaq,
         logo: logo,
         badge: "⚡ AUTO BOT",
-        aktif: true
+        aktif: stok > 0
       };
 
       if (editId) {
@@ -1816,7 +1918,7 @@
       document.getElementById("prodJenisAkun").value = p.jenisAkun || "Direct Login (PC & HP)";
       document.getElementById("prodDeskripsi").value = p.deskripsi || "";
       document.getElementById("prodLogo").value = p.logo || "";
-      document.getElementById("prodStok").value = p.stok || 5;
+      document.getElementById("prodStok").value = p.stok !== undefined ? p.stok : 5;
       document.getElementById("prodGaransi").value = p.garansi || "Full Garansi Sesuai Durasi";
 
       if (p.faq && Array.isArray(p.faq) && p.faq.length > 0) {
@@ -1896,10 +1998,16 @@
     }
 
     function filterTabelAiProduct() {
-      const q = (document.getElementById("searchAiProdInput")?.value || "").toLowerCase();
+      const inputEl = document.getElementById("searchAiProdInput");
+      if (!inputEl) return;
+      const q = inputEl.value.toLowerCase().trim();
       const rows = document.querySelectorAll("#aiProductsTableBody tr");
+
       rows.forEach(r => {
-        r.style.display = r.innerText.toLowerCase().includes(q) ? "" : "none";
+        // Abaikan baris placeholder bila belum ada data
+        if (r.cells.length <= 1) return;
+        const rowText = r.textContent.toLowerCase();
+        r.style.display = (q === "" || rowText.includes(q)) ? "" : "none";
       });
     }
   </script>
