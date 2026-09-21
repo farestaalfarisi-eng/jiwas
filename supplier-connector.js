@@ -15,13 +15,22 @@ const SupplierConnector = {
    * @param {string|number} id 
    * @returns {object|null}
    */
-  resolveProductData: function (id) {
+ resolveProductData: function (id) {
     try {
+      // 1. Cek penyimpanan Lembar 5 Admin
+      const customAi = localStorage.getItem("JIWAS_AI_PRODUCTS_OVERRIDE");
+      if (customAi) {
+        const parsed = JSON.parse(customAi);
+        const item = parsed.find(p => String(p.id) === String(id));
+        if (item) return item;
+      }
+
+      // 2. Cek database runtime window/global
       if (typeof getProductById === "function") {
         return getProductById(id);
       }
-      if (typeof window.jiwasProducts !== "undefined" && Array.isArray(window.jiwasProducts)) {
-        return window.jiwasProducts.find(p => String(p.id) === String(id)) || null;
+      if (typeof DATABASE_AI_ACCOUNT !== "undefined" && Array.isArray(DATABASE_AI_ACCOUNT)) {
+        return DATABASE_AI_ACCOUNT.find(p => String(p.id) === String(id)) || null;
       }
     } catch (e) {
       console.warn("[SupplierConnector] Gagal melacak database produk:", e);
@@ -36,16 +45,24 @@ const SupplierConnector = {
    * @param {number} qty - Jumlah akun
    * @param {string} target - Email tujuan atau akun target pembeli
    */
-  orderAkunAuto: async function (productId, variant = "Default", qty = 1, target = "") {
+
+orderAkunAuto: async function (productId, variant = "Default", qty = 1, target = "") {
     try {
       const product = this.resolveProductData(productId);
-      const productName = product ? product.name : `Produk AI (${productId})`;
-      const itemPrice = product ? (product.price || product.harga || 0) : 0;
-      const totalEstimasi = itemPrice ? `Rp ${(itemPrice * qty).toLocaleString("id-ID")}` : "Menyesuaikan Varian";
+      const productName = product ? product.nama || product.name : `Produk AI (${productId})`;
       
+      // Ambil harga berdasarkan varian (7 Hari / 30 Hari) jika ada
+      let itemPrice = product ? (product.hargaPromo || product.harga || 0) : 0;
+      if (product && product.variants && Array.isArray(product.variants)) {
+        const targetV = product.variants.find(v => v.name.toLowerCase().includes(variant.toLowerCase()));
+        if (targetV && targetV.price) {
+          itemPrice = targetV.price;
+        }
+      }
+
+      const totalEstimasi = itemPrice ? `Rp ${(itemPrice * qty).toLocaleString("id-ID")}` : "Menyesuaikan Varian";
       const orderId = "JWS-" + Date.now().toString().slice(-6);
 
-      // Susun pesan WhatsApp yang jelas, elegan, dan siap proses
       const messageLines = [
         `Halo Admin *${this.STORE_NAME}*,`,
         `Saya ingin memesan akun digital dengan rincian berikut:`,
@@ -63,24 +80,19 @@ const SupplierConnector = {
       const fullMessage = messageLines.join("\n");
       const waUrl = `https://wa.me/${this.ADMIN_WA}?text=${encodeURIComponent(fullMessage)}`;
 
-      // Buka aplikasi / web WhatsApp di jendela baru
       const win = window.open(waUrl, "_blank");
-      if (!win) {
-        window.location.href = waUrl;
-      }
+      if (!win) window.location.href = waUrl;
 
-      return {
-        success: true,
-        mode: "semi_otomatis",
-        orderId: orderId,
-        message: "Pesanan berhasil dialihkan ke WhatsApp Admin."
-      };
+      return { success: true, orderId: orderId };
     } catch (err) {
       console.error("[SupplierConnector Error]:", err);
       alert("Terjadi kendala saat membuka WhatsApp. Silakan hubungi admin langsung.");
       throw err;
     }
   },
+
+
+
 
   /**
    * Health check kompatibilitas untuk antarmuka katalog
