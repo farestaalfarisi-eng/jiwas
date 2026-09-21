@@ -1,9 +1,8 @@
 // =========================================================================
-// JIWAS - MASTER CONTROLLER & GROWTH OS ENGINE (Full Master Edition V5.2 - Restored)
+// JIWAS - MASTER CONTROLLER & GROWTH OS ENGINE (Full Master Edition V5.3)
 // Theme: Dark Luxury & Gold Atelier • Strict 9:16 Ratio & 1:1 Digital Store
 // Core Brand: Family Atelier Collection Top Priority
-// Cashflow Engine: Live H2H Inca Store Integration (Real-time Stock)
-// Media Engine: Full MP4 Native Support for Video Suites & 1:1 AI Accounts
+// Dual-Vendor Digital Store Engine (Inca Store & Finshop) with 7D & 30D Variants
 // Dual-Tier PIN Verification • Dynamic Script Injector • Family Formation Composer
 // Curated & Designed for JIWAS Atelier by Sahabat Kaya
 // =========================================================================
@@ -15,15 +14,15 @@ let currentAppliedFormationPrompt = "";
 const loadedPromptScripts = new Set();
 
 // -------------------------------------------------------------------------
-// REGISTRY UTAMA DENGAN PRIORITAS KOLEKSI KELUARGA DI PALING ATAS
+// 1. REGISTRY UTAMA KATALOG ATELIER
 // -------------------------------------------------------------------------
 const DEFAULT_FALLBACK_KATALOG = [
-  // 1. Pilar Utama (Core Brand): Koleksi Studio Keluarga Bangsawan
+  // Pilar Utama: Koleksi Studio Keluarga Bangsawan
   { id: "family-lux", folder: "family", title: "Luxury Family Collection", type: "foto", status: "live", rating: "5.0/5", sales: "200+ Terjual" },
   { id: "family02-lux", folder: "family02", title: "Luxury Family Collection Vol.02", type: "foto", status: "live", rating: "4.9/5", sales: "85+ Terjual" },
   { id: "family03-lux", folder: "family03", title: "Luxury Family Collection Vol.03", type: "foto", status: "live", rating: "4.8/5", sales: "70+ Terjual" },
 
-  // 2. Koleksi Studio Foto & Akademis
+  // Koleksi Studio Foto & Akademis
   { id: "sekolah-yearbook", folder: "sekolah", title: "Yearbook & Formal Identity Studio", type: "foto", status: "live", rating: "5.0/5", sales: "Baru Rilis" },
   { id: "retouch-restoration", folder: "retouch", title: "ID Photo & Beauty Restoration", type: "foto", status: "live", rating: "4.9/5", sales: "Baru Rilis" },
   { id: "velvet-lux", folder: "velvet", title: "Luxury Royal Velvet Studio", type: "foto", status: "live", rating: "4.9/5", sales: "180+ Terjual" },
@@ -34,7 +33,7 @@ const DEFAULT_FALLBACK_KATALOG = [
   { id: "makeup-glam", folder: "makeup", title: "Luxury Beauty & Makeover", type: "foto", status: "live", rating: "5.0/5", sales: "160+ Terjual" },
   { id: "lifestyle-lux", folder: "lifestyle", title: "Luxury Urban Lifestyle", type: "foto", status: "live", rating: "4.7/5", sales: "50+ Terjual" },
 
-  // 3. Koleksi Video & Komersial UMKM
+  // Koleksi Video & Komersial UMKM
   { id: "video-cinematic", folder: "video", title: "Cinematic Motion Suite", type: "video", status: "live", rating: "5.0/5", sales: "220+ Terjual" },
   { id: "umkm-commercial", folder: "umkm", title: "Commercial UMKM & Product Studio", type: "foto", status: "live", rating: "5.0/5", sales: "Baru Rilis" }
 ];
@@ -46,7 +45,20 @@ function getActiveRegistry() {
   return DEFAULT_FALLBACK_KATALOG;
 }
 
+// Mengambil database produk AI (Prioritas Lembar 5 Admin -> database.js)
 function getDatabaseAkun() {
+  try {
+    const customAi = localStorage.getItem("JIWAS_AI_PRODUCTS_OVERRIDE");
+    if (customAi) {
+      const parsed = JSON.parse(customAi);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        return parsed.filter(item => item.aktif !== false);
+      }
+    }
+  } catch (e) {
+    console.warn("Gagal membaca produk custom:", e);
+  }
+
   if (typeof DATABASE_AI_ACCOUNT !== "undefined" && Array.isArray(DATABASE_AI_ACCOUNT) && DATABASE_AI_ACCOUNT.length > 0) {
     return DATABASE_AI_ACCOUNT;
   }
@@ -54,7 +66,7 @@ function getDatabaseAkun() {
 }
 
 // -------------------------------------------------------------------------
-// SHOWCASE POOL SELECTION (12 Pasang / 24 Aset Foto)
+// 2. SHOWCASE POOL SELECTION (12 Pasang / 24 Aset Foto)
 // -------------------------------------------------------------------------
 function getShowcasePool() {
   const titles = [
@@ -93,7 +105,7 @@ let surveyTriggered = false;
 let deferredPrompt = null;
 
 // -------------------------------------------------------------------------
-// INITIALIZATION APP
+// 3. INITIALIZATION APP
 // -------------------------------------------------------------------------
 document.addEventListener("DOMContentLoaded", () => {
   initApp();
@@ -110,7 +122,7 @@ function initApp() {
   try { initPwaInstaller(); } catch (e) {}
   try { initInvisibleAdminDoorway(); } catch (e) {}
 
-  // Sinkronkan stok H2H Inca Store secara langsung saat web dimuat
+  // Sinkronkan stok H2H Inca jika gateway aktif
   sinkronkanStokIncaRealtime();
 
   // Render komponen utama
@@ -125,11 +137,11 @@ function initApp() {
 }
 
 // -------------------------------------------------------------------------
-// 1. SINKRONISASI STOK INCA STORE REAL-TIME KE DATABASE RUNTIME
+// 4. SINKRONISASI STOK LIVE (INCA STORE)
 // -------------------------------------------------------------------------
 async function sinkronkanStokIncaRealtime() {
   const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
-  const LIVE_URL = isLocal ? "http://localhost:3000/api/live-stock" : "/api/live-stock";
+  const LIVE_URL = isLocal ? "http://localhost:3001/api/live-stock" : "/api/live-stock";
 
   try {
     const res = await fetch(LIVE_URL);
@@ -137,13 +149,12 @@ async function sinkronkanStokIncaRealtime() {
     const result = await res.json();
 
     if (!result.success || !Array.isArray(result.products)) return;
-    if (typeof DATABASE_AI_ACCOUNT === "undefined") return;
+    const currentList = getDatabaseAkun();
 
     result.products.forEach(remoteItem => {
-      const localItem = DATABASE_AI_ACCOUNT.find(item =>
+      const localItem = currentList.find(item =>
         item.apiConfig && (
           String(item.apiConfig.productId).toLowerCase() === String(remoteItem.id || "").toLowerCase() ||
-          String(item.apiConfig.productId).toLowerCase() === String(remoteItem.name || "").toLowerCase() ||
           String(item.nama).toLowerCase().includes(String(remoteItem.name || "").toLowerCase())
         )
       );
@@ -163,18 +174,14 @@ async function sinkronkanStokIncaRealtime() {
     });
 
     renderHomeDigitalAi();
-    if (typeof AiAccountEngine !== "undefined" && typeof AiAccountEngine.renderCatalog === "function") {
-      AiAccountEngine.renderCatalog();
-    } else {
-      renderKatalogAkun();
-    }
+    renderKatalogAkun();
   } catch (err) {
-    console.warn("[LIVE STOCK]: Server gateway belum aktif. Menggunakan basis data lokal.", err);
+    // Tetap menggunakan basis data lokal tanpa crash
   }
 }
 
 // -------------------------------------------------------------------------
-// 2. VISITOR, AFFINITY & DECAYING SHOWCASE
+// 5. VISITOR, AFFINITY & DECAYING SHOWCASE
 // -------------------------------------------------------------------------
 function initVisitorAndAffinity() {
   try {
@@ -256,7 +263,7 @@ function initSocialProofPopups() {
   if (!toast || !nameEl || !descEl) return;
 
   const daftarNama = ["Kak Rina (Surabaya)", "Bunda Dewi (Jakarta)", "Kak Dimas (Bandung)", "Pak Hendra (Medan)", "Kak Maya (Yogyakarta)"];
-  const daftarAksi = ["Baru saja membuka PIN VIP 25K", "Membeli PIN Starter 10K", "Mengaktifkan CapCut Pro Bot", "Membeli Canva Pro 1 Bulan"];
+  const daftarAksi = ["Baru saja membuka PIN VIP 25K", "Membeli PIN Starter 10K", "Mengaktifkan CapCut Pro 30 Hari", "Membeli Canva Pro 7 Hari"];
 
   setInterval(() => {
     nameEl.innerText = daftarNama[Math.floor(Math.random() * daftarNama.length)];
@@ -281,7 +288,7 @@ function initLiveMarqueeTransactions() {
 }
 
 // -------------------------------------------------------------------------
-// 3. WHATSAPP & UTILITY ROUTING
+// 6. WHATSAPP & ORDER ROUTING
 // -------------------------------------------------------------------------
 function getAdminWhatsAppNumber() {
   return localStorage.getItem("JIWAS_CUSTOM_WA") || 
@@ -309,7 +316,7 @@ function bagikanKoleksiKeWA(packTitle) {
 }
 
 // -------------------------------------------------------------------------
-// 4. SHOWCASE BEFORE & AFTER SLIDER
+// 7. SHOWCASE BEFORE & AFTER SLIDER
 // -------------------------------------------------------------------------
 function initShowcaseAutoSlider() {
   renderShowcaseCards();
@@ -372,7 +379,7 @@ function lompatKeShowcaseSlide(idx) {
 }
 
 // -------------------------------------------------------------------------
-// 5. ATELIER FEED & TABS CONTROLLER
+// 8. ATELIER FEED & TABS CONTROLLER
 // -------------------------------------------------------------------------
 function renderAtelierFeed() {
   const container = document.getElementById("gridAtelierFeed");
@@ -473,7 +480,7 @@ function switchMainTab(tabType, btnEl) {
 }
 
 // -------------------------------------------------------------------------
-// 6. ETALASE DISPLAY RENDERING (9:16 STUDIO & 1:1 SQUARE DIGITAL AKUN)
+// 9. ETALASE DISPLAY: FOTO, VIDEO & DUAL-VARIANT AI STORE
 // -------------------------------------------------------------------------
 function renderHomeCategories() {
   const container = document.getElementById("gridHomeCategories");
@@ -522,38 +529,43 @@ function renderHomeCategories() {
   });
 }
 
-// Render Beranda Digital AI: Versi Tertata Bagus dengan Integrasi Auto-Bot & Cover Asli
+// Render Beranda Digital AI: 4 Akun Pilihan dengan Tombol Varian
 function renderHomeDigitalAi() {
   const container = document.getElementById("gridHomeDigitalAi");
   if (!container) return;
   container.innerHTML = "";
 
-  const rawAccounts = getDatabaseAkun();
-  const featured = rawAccounts.slice(0, 4);
+  const accounts = getDatabaseAkun();
+  const featured = accounts.slice(0, 4);
 
   featured.forEach(acc => {
     const card = document.createElement("div");
     card.className = "catalog-card card-square-ai";
 
-    let stockNotice = '<span style="color:#22c55e;"><i class="fa-solid fa-bolt"></i> Siap Pakai Instan</span>';
-    if (acc.variants && acc.variants.length > 0) {
-      const activeTotal = acc.variants.reduce((total, v) => total + (v.stock || 0), 0);
-      if (activeTotal > 0) {
-        stockNotice = `<span style="color:#22c55e;"><i class="fa-solid fa-bolt"></i> Ready Stok (${activeTotal})</span>`;
-      } else {
-        stockNotice = `<span style="color:#ef4444;"><i class="fa-solid fa-clock"></i> Cek Ketersediaan</span>`;
-      }
+    const imgSrc = acc.logo || acc.cover || `images/canvas/${acc.id || 'canva'}.jpg`;
+    const vList = acc.variants || [];
+
+    let variantButtonsHTML = "";
+    if (vList.length > 0) {
+      variantButtonsHTML = `
+        <div style="display:flex; gap:6px; margin:8px 0;">
+          ${vList.map((v, i) => `
+            <button class="btn-quick-copy" style="flex:1; justify-content:center; padding:5px 2px; font-size:0.68rem; ${i === 0 ? 'border-color:#38bdf8; color:#38bdf8;' : 'border-color:var(--gold-primary); color:var(--gold-light);'}" 
+              onclick="eksekusiOrderAkun('${acc.id}', '${v.name}')">
+              ${v.name}<br><strong>Rp${Number(v.price).toLocaleString('id-ID')}</strong>
+            </button>
+          `).join("")}
+        </div>
+      `;
+    } else {
+      const priceNum = (acc.hargaPromo || acc.harga || 0).toLocaleString("id-ID");
+      variantButtonsHTML = `
+        <div style="font-weight:800; color:var(--gold-light); font-size:0.85rem; margin-top:4px;">Rp ${priceNum}</div>
+        <button class="btn-copy" style="margin-top:8px; padding:6px 12px; font-size:0.75rem; width:100%; background:linear-gradient(135deg, #0284c7, #0369a1); color:#fff;" onclick="eksekusiOrderAkun('${acc.id}', 'Default')">
+          <i class="fa-solid fa-cart-shopping"></i> Beli Otomatis
+        </button>
+      `;
     }
-
-    const priceNum = (acc.hargaPromo || acc.harga || 0).toLocaleString("id-ID");
-
-    // Otomatis memilih gambar dari properti logo atau folder images/canvas/
-    let imgSrc = acc.logo || acc.cover || `images/canvas/${acc.id || 'canva'}.jpg`;
-
-    // Tombol aksi: prioritaskan SupplierConnector jika tersedia, fallback ke WA
-    let actionBtnOnClick = (typeof SupplierConnector !== "undefined" && typeof SupplierConnector.prosesPembelianAkun === "function")
-      ? `SupplierConnector.prosesPembelianAkun('${acc.id}')`
-      : `kirimPesananLangsungWA('${acc.nama}', 'Aktivasi Digital', 'Rp ${priceNum}')`;
 
     card.innerHTML = `
       <div style="position:relative;">
@@ -563,12 +575,9 @@ function renderHomeDigitalAi() {
       <div class="card-info">
         <div>
           <h3 class="card-title">${acc.nama}</h3>
-          <div class="card-rating-badge">${stockNotice}</div>
-          <div style="font-weight:800; color:var(--gold-light); font-size:0.85rem; margin-top:4px;">Rp ${priceNum}</div>
+          <div class="card-rating-badge" style="color:#22c55e;"><i class="fa-solid fa-bolt"></i> Siap Pakai Instan</div>
+          ${variantButtonsHTML}
         </div>
-        <button class="btn-copy" style="margin-top:8px; padding:6px 12px; font-size:0.75rem; width:100%; background:linear-gradient(135deg, #0284c7, #0369a1); color:#fff;" onclick="${actionBtnOnClick}">
-          <i class="fa-solid fa-cart-shopping"></i> Beli Otomatis
-        </button>
       </div>
     `;
     container.appendChild(card);
@@ -636,54 +645,16 @@ function renderKatalogVideo() {
   });
 }
 
-// Render Tab Akun AI: Menggunakan AiAccountEngine jika ada, dengan fallback bersih sesuai cover canvas masing-masing
+// Render Tab Akun AI: Tampil Penuh dengan Pilihan Varian Durasi 7 Hari & 30 Hari
 function renderKatalogAkun() {
-  if (typeof AiAccountEngine !== "undefined") {
-    try {
-      if (typeof AiAccountEngine.renderCatalog === "function") {
-        AiAccountEngine.renderCatalog();
-        return;
-      } else if (typeof AiAccountEngine.init === "function") {
-        AiAccountEngine.init();
-        return;
-      }
-    } catch (e) {}
-  }
-
-  const container = document.getElementById("gridAkunKatalog") || document.getElementById("gridAkunAI");
+  const container = document.getElementById("aiAccountCatalogGrid") || document.getElementById("gridAkunKatalog") || document.getElementById("gridAkunAI");
   if (!container) return;
   container.innerHTML = "";
 
   const accounts = getDatabaseAkun();
 
   if (accounts.length === 0) {
-    const digitalFromRegistry = getActiveRegistry().filter(item => item.type === "digital");
-    if (digitalFromRegistry.length === 0) {
-      container.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:30px; color:#888;">Belum ada akun AI yang tersedia saat ini.</div>';
-      return;
-    }
-
-    digitalFromRegistry.forEach(acc => {
-      const card = document.createElement("div");
-      card.className = "catalog-card card-square-ai";
-      const coverImg = acc.coverUrl || `images/canvas/${acc.folder || 'canva'}.jpg`;
-
-      card.innerHTML = `
-        <div style="position:relative;">
-          <span class="badge-pill" style="background:#0284c7; color:#fff; border:none;">⚡ RESMI</span>
-          <img src="${coverImg}" alt="${acc.title}" class="aspect-1-1" loading="lazy" onerror="this.onerror=null; this.src='images/canvas/canva.jpg';">
-        </div>
-        <div class="card-info">
-          <h3 class="card-title">${acc.title}</h3>
-          <p style="font-size:0.75rem; color:#aaa; margin:4px 0;">${acc.description || ''}</p>
-          <div style="font-weight:800; color:var(--gold-light); font-size:0.85rem; margin-top:4px;">${acc.priceText || 'Rp35.000'}</div>
-          <button class="btn-copy" style="margin-top:8px; padding:6px 12px; font-size:0.75rem; width:100%; background:linear-gradient(135deg, #0284c7, #0369a1); color:#fff;" onclick="kirimPesananLangsungWA('${acc.title}', 'Akun AI', '${acc.priceText || 'Rp35.000'}')">
-            <i class="fa-brands fa-whatsapp"></i> Pesan via WA
-          </button>
-        </div>
-      `;
-      container.appendChild(card);
-    });
+    container.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:30px; color:#888;">Belum ada akun AI yang aktif di katalog.</div>';
     return;
   }
 
@@ -691,18 +662,31 @@ function renderKatalogAkun() {
     const card = document.createElement("div");
     card.className = "catalog-card card-square-ai";
 
-    let stockText = "Ready Stok";
-    if (acc.variants && acc.variants.length > 0) {
-      const totalStok = acc.variants.reduce((accStok, v) => accStok + (v.stock || 0), 0);
-      stockText = totalStok > 0 ? `Ready (${totalStok} akun)` : "Pre-Order";
-    }
-
-    const priceNum = (acc.hargaPromo || acc.harga || 0).toLocaleString("id-ID");
     const imgSrc = acc.logo || acc.cover || `images/canvas/${acc.id || 'canva'}.jpg`;
+    const vList = acc.variants || [];
 
-    let actionBtnOnClick = (typeof SupplierConnector !== "undefined" && typeof SupplierConnector.prosesPembelianAkun === "function")
-      ? `SupplierConnector.prosesPembelianAkun('${acc.id}')`
-      : `kirimPesananLangsungWA('${acc.nama}', 'Aktivasi Digital', 'Rp ${priceNum}')`;
+    let variantButtonsHTML = "";
+    if (vList.length > 0) {
+      variantButtonsHTML = `
+        <div style="display:flex; gap:6px; margin:10px 0 6px;">
+          ${vList.map((v, i) => `
+            <button class="btn-quick-copy" style="flex:1; justify-content:center; padding:6px 4px; font-size:0.7rem; ${i === 0 ? 'border-color:#38bdf8; color:#38bdf8;' : 'border-color:var(--gold-primary); color:var(--gold-light);'}" 
+              onclick="eksekusiOrderAkun('${acc.id}', '${v.name}')">
+              ${v.name}<br><strong>Rp${Number(v.price).toLocaleString('id-ID')}</strong>
+            </button>
+          `).join("")}
+        </div>
+      `;
+    } else {
+      const priceNum = (acc.hargaPromo || acc.harga || 0).toLocaleString("id-ID");
+      variantButtonsHTML = `
+        <div style="font-weight:800; color:var(--gold-light); font-size:0.88rem; margin:8px 0 4px;">Rp ${priceNum}</div>
+        <button class="btn-copy" style="width:100%; padding:7px 12px; font-size:0.75rem; background:linear-gradient(135deg, #0284c7, #0369a1); color:#fff;" 
+          onclick="eksekusiOrderAkun('${acc.id}', 'Default')">
+          <i class="fa-solid fa-cart-shopping"></i> Beli Sekarang
+        </button>
+      `;
+    }
 
     card.innerHTML = `
       <div style="position:relative;">
@@ -712,21 +696,29 @@ function renderKatalogAkun() {
       <div class="card-info">
         <div>
           <h3 class="card-title">${acc.nama}</h3>
-          <div class="card-rating-badge" style="color:#38bdf8;"><i class="fa-solid fa-check-circle"></i> ${stockText}</div>
-          <div style="font-size:0.75rem; color:#9ca3af; margin:4px 0; line-height:1.3;">${acc.deskripsiSingkat || ''}</div>
-          <div style="font-weight:800; color:var(--gold-light); font-size:0.88rem; margin-top:6px;">Rp ${priceNum}</div>
+          <div class="card-rating-badge" style="color:#38bdf8;"><i class="fa-solid fa-check-circle"></i> Ready Stok</div>
+          <div style="font-size:0.75rem; color:#9ca3af; margin:4px 0; line-height:1.3;">${acc.deskripsi || ''}</div>
         </div>
-        <button class="btn-copy" style="margin-top:8px; padding:7px 12px; font-size:0.75rem; width:100%; background:linear-gradient(135deg, #0284c7, #0369a1); color:#fff;" onclick="${actionBtnOnClick}">
-          <i class="fa-solid fa-cart-shopping"></i> Beli Sekarang
-        </button>
+        ${variantButtonsHTML}
       </div>
     `;
     container.appendChild(card);
   });
 }
 
+function eksekusiOrderAkun(productId, variantName) {
+  if (typeof SupplierConnector !== "undefined" && typeof SupplierConnector.orderAkunAuto === "function") {
+    SupplierConnector.orderAkunAuto(productId, variantName, 1);
+  } else {
+    const list = getDatabaseAkun();
+    const target = list.find(p => String(p.id) === String(productId));
+    const pName = target ? target.nama : "Akun AI";
+    kirimPesananLangsungWA(pName, variantName, "Menyesuaikan Varian");
+  }
+}
+
 // -------------------------------------------------------------------------
-// 7. DETAIL PACK & DYNAMIC PROMPT SCRIPT INJECTOR
+// 10. DETAIL PACK & DYNAMIC PROMPT SCRIPT INJECTOR
 // -------------------------------------------------------------------------
 function isFamilyCatalog(pack) {
   if (!pack) return false;
@@ -746,7 +738,6 @@ function loadPackPromptScript(pack, callback) {
   }
 
   let scriptUrl = pack.scriptUrl || `prompts/${pack.folder}.js`;
-
   const scriptId = `script_prompt_${pack.id}`;
   if (document.getElementById(scriptId)) {
     if (callback) callback();
@@ -835,7 +826,7 @@ function kembaliKeKatalog() {
 }
 
 // -------------------------------------------------------------------------
-// 8. DUAL-TIER PIN ACCESS SYSTEM
+// 11. DUAL-TIER PIN ACCESS SYSTEM
 // -------------------------------------------------------------------------
 function cekAksesKatalog(catalogId, tier) {
   try {
@@ -980,7 +971,7 @@ function renderDetailItemCards() {
 }
 
 // -------------------------------------------------------------------------
-// 9. MODAL INPUT & VERIFIKASI PIN
+// 12. MODAL INPUT & VERIFIKASI PIN
 // -------------------------------------------------------------------------
 function bukaModalPIN(tier) {
   targetTierModal = tier || 'starter';
@@ -1062,7 +1053,7 @@ function tampilkanToast(msg) {
 }
 
 // -------------------------------------------------------------------------
-// 10. URL AUTO-UNLOCK & GROWTH OS RADAR
+// 13. URL AUTO-UNLOCK & RADAR COMMAND DOORWAY (PROTECTED)
 // -------------------------------------------------------------------------
 function cekAutoUnlockURL() {
   const params = new URLSearchParams(window.location.search);
@@ -1083,18 +1074,50 @@ function cekAutoUnlockURL() {
 }
 
 function bukaRadarDenganPIN() {
-  const input = prompt("Masukkan PIN Otorisasi Growth OS Radar:");
+  const input = prompt("Masukkan Kunci Otorisasi Command Center:");
   if (!input) return;
-  if (input.trim().toUpperCase() === "JIWASVIP" || input.trim() === "123456") {
+  
+  // Kunci akses terenkripsi sesi lokal
+  if (input.trim().toUpperCase() === "JIWASVIP" || input.trim() === "ATELIER2026") {
     sessionStorage.setItem("JIWAS_RADAR_AUTH", "true");
     window.location.href = "analytics.html";
   } else {
-    alert("❌ Otorisasi Radar Ditolak.");
+    alert("❌ Otorisasi Ditolak.");
   }
 }
 
+function initInvisibleAdminDoorway() {
+  const brandTitle = document.querySelector(".brand-title-gold");
+  if (!brandTitle) return;
+
+  let clickCount = 0;
+  let clickTimer = null;
+
+  brandTitle.addEventListener("click", () => {
+    clickCount++;
+    if (clickCount === 1) {
+      clickTimer = setTimeout(() => { clickCount = 0; }, 700);
+    } else if (clickCount === 3) {
+      clearTimeout(clickTimer);
+      clickCount = 0;
+      bukaRadarDenganPIN();
+    }
+  });
+
+  let pressTimer = null;
+  brandTitle.addEventListener("touchstart", () => {
+    pressTimer = setTimeout(() => {
+      bukaRadarDenganPIN();
+    }, 1500);
+  }, { passive: true });
+
+  brandTitle.addEventListener("touchend", () => {
+    if (pressTimer) clearTimeout(pressTimer);
+  });
+}
+
 // -------------------------------------------------------------------------
-// 11. FAMILY FORMATION COMPOSER
+// 14. FAMILY FORMATION COMPOSER
 // -------------------------------------------------------------------------
 function updatePromptFormasi() {
   const father = document.getElementById("fatherBuild")?.value || "medium build";
@@ -1232,7 +1255,7 @@ function terapkanKeSemuaPromptKeluarga() {
 }
 
 // -------------------------------------------------------------------------
-// 12. EXIT-INTENT SURVEY & PWA INSTALLER
+// 15. EXIT-INTENT SURVEY & PWA INSTALLER
 // -------------------------------------------------------------------------
 function initExitIntentSurvey() {
   document.addEventListener("mouseleave", (e) => {
@@ -1301,7 +1324,7 @@ function tutupBannerPWA() {
 }
 
 // -------------------------------------------------------------------------
-// 13. PINTEREST SIMETRIS LIVE SEARCH & INVISIBLE ADMIN DOORWAY
+// 16. PINTEREST SIMETRIS LIVE SEARCH
 // -------------------------------------------------------------------------
 function handleLiveAtelierSearch(keyword) {
   const cleanKey = (keyword || "").toLowerCase().trim();
@@ -1361,34 +1384,4 @@ function filterByQuickChip(categoryTag, btnEl) {
   const searchKeyword = tagMap[categoryTag] || categoryTag;
   if (input) input.value = searchKeyword;
   handleLiveAtelierSearch(searchKeyword);
-}
-
-function initInvisibleAdminDoorway() {
-  const brandTitle = document.querySelector(".brand-title-gold");
-  if (!brandTitle) return;
-
-  let clickCount = 0;
-  let clickTimer = null;
-
-  brandTitle.addEventListener("click", () => {
-    clickCount++;
-    if (clickCount === 1) {
-      clickTimer = setTimeout(() => { clickCount = 0; }, 700);
-    } else if (clickCount === 3) {
-      clearTimeout(clickTimer);
-      clickCount = 0;
-      bukaRadarDenganPIN();
-    }
-  });
-
-  let pressTimer = null;
-  brandTitle.addEventListener("touchstart", () => {
-    pressTimer = setTimeout(() => {
-      bukaRadarDenganPIN();
-    }, 1500);
-  }, { passive: true });
-
-  brandTitle.addEventListener("touchend", () => {
-    if (pressTimer) clearTimeout(pressTimer);
-  });
 }
