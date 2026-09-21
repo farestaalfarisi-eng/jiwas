@@ -1,7 +1,7 @@
 // =========================================================================
 // JIWAS STUDIO - DATABASE PIN & KONFIGURASI WA (Tersinkronisasi dengan data.js)
 // =========================================================================
-window.NOMOR_WA_ADMIN_CONFIG = "6282255267793"; // Nomor WA Admin aktif
+window.NOMOR_WA_ADMIN_CONFIG = "6285181780429"; // Nomor WA Admin aktif
 
 window.LIST_PIN_KATALOG = {
   // --- FOTO STUDIO AI (LIVE) ---
