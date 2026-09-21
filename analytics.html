@@ -304,7 +304,7 @@
       </div>
     </header>
 
-    <!-- NAVIGASI 5 LEMBAR LENGKAP -->
+    <!-- NAVIGASI 5 LEMBAR -->
     <div class="tab-nav-wrapper">
       <button class="btn-sheet-tab active" onclick="switchSheet('radarTab', this)">
         <i class="fa-solid fa-chart-pie"></i> LEMBAR 1: Radar & Aktivitas
@@ -323,9 +323,7 @@
       </button>
     </div>
 
-    <!-- ========================================================================= -->
-    <!-- LEMBAR 1: RADAR TRAFIK & LOG AKTIVITAS                                   -->
-    <!-- ========================================================================= -->
+    <!-- LEMBAR 1: RADAR TRAFIK -->
     <div id="radarTab" class="sheet-content active">
       <div class="metric-grid">
         <div class="metric-card">
@@ -370,11 +368,8 @@
       </div>
     </div>
 
-    <!-- ========================================================================= -->
-    <!-- LEMBAR 2: MASTER PIN & KONTROL SATU PINTU WHATSAPP                        -->
-    <!-- ========================================================================= -->
+    <!-- LEMBAR 2: MASTER PIN & WA DISPATCH -->
     <div id="pinTab" class="sheet-content">
-      
       <div class="panel-box" style="border: 1px solid #22c55e; background: linear-gradient(135deg, rgba(34,197,94,0.06), rgba(18,18,24,0.95));">
         <div class="panel-title" style="color: #4ade80;">
           <span><i class="fa-brands fa-whatsapp"></i> KONTROL SATU PINTU: GENERATOR BALASAN & DISPATCH WA</span>
@@ -448,12 +443,9 @@
           </table>
         </div>
       </div>
-
     </div>
 
-    <!-- ========================================================================= -->
-    <!-- LEMBAR 3: MONITOR PRODUKSI ENGINE AI                                      -->
-    <!-- ========================================================================= -->
+    <!-- LEMBAR 3: MONITOR PRODUKSI ENGINE AI -->
     <div id="engineTab" class="sheet-content">
       <div class="metric-grid">
         <div class="metric-card">
@@ -501,11 +493,8 @@
       </div>
     </div>
 
-    <!-- ========================================================================= -->
-    <!-- LEMBAR 4: JIWAS GROWTH OS                                                 -->
-    <!-- ========================================================================= -->
+    <!-- LEMBAR 4: GROWTH OS -->
     <div id="growthTab" class="sheet-content">
-      
       <div class="panel-box" style="border: 1px solid var(--gold-primary); background: linear-gradient(135deg, rgba(212,175,55,0.08), rgba(18,18,24,0.95));">
         <div class="panel-title" style="margin-bottom:10px;">
           <span><i class="fa-solid fa-fire" style="color:#f59e0b;"></i> PRIORITAS TINDAKAN HARI INI (AI STRATEGIST)</span>
@@ -684,15 +673,10 @@
           </table>
         </div>
       </div>
-
     </div>
 
-    <!-- ========================================================================= -->
-    <!-- LEMBAR 5: MASTER VENDOR & INVENTARIS AKUN AI (SEMI-OTOMATIS)               -->
-    <!-- ========================================================================= -->
+    <!-- LEMBAR 5: MASTER VENDOR & INVENTARIS AKUN AI (ONLINE SYNC) -->
     <div id="vendorTab" class="sheet-content">
-      
-      <!-- Metrik Ringkas Produk AI -->
       <div class="metric-grid">
         <div class="metric-card">
           <div class="metric-title">Total Produk Terdaftar</div>
@@ -712,7 +696,6 @@
         </div>
       </div>
 
-      <!-- Panel Input & Edit Produk Cepat dengan Varian Durasi (7 Hari & 30 Hari) -->
       <div class="panel-box" style="border: 1px solid #38bdf8; background: linear-gradient(135deg, rgba(56,189,248,0.06), rgba(18,18,24,0.95));">
         <div class="panel-title" style="color: #38bdf8;">
           <span><i class="fa-solid fa-layer-group"></i> INPUT & KELOLA VARIAN AKUN (INCA STORE & FINSHOP)</span>
@@ -722,7 +705,6 @@
         <form id="formAiProduct" onsubmit="simpanProdukAI(event)">
           <input type="hidden" id="prodEditId" value="">
 
-          <!-- Baris 1: Identitas Produk -->
           <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap:12px; margin-bottom:14px;">
             <div>
               <label style="font-size:0.75rem; font-weight:700; color:var(--gold-light); display:block; margin-bottom:4px;">Sumber Vendor:</label>
@@ -757,15 +739,12 @@
             </div>
           </div>
 
-          <!-- Baris 2: Pengaturan Varian Durasi (7 Hari & 30 Hari) -->
           <div style="background:#09090e; padding:14px; border-radius:10px; border:1px solid rgba(56,189,248,0.25); margin-bottom:14px;">
             <div style="font-size:0.8rem; font-weight:800; color:var(--gold-light); margin-bottom:10px; display:flex; align-items:center; gap:6px;">
               <i class="fa-solid fa-clock"></i> Pengaturan Varian Durasi, Modal Grosir & Harga Ecer JIWAS:
             </div>
 
             <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:16px;">
-              
-              <!-- Kolom Varian 7 Hari -->
               <div style="background:#13131c; padding:12px; border-radius:8px; border:1px solid rgba(255,255,255,0.08);">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
                   <span style="font-weight:800; color:#38bdf8; font-size:0.78rem;">⚡ VARIAN 7 HARI (HEMAT)</span>
@@ -789,7 +768,6 @@
                 </div>
               </div>
 
-              <!-- Kolom Varian 30 Hari -->
               <div style="background:#13131c; padding:12px; border-radius:8px; border:1px solid rgba(255,255,255,0.08);">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
                   <span style="font-weight:800; color:var(--gold-light); font-size:0.78rem;">👑 VARIAN 30 HARI (REGULER)</span>
@@ -812,11 +790,9 @@
                   </div>
                 </div>
               </div>
-
             </div>
           </div>
 
-          <!-- Baris 3: Deskripsi, Logo, & Stok -->
           <div style="display:grid; grid-template-columns: 2fr 1fr 100px; gap:12px; margin-bottom:14px;">
             <div>
               <label style="font-size:0.75rem; font-weight:700; color:var(--gold-light); display:block; margin-bottom:4px;">Deskripsi Singkat Fitur:</label>
@@ -841,7 +817,6 @@
         </form>
       </div>
 
-      <!-- Tabel Master Koleksi Produk AI -->
       <div class="panel-box">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:10px;">
           <h2 class="panel-title"><i class="fa-solid fa-boxes-stacked"></i> Master Koleksi Produk AI dari 2 Vendor</h2>
@@ -879,7 +854,6 @@
           </table>
         </div>
       </div>
-
     </div>
 
   </div>
@@ -897,7 +871,6 @@
     const ENGINE_API_URL = "http://localhost:3000";
     const STORAGE_KEY_AI_PRODUCTS = "JIWAS_AI_PRODUCTS_OVERRIDE";
 
-    // Fallback cadangan resilien jika data.js lambat dimuat
     const FALLBACK_KATALOG_SAFE = [
       { id: "velvet-lux", title: "Luxury Royal Velvet Studio", type: "foto" },
       { id: "hijab-lux", title: "Luxury Hijab Collection", type: "foto" },
@@ -925,7 +898,7 @@
       try { renderPinManager(); } catch(e) { console.warn("PIN Manager error:", e); }
       try { populateQuickPackDropdown(); } catch(e) { console.warn("Dropdown error:", e); }
       try { renderGrowthOS(); } catch(e) { console.warn("Growth OS error:", e); }
-      try { renderTabelAiProducts(); } catch(e) { console.warn("AI Product error:", e); }
+      try { initFetchMasterAiProductsOnline(); } catch(e) { console.warn("AI Product error:", e); }
       try { hitungMarginVarian(); } catch(e) {}
 
       const isLocalHost = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
@@ -962,9 +935,6 @@
       });
     }
 
-    // =========================================================================
-    // 1. WHATSAPP 1 PINTU ENGINE & GENERATOR
-    // =========================================================================
     function populateQuickPackDropdown() {
       const select = document.getElementById("waQuickPackSelect");
       if (!select) return;
@@ -1040,9 +1010,6 @@ Selamat berkreasi di JIWAS Atelier! 🚀`;
       window.open(url, "_blank");
     }
 
-    // =========================================================================
-    // 2. MASTER PIN MANAGER TABLE
-    // =========================================================================
     function renderPinManager() {
       const waInput = document.getElementById("adminWaInput");
       const currentWa = localStorage.getItem("JIWAS_CUSTOM_WA") || 
@@ -1149,9 +1116,6 @@ Selamat berkreasi di JIWAS! 🚀`;
       setTimeout(() => toast.classList.add("hidden"), 3000);
     }
 
-    // =========================================================================
-    // 3. ENGINE ATM SYNC
-    // =========================================================================
     async function sinkronkanEngineManual() {
       const ind = document.getElementById("engineStatusIndicator");
       try {
@@ -1188,9 +1152,6 @@ Selamat berkreasi di JIWAS! 🚀`;
       }
     }
 
-    // =========================================================================
-    // 4. RADAR TRAFIK DASHBOARD
-    // =========================================================================
     function renderDashboardAnalytics() {
       let visits = "0";
       let logs = [];
@@ -1252,9 +1213,6 @@ Selamat berkreasi di JIWAS! 🚀`;
       }
     }
 
-    // =========================================================================
-    // 5. JIWAS GROWTH OS
-    // =========================================================================
     function renderGrowthOS() {
       let logs = [];
       let visits = 1;
@@ -1308,7 +1266,6 @@ Selamat berkreasi di JIWAS! 🚀`;
       const lastSalesTitle = localStorage.getItem("JIWAS_LAST_SALES_TITLE");
       document.getElementById("growthBestSeller").innerText = lastSalesTitle || (unlockedVIP[0] || unlockedStarter[0] || "Belum Ada");
 
-      // AI Strategist
       const actionBox = document.getElementById("growthActionPriorities");
       if (actionBox) {
         actionBox.innerHTML = "";
@@ -1338,7 +1295,6 @@ Selamat berkreasi di JIWAS! 🚀`;
         });
       }
 
-      // Funnel Table
       const fBody = document.getElementById("growthFunnelTableBody");
       if (fBody) {
         fBody.innerHTML = `
@@ -1349,7 +1305,6 @@ Selamat berkreasi di JIWAS! 🚀`;
         `;
       }
 
-      // Diagnostics Table
       const diagBody = document.getElementById("growthDiagnosticTableBody");
       if (diagBody) {
         const packs = getRegistryPacksSafe();
@@ -1397,7 +1352,6 @@ Selamat berkreasi di JIWAS! 🚀`;
         }
       }
 
-      // UTM Attribution
       let utmObj = {};
       try { utmObj = JSON.parse(sessionStorage.getItem("JIWAS_ACTIVE_UTM") || "{}"); } catch(e) {}
 
@@ -1413,7 +1367,6 @@ Selamat berkreasi di JIWAS! 🚀`;
         `;
       }
 
-      // Customer Voice
       const voiceBody = document.getElementById("customerVoiceTableBody");
       if (voiceBody) {
         let voices = [];
@@ -1558,8 +1511,25 @@ Selamat berkreasi di JIWAS! 🚀`;
     }
 
     // =========================================================================
-    // 6. LEMBAR 5: MASTER VENDOR & INVENTARIS PRODUK AI (SEMI-OTOMATIS)
+    // SINKRONISASI SERVER ONLINE (LEMBAR 5 ANALYTICS)
     // =========================================================================
+    async function initFetchMasterAiProductsOnline() {
+      try {
+        const res = await fetch('/api/products');
+        if (res.ok) {
+          const data = await res.json();
+          if (data.success && Array.isArray(data.products) && data.products.length > 0) {
+            localStorage.setItem(STORAGE_KEY_AI_PRODUCTS, JSON.stringify(data.products));
+            renderTabelAiProducts();
+            return;
+          }
+        }
+      } catch (e) {
+        console.warn("[SYNC LOCAL]: Menggunakan basis data cache browser.");
+      }
+      renderTabelAiProducts();
+    }
+
     function getMasterAiProducts() {
       try {
         const stored = localStorage.getItem(STORAGE_KEY_AI_PRODUCTS);
@@ -1587,10 +1557,25 @@ Selamat berkreasi di JIWAS! 🚀`;
       return [];
     }
 
-    function saveMasterAiProducts(products) {
+    async function saveMasterAiProducts(products) {
       localStorage.setItem(STORAGE_KEY_AI_PRODUCTS, JSON.stringify(products));
       renderTabelAiProducts();
-      tampilkanToastRadar("✅ Inventaris Akun AI tersimpan & terhubung ke katalog JIWAS!");
+
+      try {
+        const res = await fetch('/api/products/save', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ products: products })
+        });
+        const resData = await res.json();
+        if (resData.success) {
+          tampilkanToastRadar("☁️ Berhasil Online! Tersimpan permanen ke server.");
+          return;
+        }
+      } catch (e) {
+        console.warn("[OFFLINE CACHE]: Server tidak merespons, disimpan di peramban lokal.");
+      }
+      tampilkanToastRadar("✅ Tersimpan di penyimpanan lokal!");
     }
 
     function toggleVarianForm(prefix) {
