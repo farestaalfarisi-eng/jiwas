@@ -225,7 +225,7 @@
     .toast-radar.hidden { display: none; }
     .hidden { display: none !important; }
 
-    /* WHATSAPP PINTU SATU */
+    /* WHATSAPP 1 PINTU */
     .wa-control-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -672,7 +672,7 @@
       </div>
     </div>
 
-    <!-- LEMBAR 5: MASTER VENDOR & INVENTARIS AKUN AI (ONLINE SYNC) -->
+    <!-- LEMBAR 5: MASTER VENDOR & INVENTARIS AKUN AI (INPUT LENGKAP DETAIL, VARIAN & FAQ) -->
     <div id="vendorTab" class="sheet-content">
       <div class="metric-grid">
         <div class="metric-card">
@@ -696,7 +696,7 @@
       <div class="panel-box" style="border: 1px solid #38bdf8; background: linear-gradient(135deg, rgba(56,189,248,0.06), rgba(18,18,24,0.95));">
         <div class="panel-title" style="color: #38bdf8;">
           <span><i class="fa-solid fa-layer-group"></i> INPUT & KELOLA VARIAN AKUN (INCA STORE & FINSHOP)</span>
-          <span style="font-size:0.7rem; color:var(--text-muted);">Dukungan Varian Durasi 7 Hari, 30 Hari & Margin Grosir-Ecer</span>
+          <span style="font-size:0.7rem; color:var(--text-muted);">Dukungan Detail Lengkap, Varian Durasi 7/30 Hari, Garansi & FAQ</span>
         </div>
 
         <form id="formAiProduct" onsubmit="simpanProdukAI(event)">
@@ -736,6 +736,7 @@
             </div>
           </div>
 
+          <!-- PENGATURAN VARIAN 7 HARI & 30 HARI -->
           <div style="background:#09090e; padding:14px; border-radius:10px; border:1px solid rgba(56,189,248,0.25); margin-bottom:14px;">
             <div style="font-size:0.8rem; font-weight:800; color:var(--gold-light); margin-bottom:10px; display:flex; align-items:center; gap:6px;">
               <i class="fa-solid fa-clock"></i> Pengaturan Varian Durasi, Modal Grosir & Harga Ecer JIWAS:
@@ -790,7 +791,8 @@
             </div>
           </div>
 
-          <div style="display:grid; grid-template-columns: 2fr 1fr 100px; gap:12px; margin-bottom:14px;">
+          <!-- INPUT INFORMASI FITUR, GARANSI & FAQ DETAIL -->
+          <div style="display:grid; grid-template-columns: 2fr 1fr 100px; gap:12px; margin-bottom:12px;">
             <div>
               <label style="font-size:0.75rem; font-weight:700; color:var(--gold-light); display:block; margin-bottom:4px;">Deskripsi Singkat Fitur:</label>
               <input type="text" id="prodDeskripsi" class="input-growth" style="width:100%;" placeholder="Unlock semua filter, AI auto-caption & ekspor tanpa watermark.">
@@ -802,6 +804,19 @@
             <div>
               <label style="font-size:0.75rem; font-weight:700; color:var(--gold-light); display:block; margin-bottom:4px;">Stok Ready:</label>
               <input type="number" id="prodStok" class="input-growth" style="width:100%;" value="5">
+            </div>
+          </div>
+
+          <div style="display:grid; grid-template-columns: 1fr 1.5fr; gap:12px; margin-bottom:14px;">
+            <div>
+              <label style="font-size:0.75rem; font-weight:700; color:var(--gold-light); display:block; margin-bottom:4px;">Ketentuan Garansi:</label>
+              <input type="text" id="prodGaransi" class="input-growth" style="width:100%;" placeholder="Full Garansi Sesuai Durasi">
+            </div>
+            <div>
+              <label style="font-size:0.75rem; font-weight:700; color:var(--gold-light); display:block; margin-bottom:4px;">
+                FAQ Tambahan (Format: Tanya? | Jawab. || Tanya? | Jawab.):
+              </label>
+              <input type="text" id="prodFaqRaw" class="input-growth" style="width:100%;" placeholder="Bisa di laptop? | Mendukung PC & HP. || Apakah instan? | Langsung aktif seketika.">
             </div>
           </div>
 
@@ -902,7 +917,6 @@
     }
 
     document.addEventListener("DOMContentLoaded", () => {
-      // Pastikan otorisasi radar ditandai aktif saat dibuka admin
       sessionStorage.setItem("JIWAS_RADAR_AUTH", "true");
 
       try { renderDashboardAnalytics(); } catch(e) { console.warn("Analytics error:", e); }
@@ -1057,7 +1071,7 @@
               <button class="btn-quick-copy" onclick="salinTemplateBalasan('${pack.title}', 'Starter (10K)', '${pack.id}', 'pin10k')">
                 <i class="fa-solid fa-copy"></i> Salin 10K
               </button>
-              <a href="${magic10}" target="_blank" class="btn-quick-copy btn-test-link" title="Tes Langsung Buka Link di Tab Baru">
+              <a href="${magic10}" target="_blank" class="btn-quick-copy btn-test-link" title="Tes Buka Langsung Link di Tab Baru">
                 <i class="fa-solid fa-arrow-up-right-from-square"></i> Tes
               </a>
             </div>
@@ -1068,7 +1082,7 @@
               <button class="btn-quick-copy btn-quick-copy-vip" onclick="salinTemplateBalasan('${pack.title}', 'VIP (25K)', '${pack.id}', 'pin25k')">
                 <i class="fa-solid fa-copy"></i> Salin 25K
               </button>
-              <a href="${magic25}" target="_blank" class="btn-quick-copy btn-test-link" title="Tes Langsung Buka Link di Tab Baru">
+              <a href="${magic25}" target="_blank" class="btn-quick-copy btn-test-link" title="Tes Buka Langsung Link di Tab Baru">
                 <i class="fa-solid fa-arrow-up-right-from-square"></i> Tes
               </a>
             </div>
@@ -1088,7 +1102,7 @@
         `👉 ${magicLink}\n\n` +
         `*(Cukup klik link di atas, seluruh prompt otomatis terbuka tanpa repot ketik PIN)*\n\n` +
         `Kode PIN Cadangan: *${pinVal}*\n` +
-        `Selamat berkreasi di JIWAS Atelier! 🚀`;
+        `Selamat berkreasi di JIWAS! 🚀`;
 
       navigator.clipboard.writeText(template).then(() => {
         tampilkanToastRadar(`✅ Teks Balasan + Link Ajaib ${tierName} Berhasil Disalin!`);
@@ -1525,7 +1539,7 @@
     }
 
     // =========================================================================
-    // SINKRONISASI SERVER ONLINE (LEMBAR 5 ANALYTICS)
+    // SINKRONISASI SERVER & MASTER AI PRODUCT (LEMBAR 5)
     // =========================================================================
     async function initFetchMasterAiProductsOnline() {
       try {
@@ -1539,7 +1553,7 @@
           }
         }
       } catch (e) {
-        console.warn("[SYNC LOCAL]: Menggunakan basis data cache browser.");
+        console.warn("[SYNC LOCAL]: Menggunakan basis data cache peramban.");
       }
       renderTabelAiProducts();
     }
@@ -1563,6 +1577,8 @@
             hargaModal: vList[0].cost,
             hargaPromo: vList[0].price,
             harga: Math.round(vList[0].price * 1.35),
+            garansi: p.garansi || "Full Garansi Sesuai Durasi",
+            faq: p.faq || [],
             aktif: true,
             stok: 10
           };
@@ -1587,7 +1603,7 @@
           return;
         }
       } catch (e) {
-        console.warn("[OFFLINE CACHE]: Server tidak merespons, disimpan di peramban lokal.");
+        console.warn("[OFFLINE CACHE]: Server offline, tersimpan di peramban lokal.");
       }
       tampilkanToastRadar("✅ Tersimpan di penyimpanan lokal!");
     }
@@ -1714,6 +1730,25 @@
       const deskripsi = document.getElementById("prodDeskripsi").value.trim();
       const logo = document.getElementById("prodLogo").value.trim() || "images/canvas/canva.jpg";
       const stok = parseInt(document.getElementById("prodStok").value, 10) || 5;
+      const garansi = document.getElementById("prodGaransi").value.trim() || "Full Garansi Sesuai Durasi";
+
+      // Parsing FAQ (Format: Tanya? | Jawab. || Tanya? | Jawab.)
+      let parsedFaq = [];
+      const rawFaq = (document.getElementById("prodFaqRaw")?.value || "").trim();
+      if (rawFaq) {
+        parsedFaq = rawFaq.split("||").map(item => {
+          const parts = item.split("|");
+          return {
+            q: (parts[0] || "").trim(),
+            a: (parts[1] || "").trim()
+          };
+        }).filter(f => f.q && f.a);
+      } else {
+        parsedFaq = [
+          { q: "Apakah akun langsung dikirim?", a: "Ya, instruksi dan detail akun diproses cepat oleh admin via WhatsApp resmi." },
+          { q: "Bagaimana cara klaim garansi?", a: "Cukup konfirmasi ke WhatsApp admin dengan melampirkan no. pesanan Anda." }
+        ];
+      }
 
       const variants = [];
       if (document.getElementById("v7Aktif").checked) {
@@ -1741,6 +1776,7 @@
         nama: nama,
         vendor: vendor,
         kategori: kategori,
+        subKategori: jenisAkun,
         jenisAkun: jenisAkun,
         hargaModal: modalTampil,
         hargaPromo: hargaTampil,
@@ -1748,6 +1784,8 @@
         variants: variants,
         stok: stok,
         deskripsi: deskripsi || `Akses layanan ${nama} bergaransi penuh.`,
+        garansi: garansi,
+        faq: parsedFaq,
         logo: logo,
         badge: "⚡ AUTO BOT",
         aktif: true
@@ -1779,6 +1817,13 @@
       document.getElementById("prodDeskripsi").value = p.deskripsi || "";
       document.getElementById("prodLogo").value = p.logo || "";
       document.getElementById("prodStok").value = p.stok || 5;
+      document.getElementById("prodGaransi").value = p.garansi || "Full Garansi Sesuai Durasi";
+
+      if (p.faq && Array.isArray(p.faq) && p.faq.length > 0) {
+        document.getElementById("prodFaqRaw").value = p.faq.map(f => `${f.q} | ${f.a}`).join(" || ");
+      } else {
+        document.getElementById("prodFaqRaw").value = "";
+      }
 
       const v7 = (p.variants || []).find(v => v.name.includes("7"));
       const v30 = (p.variants || []).find(v => v.name.includes("30"));
@@ -1810,6 +1855,8 @@
       document.getElementById("formAiProduct").reset();
       document.getElementById("prodEditId").value = "";
       document.getElementById("btnBatalEdit").classList.add("hidden");
+      document.getElementById("prodGaransi").value = "";
+      document.getElementById("prodFaqRaw").value = "";
       document.getElementById("v7Aktif").checked = true;
       document.getElementById("v30Aktif").checked = true;
       toggleVarianForm("v7");
