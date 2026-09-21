@@ -5,14 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>JIWAS - Master Radar, Command Center & Growth OS</title>
 
-  <!-- Proteksi Akses Langsung URL Tanpa Otorisasi -->
-  <script>
-    if (sessionStorage.getItem("JIWAS_RADAR_AUTH") !== "true") {
-      alert("🔒 Halaman ini dilindungi otorisasi PIN. Silakan buka melalui otorisasi etalase.");
-      window.location.href = "index.html";
-    }
-  </script>
-
   <!-- Google Fonts & Font Awesome -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -199,10 +191,16 @@
       display: inline-flex;
       align-items: center;
       gap: 4px;
+      text-decoration: none;
     }
     .btn-quick-copy-vip {
       border-color: var(--gold-primary);
       color: var(--gold-light);
+    }
+    .btn-test-link {
+      border-color: #10b981;
+      color: #34d399;
+      background: #064e3b;
     }
     .btn-clear { background: #1e1e24; border: 1px solid #333; color: #ef4444; padding: 6px 12px; border-radius: 6px; font-size: 0.75rem; cursor: pointer; }
     
@@ -227,7 +225,7 @@
     .toast-radar.hidden { display: none; }
     .hidden { display: none !important; }
 
-    /* STYLES KHUSUS WHATSAPP 1 PINTU */
+    /* WHATSAPP PINTU SATU */
     .wa-control-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -271,7 +269,6 @@
     }
     .btn-send-wa:hover { background: #16a34a; color: #fff; }
 
-    /* STYLES KHUSUS GROWTH OS */
     .growth-layout-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
     @media(max-width: 800px) { .growth-layout-2 { grid-template-columns: 1fr; } }
     .creative-box {
@@ -415,14 +412,14 @@
 
       <div class="panel-box">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:10px;">
-          <h2 class="panel-title"><i class="fa-solid fa-sliders"></i> Master Database PIN & Nomor Admin</h2>
+          <h2 class="panel-title"><i class="fa-solid fa-sliders"></i> Master Database PIN & Link Buka Instan</h2>
           <button class="btn-action" onclick="simpanSemuaPIN()"><i class="fa-solid fa-floppy-disk"></i> Simpan Seluruh PIN</button>
         </div>
 
         <div style="background:#161620; padding:12px; border-radius:8px; margin-bottom:14px; display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
           <label style="font-size:0.8rem; font-weight:700; color:var(--gold-light);"><i class="fa-brands fa-whatsapp"></i> Nomor WhatsApp Admin Toko:</label>
           <input type="text" id="adminWaInput" class="input-pin" style="width:190px;" placeholder="6282255267793">
-          <span style="font-size:0.7rem; color:var(--text-muted);">*Nomor tujuan saat pembeli klik tombol beli di etalase</span>
+          <span style="font-size:0.7rem; color:var(--text-muted);">*Nomor tujuan saat pembeli klik tombol pesan di etalase</span>
         </div>
 
         <div class="search-filter-box">
@@ -893,7 +890,21 @@
       return FALLBACK_KATALOG_SAFE;
     }
 
+    function generateMagicUrl(packId, tier, pinVal) {
+      const origin = window.location.origin;
+      let pathName = window.location.pathname;
+      if (pathName.endsWith("analytics.html")) {
+        pathName = pathName.replace("analytics.html", "index.html");
+      } else {
+        pathName = pathName.substring(0, pathName.lastIndexOf('/') + 1) + "index.html";
+      }
+      return `${origin}${pathName}?pack=${encodeURIComponent(packId)}&unlock=${encodeURIComponent(tier)}&pin=${encodeURIComponent(pinVal)}`;
+    }
+
     document.addEventListener("DOMContentLoaded", () => {
+      // Pastikan otorisasi radar ditandai aktif saat dibuka admin
+      sessionStorage.setItem("JIWAS_RADAR_AUTH", "true");
+
       try { renderDashboardAnalytics(); } catch(e) { console.warn("Analytics error:", e); }
       try { renderPinManager(); } catch(e) { console.warn("PIN Manager error:", e); }
       try { populateQuickPackDropdown(); } catch(e) { console.warn("Dropdown error:", e); }
@@ -921,7 +932,7 @@
       if (sheetId === 'growthTab') {
         try { renderGrowthOS(); } catch(e) {}
       } else if (sheetId === 'pinTab') {
-        try { populateQuickPackDropdown(); } catch(e) {}
+        try { populateQuickPackDropdown(); renderPinManager(); } catch(e) {}
       } else if (sheetId === 'vendorTab') {
         try { renderTabelAiProducts(); } catch(e) {}
       }
@@ -938,17 +949,16 @@
     function populateQuickPackDropdown() {
       const select = document.getElementById("waQuickPackSelect");
       if (!select) return;
-      if (select.children.length === 0) {
-        const packs = getRegistryPacksSafe();
-        packs.forEach(p => {
-          if (p.type !== "digital") {
-            const opt = document.createElement("option");
-            opt.value = p.id;
-            opt.innerText = p.title;
-            select.appendChild(opt);
-          }
-        });
-      }
+      select.innerHTML = "";
+      const packs = getRegistryPacksSafe();
+      packs.forEach(p => {
+        if (p.type !== "digital") {
+          const opt = document.createElement("option");
+          opt.value = p.id;
+          opt.innerText = p.title;
+          select.appendChild(opt);
+        }
+      });
       updateLiveWAPreview();
     }
 
@@ -973,19 +983,14 @@
       }
 
       const tierLabel = tier === "vip" ? "VIP Full (25K)" : "Starter (10K)";
-      const currentOrigin = window.location.origin;
-      let pathRoot = window.location.pathname.replace("analytics.html", "index.html");
-      const magicLink = `${currentOrigin}${pathRoot}?pack=${packId}&unlock=${tier}&pin=${pinVal}`;
+      const magicLink = generateMagicUrl(packId, tier, pinVal);
 
-      const template = `Terima kasih banyak Kak! Pembayaran untuk *${packTitle}* (${tierLabel}) telah kami terima.
-
-✨ *KLIK LINK INI UNTUK LANGSUNG MEMBUKA FORMULA:*
-👉 ${magicLink}
-
-*(Klik tautan di atas, seluruh formula otomatis terbuka tanpa repot ketik PIN)*
-
-Kode PIN Cadangan: *${pinVal}*
-Selamat berkreasi di JIWAS Atelier! 🚀`;
+      const template = `Terima kasih banyak Kak! Pembayaran untuk *${packTitle}* (${tierLabel}) telah kami terima.\n\n` +
+        `✨ *KLIK LINK INI UNTUK LANGSUNG MEMBUKA FORMULA:*\n` +
+        `👉 ${magicLink}\n\n` +
+        `*(Klik tautan di atas, seluruh formula otomatis terbuka tanpa repot ketik PIN)*\n\n` +
+        `Kode PIN Cadangan: *${pinVal}*\n` +
+        `Selamat berkreasi di JIWAS Atelier! 🚀`;
 
       previewBox.innerText = template;
     }
@@ -1037,6 +1042,9 @@ Selamat berkreasi di JIWAS Atelier! 🚀`;
         const val10k = customPins[pack.id]?.pin10k || default10k;
         const val25k = customPins[pack.id]?.pin25k || default25k;
 
+        const magic10 = generateMagicUrl(pack.id, 'starter', val10k);
+        const magic25 = generateMagicUrl(pack.id, 'vip', val25k);
+
         const tr = document.createElement("tr");
         tr.innerHTML = `
           <td>
@@ -1045,15 +1053,25 @@ Selamat berkreasi di JIWAS Atelier! 🚀`;
           </td>
           <td>
             <input type="text" class="input-pin" id="pin10k_${pack.id}" value="${val10k}" oninput="updateLiveWAPreview()"><br>
-            <button class="btn-quick-copy" onclick="salinTemplateBalasan('${pack.title}', 'Starter (10K)', '${pack.id}', 'pin10k')" style="margin-top:4px;">
-              <i class="fa-solid fa-copy"></i> Salin Link 10K
-            </button>
+            <div style="display:flex; gap:4px; margin-top:4px;">
+              <button class="btn-quick-copy" onclick="salinTemplateBalasan('${pack.title}', 'Starter (10K)', '${pack.id}', 'pin10k')">
+                <i class="fa-solid fa-copy"></i> Salin 10K
+              </button>
+              <a href="${magic10}" target="_blank" class="btn-quick-copy btn-test-link" title="Tes Langsung Buka Link di Tab Baru">
+                <i class="fa-solid fa-arrow-up-right-from-square"></i> Tes
+              </a>
+            </div>
           </td>
           <td>
             <input type="text" class="input-pin" id="pin25k_${pack.id}" value="${val25k}" oninput="updateLiveWAPreview()"><br>
-            <button class="btn-quick-copy btn-quick-copy-vip" onclick="salinTemplateBalasan('${pack.title}', 'VIP (25K)', '${pack.id}', 'pin25k')" style="margin-top:4px;">
-              <i class="fa-solid fa-copy"></i> Salin Link 25K
-            </button>
+            <div style="display:flex; gap:4px; margin-top:4px;">
+              <button class="btn-quick-copy btn-quick-copy-vip" onclick="salinTemplateBalasan('${pack.title}', 'VIP (25K)', '${pack.id}', 'pin25k')">
+                <i class="fa-solid fa-copy"></i> Salin 25K
+              </button>
+              <a href="${magic25}" target="_blank" class="btn-quick-copy btn-test-link" title="Tes Langsung Buka Link di Tab Baru">
+                <i class="fa-solid fa-arrow-up-right-from-square"></i> Tes
+              </a>
+            </div>
           </td>
         `;
         tbody.appendChild(tr);
@@ -1063,20 +1081,14 @@ Selamat berkreasi di JIWAS Atelier! 🚀`;
     function salinTemplateBalasan(packTitle, tierName, packId, inputKey) {
       const pinVal = document.getElementById(`${inputKey}_${packId}`)?.value.trim().toUpperCase() || "TERKONFIRMASI";
       const tierParam = inputKey === 'pin25k' ? 'vip' : 'starter';
+      const magicLink = generateMagicUrl(packId, tierParam, pinVal);
 
-      const currentOrigin = window.location.origin;
-      let pathRoot = window.location.pathname.replace("analytics.html", "index.html");
-      const magicLink = `${currentOrigin}${pathRoot}?pack=${packId}&unlock=${tierParam}&pin=${pinVal}`;
-
-      const template = `Terima kasih banyak Kak! Pembayaran untuk *${packTitle}* (${tierName}) telah kami terima.
-
-✨ *KLIK LINK INI UNTUK LANGSUNG MEMBUKA 100 PROMPT:*
-👉 ${magicLink}
-
-*(Cukup klik link di atas, seluruh prompt otomatis terbuka tanpa repot ketik PIN)*
-
-Kode PIN Cadangan: *${pinVal}*
-Selamat berkreasi di JIWAS! 🚀`;
+      const template = `Terima kasih banyak Kak! Pembayaran untuk *${packTitle}* (${tierName}) telah kami terima.\n\n` +
+        `✨ *KLIK LINK INI UNTUK LANGSUNG MEMBUKA 100 PROMPT:*\n` +
+        `👉 ${magicLink}\n\n` +
+        `*(Cukup klik link di atas, seluruh prompt otomatis terbuka tanpa repot ketik PIN)*\n\n` +
+        `Kode PIN Cadangan: *${pinVal}*\n` +
+        `Selamat berkreasi di JIWAS Atelier! 🚀`;
 
       navigator.clipboard.writeText(template).then(() => {
         tampilkanToastRadar(`✅ Teks Balasan + Link Ajaib ${tierName} Berhasil Disalin!`);
@@ -1103,6 +1115,7 @@ Selamat berkreasi di JIWAS! 🚀`;
       });
 
       localStorage.setItem("JIWAS_CUSTOM_PINS", JSON.stringify(customPins));
+      renderPinManager();
       updateLiveWAPreview();
       tampilkanToastRadar("✅ Seluruh PIN & WhatsApp Dispatch berhasil diperbarui!");
     }
@@ -1158,7 +1171,7 @@ Selamat berkreasi di JIWAS! 🚀`;
       let affinity = {};
 
       try {
-        visits = localStorage.getItem("JIWAS_VISIT_COUNT") || "0";
+        visits = localStorage.getItem("JIWAS_VISIT_COUNT") || "1";
         logs = JSON.parse(localStorage.getItem("JIWAS_USER_LOGS") || "[]");
         affinity = JSON.parse(localStorage.getItem("JIWAS_USER_AFFINITY") || "{}");
       } catch(e) {}
@@ -1209,6 +1222,7 @@ Selamat berkreasi di JIWAS! 🚀`;
     function hapusLogAktivitas() {
       if (confirm("Hapus seluruh catatan log aktivitas pengunjung?")) {
         localStorage.removeItem("JIWAS_USER_LOGS");
+        localStorage.removeItem("JIWAS_USER_AFFINITY");
         location.reload();
       }
     }
