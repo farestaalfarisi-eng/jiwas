@@ -550,31 +550,34 @@ function renderHomeDigitalAi() {
     card.className = "catalog-card card-square-ai";
 
     const imgSrc = acc.logo || acc.cover || `images/canvas/${acc.id || 'canva'}.jpg`;
-    const vList = acc.variants || [];
+    
+    // Pastikan varian selalu ada walau tidak didefinisikan eksplisit di objek
+    let vList = (acc.variants && acc.variants.length > 0) ? acc.variants : [
+      { name: "7 Hari", price: acc.hargaPromo || 7000, ready: true },
+      { name: "30 Hari", price: acc.harga || 15000, ready: true }
+    ];
 
-   let variantButtonsHTML = "";
-    if (vList.length > 0) {
-      variantButtonsHTML = `
-        <div style="display:flex; gap:6px; margin:8px 0;">
-          ${vList.map((v, i) => {
-            const isOutOfStock = v.stock === 0 || v.ready === false;
-            if (isOutOfStock) {
-              return `
-                <button class="btn-quick-copy btn-out-of-stock" disabled>
-                  ${v.name}<br><strong>Habis</strong>
-                </button>
-              `;
-            }
+    let variantButtonsHTML = `
+      <div style="display:flex; gap:6px; margin:8px 0;">
+        ${vList.map((v, i) => {
+          const isOutOfStock = (v.ready === false) || (v.stock !== undefined && Number(v.stock) <= 0) || (acc.stok !== undefined && Number(acc.stok) <= 0);
+          
+          if (isOutOfStock) {
             return `
-              <button class="btn-quick-copy" style="flex:1; justify-content:center; padding:5px 2px; font-size:0.68rem; ${i === 0 ? 'border-color:#38bdf8; color:#38bdf8;' : 'border-color:var(--gold-primary); color:var(--gold-light);'}" 
-                onclick="eksekusiOrderAkun('${acc.id}', '${v.name}')">
-                ${v.name}<br><strong>Rp${Number(v.price).toLocaleString('id-ID')}</strong>
+              <button class="btn-quick-copy btn-out-of-stock" disabled style="flex:1; justify-content:center; padding:5px 2px; font-size:0.68rem;">
+                ${v.name}<br><strong style="color:var(--accent-red);">Habis</strong>
               </button>
             `;
-          }).join("")}
-        </div>
-      `;
-    }
+          }
+          return `
+            <button class="btn-quick-copy" style="flex:1; justify-content:center; padding:5px 2px; font-size:0.68rem; ${i === 0 ? 'border-color:#38bdf8; color:#38bdf8;' : 'border-color:var(--gold-primary); color:var(--gold-light);'}" 
+              onclick="eksekusiOrderAkun('${acc.id}', '${v.name}')">
+              ${v.name}<br><strong>Rp${Number(v.price || acc.hargaPromo || 0).toLocaleString('id-ID')}</strong>
+            </button>
+          `;
+        }).join("")}
+      </div>
+    `;
 
     card.innerHTML = `
       <div style="position:relative;">
@@ -671,31 +674,34 @@ function renderKatalogAkun() {
     card.className = "catalog-card card-square-ai";
 
     const imgSrc = acc.logo || acc.cover || `images/canvas/${acc.id || 'canva'}.jpg`;
-    const vList = acc.variants || [];
+    
+    // Fallback varian jika kosong
+    let vList = (acc.variants && acc.variants.length > 0) ? acc.variants : [
+      { name: "7 Hari", price: acc.hargaPromo || 7000, ready: true },
+      { name: "30 Hari", price: acc.harga || 15000, ready: true }
+    ];
 
-   let variantButtonsHTML = "";
-    if (vList.length > 0) {
-      variantButtonsHTML = `
-        <div style="display:flex; gap:6px; margin:8px 0;">
-          ${vList.map((v, i) => {
-            const isOutOfStock = v.stock === 0 || v.ready === false;
-            if (isOutOfStock) {
-              return `
-                <button class="btn-quick-copy btn-out-of-stock" disabled>
-                  ${v.name}<br><strong>Habis</strong>
-                </button>
-              `;
-            }
+    let variantButtonsHTML = `
+      <div style="display:flex; gap:6px; margin:8px 0;">
+        ${vList.map((v, i) => {
+          const isOutOfStock = (v.ready === false) || (v.stock !== undefined && Number(v.stock) <= 0) || (acc.stok !== undefined && Number(acc.stok) <= 0);
+          
+          if (isOutOfStock) {
             return `
-              <button class="btn-quick-copy" style="flex:1; justify-content:center; padding:5px 2px; font-size:0.68rem; ${i === 0 ? 'border-color:#38bdf8; color:#38bdf8;' : 'border-color:var(--gold-primary); color:var(--gold-light);'}" 
-                onclick="eksekusiOrderAkun('${acc.id}', '${v.name}')">
-                ${v.name}<br><strong>Rp${Number(v.price).toLocaleString('id-ID')}</strong>
+              <button class="btn-quick-copy btn-out-of-stock" disabled style="flex:1; justify-content:center; padding:5px 2px; font-size:0.68rem;">
+                ${v.name}<br><strong style="color:var(--accent-red);">Habis</strong>
               </button>
             `;
-          }).join("")}
-        </div>
-      `;
-    }
+          }
+          return `
+            <button class="btn-quick-copy" style="flex:1; justify-content:center; padding:5px 2px; font-size:0.68rem; ${i === 0 ? 'border-color:#38bdf8; color:#38bdf8;' : 'border-color:var(--gold-primary); color:var(--gold-light);'}" 
+              onclick="eksekusiOrderAkun('${acc.id}', '${v.name}')">
+              ${v.name}<br><strong>Rp${Number(v.price || acc.hargaPromo || 0).toLocaleString('id-ID')}</strong>
+            </button>
+          `;
+        }).join("")}
+      </div>
+    `;
 
     card.innerHTML = `
       <div style="position:relative;">
