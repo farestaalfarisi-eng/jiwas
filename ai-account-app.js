@@ -3,7 +3,7 @@
 // =========================================================================
 
 const SupplierConnector = {
-  ADMIN_WA: "6282255267793",
+  ADMIN_WA: "6285181780429",
   STORE_NAME: "JIWAS ATELIER DIGITAL STORE",
 
   getAdminWa: function () {
