@@ -803,8 +803,8 @@ function bukaDetailPack(pack) {
       : '';
 
     pabContainer.innerHTML = `
-      <button onclick="kirimPesananLangsungWA('${pack.title}', 'Starter 10K', 'Rp10.000')" class="btn-buy-wa">Beli Starter (10K)</button>
-      <button onclick="kirimPesananLangsungWA('${pack.title}', 'VIP 25K', 'Rp25.000')" class="btn-buy-wa" style="background:var(--gold-gradient); color:#000;">Beli VIP (25K)</button>
+      <button onclick="bukaModalCheckout('${pack.title}', 'Starter 10K', 'Rp10.000')" class="btn-buy-wa">Beli Starter (10K)</button>
+      <button onclick="bukaModalCheckout('${pack.title}', 'VIP 25K', 'Rp25.000')" class="btn-buy-wa" style="background:var(--gold-gradient); color:#000;">Beli VIP (25K)</button>
       <button class="btn-enter-pin-main" onclick="bukaModalPIN('vip')">Masukkan PIN</button>
       ${zipBtn}
     `;
@@ -957,7 +957,7 @@ function renderDetailItemCards() {
           <button class="btn-copy" style="background:var(--gold-gradient); color:#000; font-weight:800; flex:1;" onclick="bukaModalPIN('${tier}')">
             🔑 Masukkan PIN ${tier === 'starter' ? '10K' : '25K'}
           </button>
-          <button onclick="kirimPesananLangsungWA('${activePack.title}', 'Paket ${tier.toUpperCase()}', 'Rp${tier === 'starter' ? '10.000' : '25.000'}')" class="btn-unlock-wa" style="flex:1;">
+          <button onclick="bukaModalCheckout('${activePack.title}', 'Paket ${tier.toUpperCase()}', 'Rp${tier === 'starter' ? '10.000' : '25.000'}')" class="btn-unlock-wa" style="flex:1;">
             Beli via WA
           </button>
         </div>`;
@@ -1392,4 +1392,101 @@ function filterByQuickChip(categoryTag, btnEl) {
   const searchKeyword = tagMap[categoryTag] || categoryTag;
   if (input) input.value = searchKeyword;
   handleLiveAtelierSearch(searchKeyword);
+}
+
+// -------------------------------------------------------------------------
+// 17. ALUR CHECKOUT INSTAN DANA QRIS & WA (JIWAS)
+// -------------------------------------------------------------------------
+let currentOrderData = {
+  title: "",
+  tier: "",
+  priceText: "",
+  orderId: ""
+};
+
+function bukaModalCheckout(itemTitle, tierName, priceText) {
+  currentOrderData.title = itemTitle;
+  currentOrderData.tier = tierName;
+  currentOrderData.priceText = priceText;
+
+  const itemTitleEl = document.getElementById("checkoutItemTitle");
+  const itemPriceEl = document.getElementById("checkoutItemPrice");
+  if (itemTitleEl) itemTitleEl.innerText = `${itemTitle} (${tierName})`;
+  if (itemPriceEl) itemPriceEl.innerText = priceText;
+
+  const nameInput = document.getElementById("coBuyerName");
+  const waInput = document.getElementById("coBuyerWA");
+  if (nameInput) nameInput.value = "";
+  if (waInput) waInput.value = "";
+
+  const stepForm = document.getElementById("stepCheckoutForm");
+  const stepQRIS = document.getElementById("stepCheckoutQRIS");
+  if (stepForm) stepForm.classList.remove("hidden");
+  if (stepQRIS) stepQRIS.classList.add("hidden");
+
+  const modal = document.getElementById("checkoutModal");
+  if (modal) modal.classList.remove("hidden");
+}
+
+function tutupModalCheckout() {
+  const modal = document.getElementById("checkoutModal");
+  if (modal) modal.classList.add("hidden");
+}
+
+function prosesKeQRIS(e) {
+  e.preventDefault();
+
+  const buyerName = document.getElementById("coBuyerName")?.value.trim() || "";
+  const buyerWA = document.getElementById("coBuyerWA")?.value.trim() || "";
+  if (!buyerName || !buyerWA) return;
+
+  const now = new Date();
+  const yy = String(now.getFullYear()).slice(-2);
+  const mm = String(now.getMonth() + 1).padStart(2, '0');
+  const dd = String(now.getDate()).padStart(2, '0');
+  const rand = Math.floor(1000 + Math.random() * 9000);
+  currentOrderData.orderId = `JWS-${yy}${mm}${dd}-${rand}`;
+
+  const orderIdEl = document.getElementById("coOrderID");
+  const totalBayarEl = document.getElementById("coTotalBayar");
+  const qrisImgEl = document.getElementById("coQrisImage");
+
+  if (orderIdEl) orderIdEl.innerText = currentOrderData.orderId;
+  if (totalBayarEl) totalBayarEl.innerText = currentOrderData.priceText;
+
+  if (qrisImgEl) {
+    const rawPrice = (currentOrderData.priceText || "").toLowerCase();
+    const rawTier = (currentOrderData.tier || "").toLowerCase();
+
+    if (rawPrice.includes("10.000") || rawTier.includes("10k") || rawTier.includes("starter")) {
+      qrisImgEl.src = "images/qris-10k.jpg";
+    } else if (rawPrice.includes("25.000") || rawTier.includes("25k") || rawTier.includes("vip")) {
+      qrisImgEl.src = "images/qris-25k.jpg";
+    } else {
+      qrisImgEl.src = "images/qris-dana.jpg";
+    }
+  }
+
+  const pesanWA = 
+`Halo Admin JIWAS, saya sudah transfer via QRIS DANA.
+
+- No. Order: ${currentOrderData.orderId}
+- Nama: ${buyerName}
+- No. WhatsApp: ${buyerWA}
+- Pesanan: ${currentOrderData.title} (${currentOrderData.tier})
+- Total: ${currentOrderData.priceText}
+
+Berikut bukti transfernya. Tolong segera dikonfirmasi ya. Terima kasih!`;
+
+  const waTarget = getAdminWhatsAppNumber();
+  const waUrl = `https://wa.me/${waTarget}?text=${encodeURIComponent(pesanWA)}`;
+  const btnWA = document.getElementById("btnKonfirmasiWA");
+  if (btnWA) btnWA.href = waUrl;
+
+  const stepForm = document.getElementById("stepCheckoutForm");
+  const stepQRIS = document.getElementById("stepCheckoutQRIS");
+  if (stepForm) stepForm.classList.add("hidden");
+  if (stepQRIS) stepQRIS.classList.remove("hidden");
+
+  catatLogAktivitas("CHECKOUT_QRIS", currentOrderData.title, `${currentOrderData.tier} (${buyerName})`);
 }
