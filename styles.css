@@ -1731,3 +1731,21 @@ footer {
   color: var(--accent-red) !important; /* Tulisan 'Habis' berwarna merah lembut */
   font-size: 0.7rem;
 }
+
+/* -------------------------------------------------------------------------
+   11. INPUT CHECKOUT INSTAN DANA QRIS
+   ------------------------------------------------------------------------- */
+.input-growth {
+  background: #1a1a24;
+  border: 1px solid var(--card-border);
+  color: var(--gold-light);
+  padding: 8px 10px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  outline: none;
+}
+
+.input-growth:focus {
+  border-color: var(--gold-primary);
+}
