@@ -400,6 +400,60 @@
     </div>
   </div>
 
+  <!-- MODAL CHECKOUT INSTAN JIWAS (QRIS DANA + WA) -->
+  <div id="checkoutModal" class="modal-overlay hidden">
+    <div class="modal-content" style="max-width:380px; text-align:left;">
+      <button class="btn-modal-close" onclick="tutupModalCheckout()" aria-label="Tutup"><i class="fa-solid fa-xmark"></i></button>
+
+      <!-- Step 1: Input Nama & No WA -->
+      <div id="stepCheckoutForm">
+        <h3 style="font-family:'Cinzel', serif; color:var(--gold-light); font-size:1.1rem; margin-bottom:4px;">Checkout Instan</h3>
+        <p style="font-size:0.75rem; color:var(--text-muted); margin-bottom:12px;">Tanpa ribet, langsung proses pesanan via QRIS DANA.</p>
+
+        <div style="background:#0b0b10; border:1px solid var(--card-border); padding:10px; border-radius:8px; margin-bottom:14px;">
+          <div id="checkoutItemTitle" style="font-weight:700; font-size:0.82rem; color:#fff;">-</div>
+          <div id="checkoutItemPrice" style="color:var(--gold-primary); font-weight:800; font-size:0.95rem; margin-top:2px;">-</div>
+        </div>
+
+        <form onsubmit="prosesKeQRIS(event)">
+          <div style="margin-bottom:10px;">
+            <label style="font-size:0.75rem; font-weight:700; color:var(--gold-light); display:block; margin-bottom:4px;">Nama Lengkap / Panggilan:</label>
+            <input type="text" id="coBuyerName" class="input-growth" style="width:100%;" placeholder="Contoh: Budi" required autocomplete="off">
+          </div>
+
+          <div style="margin-bottom:14px;">
+            <label style="font-size:0.75rem; font-weight:700; color:var(--gold-light); display:block; margin-bottom:4px;">Nomor WhatsApp Aktif:</label>
+            <input type="tel" id="coBuyerWA" class="input-growth" style="width:100%;" placeholder="Contoh: 08123456789" required autocomplete="off">
+          </div>
+
+          <button type="submit" class="btn-copy" style="background:var(--gold-gradient); color:#000; font-weight:800; width:100%; justify-content:center; padding:10px;">
+            Lanjut ke Pembayaran QRIS <i class="fa-solid fa-arrow-right"></i>
+          </button>
+        </form>
+      </div>
+
+      <!-- Step 2: Scan QRIS DANA -->
+      <div id="stepCheckoutQRIS" class="hidden" style="text-align:center;">
+        <span class="hero-badge" style="margin-bottom:4px;">PEMBAYARAN DANA QRIS</span>
+        <h3 style="font-family:'Cinzel', serif; color:#fff; font-size:1.05rem; margin-bottom:2px;">Scan & Konfirmasi</h3>
+        <p style="font-size:0.75rem; color:var(--text-muted); margin-bottom:10px;">Order ID: <strong id="coOrderID" style="color:var(--accent-cyan); font-family:monospace;">-</strong></p>
+
+        <div style="background:#fff; padding:10px; border-radius:10px; display:inline-block; margin-bottom:10px; box-shadow:0 4px 15px rgba(0,0,0,0.5);">
+          <img id="coQrisImage" src="images/qris-10k.jpg" alt="QRIS DANA JIWAS" style="width:100%; max-width:210px; display:block; border-radius:4px;" onerror="this.src='images/qris-dana.jpg';">
+        </div>
+
+        <div style="background:#161622; border:1px solid var(--card-border); padding:8px 12px; border-radius:6px; margin-bottom:12px; display:flex; justify-content:space-between; align-items:center;">
+          <span style="font-size:0.75rem; color:var(--text-muted);">Total Bayar:</span>
+          <strong id="coTotalBayar" style="color:var(--accent-green); font-size:1rem;">-</strong>
+        </div>
+
+        <a id="btnKonfirmasiWA" href="#" target="_blank" class="btn-buy-wa" style="width:100%; justify-content:center; padding:10px; font-size:0.8rem;">
+          <i class="fa-brands fa-whatsapp"></i> Sudah Bayar & Kirim Bukti Transfer
+        </a>
+      </div>
+    </div>
+  </div>
+
   <!-- MODAL EXIT-INTENT SURVEY -->
   <div id="surveyModal" class="modal-overlay hidden">
     <div class="modal-content" style="max-width:360px;">
