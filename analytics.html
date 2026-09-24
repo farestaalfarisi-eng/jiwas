@@ -1687,7 +1687,7 @@
       }
     }
 
-    // Mengurangi stok produk AI dan mengubah tombol jadi abu-abu jika stok 0
+    // Mengurangi stok produk AI dan menjaga kartu & logo tetap tampil (tidak disembunyikan)
     function kurangiStokProdukAI(idx) {
       const products = getMasterAiProducts();
       if (!products[idx]) return;
@@ -1702,15 +1702,11 @@
 
       products[idx].stok = stokSekarang - 1;
 
-      // Jika stok habis, nonaktifkan otomatis penayangan di etalase
-      if (products[idx].stok === 0) {
-        products[idx].aktif = false;
-      }
-
+      // Status aktif dipertahankan agar kartu dan logo produk tidak ikut menghilang
       saveMasterAiProducts(products);
 
       if (products[idx].stok === 0) {
-        tampilkanToastRadar(`🚨 Stok ${products[idx].nama} habis! Menu dinonaktifkan.`);
+        tampilkanToastRadar(`🚨 Stok ${products[idx].nama} habis! Tombol dinonaktifkan.`);
       } else {
         tampilkanToastRadar(`✅ Transaksi dicatat! Sisa stok ${products[idx].nama}: ${products[idx].stok}`);
       }
@@ -1890,7 +1886,7 @@
         faq: parsedFaq,
         logo: logo,
         badge: "⚡ AUTO BOT",
-        aktif: stok > 0
+        aktif: true // Tetap aktif agar kartu dan logo produk tidak hilang saat stok 0
       };
 
       if (editId) {
