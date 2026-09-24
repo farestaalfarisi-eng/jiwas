@@ -12,16 +12,18 @@ let targetTierModal = 'starter';
 let extraFamilyMembers = [];
 let currentAppliedFormationPrompt = "";
 const loadedPromptScripts = new Set();
+let activeCommercialChip = "all";
 
 // -------------------------------------------------------------------------
 // 1. REGISTRY UTAMA KATALOG ATELIER
 // -------------------------------------------------------------------------
 const DEFAULT_FALLBACK_KATALOG = [
+  { id: "umkm-commercial", folder: "umkm", title: "Commercial UMKM & Product Studio", type: "product", status: "live", rating: "5.0/5", sales: "Baru Rilis" },
   { id: "family-lux", folder: "family", title: "Luxury Family Collection", type: "foto", status: "live", rating: "5.0/5", sales: "200+ Terjual" },
   { id: "family02-lux", folder: "family02", title: "Luxury Family Collection Vol.02", type: "foto", status: "live", rating: "4.9/5", sales: "85+ Terjual" },
   { id: "family03-lux", folder: "family03", title: "Luxury Family Collection Vol.03", type: "foto", status: "live", rating: "4.8/5", sales: "70+ Terjual" },
-  { id: "sekolah-yearbook", folder: "sekolah", title: "Yearbook & Formal Identity Studio", type: "foto", status: "live", rating: "5.0/5", sales: "Baru Rilis" },
-  { id: "retouch-restoration", folder: "retouch", title: "ID Photo & Beauty Restoration", type: "foto", status: "live", rating: "4.9/5", sales: "Baru Rilis" },
+  { id: "sekolah-yearbook", folder: "sekolah", title: "Yearbook & Formal Identity Studio", type: "product", status: "live", rating: "5.0/5", sales: "Baru Rilis" },
+  { id: "retouch-restoration", folder: "retouch", title: "ID Photo & Beauty Restoration", type: "product", status: "live", rating: "4.9/5", sales: "Baru Rilis" },
   { id: "velvet-lux", folder: "velvet", title: "Luxury Royal Velvet Studio", type: "foto", status: "live", rating: "4.9/5", sales: "180+ Terjual" },
   { id: "hijab-lux", folder: "hijab", title: "Luxury Hijab Collection", type: "foto", status: "live", rating: "5.0/5", sales: "210+ Terjual" },
   { id: "couple-cinematic", folder: "couple", title: "Luxury Couple Cinematic", type: "foto", status: "live", rating: "4.8/5", sales: "95+ Terjual" },
@@ -29,8 +31,7 @@ const DEFAULT_FALLBACK_KATALOG = [
   { id: "fantasi-gold", folder: "fantasi", title: "Luxury Fantasy Gold", type: "foto", status: "live", rating: "4.9/5", sales: "115+ Terjual" },
   { id: "makeup-glam", folder: "makeup", title: "Luxury Beauty & Makeover", type: "foto", status: "live", rating: "5.0/5", sales: "160+ Terjual" },
   { id: "lifestyle-lux", folder: "lifestyle", title: "Luxury Urban Lifestyle", type: "foto", status: "live", rating: "4.7/5", sales: "50+ Terjual" },
-  { id: "video-cinematic", folder: "video", title: "Cinematic Motion Suite", type: "video", status: "live", rating: "5.0/5", sales: "220+ Terjual" },
-  { id: "umkm-commercial", folder: "umkm", title: "Commercial UMKM & Product Studio", type: "foto", status: "live", rating: "5.0/5", sales: "Baru Rilis" }
+  { id: "video-cinematic", folder: "video", title: "Cinematic Motion Suite", type: "video", status: "live", rating: "5.0/5", sales: "220+ Terjual" }
 ];
 
 function getActiveRegistry() {
@@ -120,11 +121,13 @@ function initApp() {
   sinkronkanStokIncaRealtime();
 
   renderHomeCategories();
+  renderHomeCommercialPreview();
   renderHomeDigitalAi();
   renderAtelierFeed();
   renderKatalogFoto();
   renderKatalogVideo();
   renderKatalogAkun();
+  renderAiAccountCategories();
   initGlobalClickListener();
   cekAutoUnlockURL();
 }
@@ -324,6 +327,46 @@ function bagikanKoleksiKeWA(packTitle) {
 }
 
 // -------------------------------------------------------------------------
+// FITUR BAGIKAN PROMOSI SOSMED PRODUK AKUN AI
+// -------------------------------------------------------------------------
+function bagikanPromoProdukAkun(productId) {
+  const accounts = getDatabaseAkun();
+  const item = accounts.find(p => String(p.id) === String(productId));
+  if (!item) return;
+
+  const currentUrl = window.location.origin + window.location.pathname + `?tab=akun&product=${encodeURIComponent(item.id)}`;
+  const namaProduk = item.nama || item.name || "Akun AI Premium";
+  
+  let infoHarga = "";
+  if (item.variants && item.variants.length > 0) {
+    const listHarga = item.variants.filter(v => v.stock !== 0 && v.ready !== false);
+    if (listHarga.length > 0) {
+      infoHarga = `Mulai Rp${Number(listHarga[0].price).toLocaleString("id-ID")}`;
+    }
+  }
+  if (!infoHarga && item.hargaPromo) {
+    infoHarga = `Hanya Rp${Number(item.hargaPromo).toLocaleString("id-ID")}`;
+  }
+
+  const shareTitle = `⚡ Promo Spesial: ${namaProduk} - JIWAS Digital Store`;
+  const shareText = `Dapatkan akses resmi & bergaransi untuk ${namaProduk} (${infoHarga}). Aktivasi instan tanpa kartu kredit!\n\nCek katalog lengkapnya di sini:`;
+
+  catatLogAktivitas("SHARE_PRODUCT", namaProduk, "Sosmed Share");
+
+  if (navigator.share) {
+    navigator.share({
+      title: shareTitle,
+      text: `${shareText}\n${currentUrl}`,
+      url: currentUrl
+    }).catch(() => {});
+  } else {
+    const fullPromoText = `${shareTitle}\n\n${shareText}\n${currentUrl}`;
+    copasPrompt(fullPromoText);
+    tampilkanToast("✅ Teks promosi & link tersalin! Siap diposting ke sosmed.");
+  }
+}
+
+// -------------------------------------------------------------------------
 // 7. SHOWCASE BEFORE & AFTER SLIDER
 // -------------------------------------------------------------------------
 function initShowcaseAutoSlider() {
@@ -456,6 +499,7 @@ function switchMainTab(tabType, btnEl) {
   const secVideo = document.getElementById("sectionVideoAI");
   const secAkun = document.getElementById("sectionAkunAI");
   const secDetail = document.getElementById("sectionDetailPack");
+  const secComm = document.getElementById("sectionCommercialStudio");
   const heroHeader = document.getElementById("atelierMainHeader");
 
   if (secAtelier) secAtelier.classList.add("hidden");
@@ -463,6 +507,7 @@ function switchMainTab(tabType, btnEl) {
   if (secVideo) secVideo.classList.add("hidden");
   if (secAkun) secAkun.classList.add("hidden");
   if (secDetail) secDetail.classList.add("hidden");
+  if (secComm) secComm.classList.add("hidden");
 
   if (tabType === 'atelier') {
     if (secAtelier) secAtelier.classList.remove("hidden");
@@ -482,6 +527,7 @@ function switchMainTab(tabType, btnEl) {
   if (tabType === 'akun' && secAkun) {
     secAkun.classList.remove("hidden");
     renderKatalogAkun();
+    renderAiAccountCategories();
   }
 
   window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -495,7 +541,15 @@ function renderHomeCategories() {
   if (!container) return;
   container.innerHTML = "";
 
-  const studioPacks = getActiveRegistry().filter(item => item.type !== "digital" && item.status === "live");
+  const studioPacks = getActiveRegistry().filter(item => 
+    item.type !== "digital" && 
+    item.status === "live" &&
+    item.type !== "product" &&
+    !item.id.includes("umkm") &&
+    !item.id.includes("sekolah") &&
+    !item.id.includes("retouch")
+  );
+  
   studioPacks.forEach(item => {
     let badgeText = '📸 100 PROMPT';
     let mediaDisplayHTML = "";
@@ -550,34 +604,31 @@ function renderHomeDigitalAi() {
     card.className = "catalog-card card-square-ai";
 
     const imgSrc = acc.logo || acc.cover || `images/canvas/${acc.id || 'canva'}.jpg`;
-    
-    // Pastikan varian selalu ada walau tidak didefinisikan eksplisit di objek
-    let vList = (acc.variants && acc.variants.length > 0) ? acc.variants : [
-      { name: "7 Hari", price: acc.hargaPromo || 7000, ready: true },
-      { name: "30 Hari", price: acc.harga || 15000, ready: true }
-    ];
+    const vList = acc.variants || [];
 
-    let variantButtonsHTML = `
-      <div style="display:flex; gap:6px; margin:8px 0;">
-        ${vList.map((v, i) => {
-          const isOutOfStock = (v.ready === false) || (v.stock !== undefined && Number(v.stock) <= 0) || (acc.stok !== undefined && Number(acc.stok) <= 0);
-          
-          if (isOutOfStock) {
+   let variantButtonsHTML = "";
+    if (vList.length > 0) {
+      variantButtonsHTML = `
+        <div style="display:flex; gap:6px; margin:8px 0;">
+          ${vList.map((v, i) => {
+            const isOutOfStock = v.stock === 0 || v.ready === false;
+            if (isOutOfStock) {
+              return `
+                <button class="btn-quick-copy btn-out-of-stock" disabled>
+                  ${v.name}<br><strong>Habis</strong>
+                </button>
+              `;
+            }
             return `
-              <button class="btn-quick-copy btn-out-of-stock" disabled style="flex:1; justify-content:center; padding:5px 2px; font-size:0.68rem;">
-                ${v.name}<br><strong style="color:var(--accent-red);">Habis</strong>
+              <button class="btn-quick-copy" style="flex:1; justify-content:center; padding:5px 2px; font-size:0.68rem; ${i === 0 ? 'border-color:#38bdf8; color:#38bdf8;' : 'border-color:var(--gold-primary); color:var(--gold-light);'}" 
+                onclick="eksekusiOrderAkun('${acc.id}', '${v.name}')">
+                ${v.name}<br><strong>Rp${Number(v.price).toLocaleString('id-ID')}</strong>
               </button>
             `;
-          }
-          return `
-            <button class="btn-quick-copy" style="flex:1; justify-content:center; padding:5px 2px; font-size:0.68rem; ${i === 0 ? 'border-color:#38bdf8; color:#38bdf8;' : 'border-color:var(--gold-primary); color:var(--gold-light);'}" 
-              onclick="eksekusiOrderAkun('${acc.id}', '${v.name}')">
-              ${v.name}<br><strong>Rp${Number(v.price || acc.hargaPromo || 0).toLocaleString('id-ID')}</strong>
-            </button>
-          `;
-        }).join("")}
-      </div>
-    `;
+          }).join("")}
+        </div>
+      `;
+    }
 
     card.innerHTML = `
       <div style="position:relative;">
@@ -590,6 +641,9 @@ function renderHomeDigitalAi() {
           <div class="card-rating-badge" style="color:#22c55e;"><i class="fa-solid fa-bolt"></i> Siap Pakai Instan</div>
           ${variantButtonsHTML}
         </div>
+        <button class="btn-share-promo" style="width:100%; margin-top:6px;" onclick="bagikanPromoProdukAkun('${acc.id}')">
+          <i class="fa-solid fa-share-nodes"></i> Bagikan Promo
+        </button>
       </div>
     `;
     container.appendChild(card);
@@ -600,7 +654,15 @@ function renderKatalogFoto() {
   const container = document.getElementById("gridFotoKatalog");
   if (!container) return;
   container.innerHTML = "";
-  const list = getActiveRegistry().filter(item => item.type === "foto" && item.status === "live");
+  
+  // Kecualikan katalog komersial agar tidak campur aduk di menu Foto AI
+  const list = getActiveRegistry().filter(item => 
+    item.type === "foto" && 
+    item.status === "live" &&
+    !item.id.includes("umkm") &&
+    !item.id.includes("sekolah") &&
+    !item.id.includes("retouch")
+  );
 
   list.forEach(pack => {
     const card = document.createElement("div");
@@ -657,15 +719,15 @@ function renderKatalogVideo() {
   });
 }
 
-function renderKatalogAkun() {
+function renderKatalogAkun(filteredList) {
   const container = document.getElementById("aiAccountCatalogGrid") || document.getElementById("gridAkunKatalog") || document.getElementById("gridAkunAI");
   if (!container) return;
   container.innerHTML = "";
 
-  const accounts = getDatabaseAkun();
+  const accounts = filteredList || getDatabaseAkun();
 
   if (accounts.length === 0) {
-    container.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:30px; color:#888;">Belum ada akun AI yang aktif di katalog.</div>';
+    container.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:30px; color:#888;">Belum ada akun AI yang aktif di kategori ini.</div>';
     return;
   }
 
@@ -674,34 +736,31 @@ function renderKatalogAkun() {
     card.className = "catalog-card card-square-ai";
 
     const imgSrc = acc.logo || acc.cover || `images/canvas/${acc.id || 'canva'}.jpg`;
-    
-    // Fallback varian jika kosong
-    let vList = (acc.variants && acc.variants.length > 0) ? acc.variants : [
-      { name: "7 Hari", price: acc.hargaPromo || 7000, ready: true },
-      { name: "30 Hari", price: acc.harga || 15000, ready: true }
-    ];
+    const vList = acc.variants || [];
 
-    let variantButtonsHTML = `
-      <div style="display:flex; gap:6px; margin:8px 0;">
-        ${vList.map((v, i) => {
-          const isOutOfStock = (v.ready === false) || (v.stock !== undefined && Number(v.stock) <= 0) || (acc.stok !== undefined && Number(acc.stok) <= 0);
-          
-          if (isOutOfStock) {
+   let variantButtonsHTML = "";
+    if (vList.length > 0) {
+      variantButtonsHTML = `
+        <div style="display:flex; gap:6px; margin:8px 0;">
+          ${vList.map((v, i) => {
+            const isOutOfStock = v.stock === 0 || v.ready === false;
+            if (isOutOfStock) {
+              return `
+                <button class="btn-quick-copy btn-out-of-stock" disabled>
+                  ${v.name}<br><strong>Habis</strong>
+                </button>
+              `;
+            }
             return `
-              <button class="btn-quick-copy btn-out-of-stock" disabled style="flex:1; justify-content:center; padding:5px 2px; font-size:0.68rem;">
-                ${v.name}<br><strong style="color:var(--accent-red);">Habis</strong>
+              <button class="btn-quick-copy" style="flex:1; justify-content:center; padding:5px 2px; font-size:0.68rem; ${i === 0 ? 'border-color:#38bdf8; color:#38bdf8;' : 'border-color:var(--gold-primary); color:var(--gold-light);'}" 
+                onclick="eksekusiOrderAkun('${acc.id}', '${v.name}')">
+                ${v.name}<br><strong>Rp${Number(v.price).toLocaleString('id-ID')}</strong>
               </button>
             `;
-          }
-          return `
-            <button class="btn-quick-copy" style="flex:1; justify-content:center; padding:5px 2px; font-size:0.68rem; ${i === 0 ? 'border-color:#38bdf8; color:#38bdf8;' : 'border-color:var(--gold-primary); color:var(--gold-light);'}" 
-              onclick="eksekusiOrderAkun('${acc.id}', '${v.name}')">
-              ${v.name}<br><strong>Rp${Number(v.price || acc.hargaPromo || 0).toLocaleString('id-ID')}</strong>
-            </button>
-          `;
-        }).join("")}
-      </div>
-    `;
+          }).join("")}
+        </div>
+      `;
+    }
 
     card.innerHTML = `
       <div style="position:relative;">
@@ -715,10 +774,56 @@ function renderKatalogAkun() {
           <div style="font-size:0.75rem; color:#9ca3af; margin:4px 0; line-height:1.3;">${acc.deskripsi || ''}</div>
         </div>
         ${variantButtonsHTML}
+        <button class="btn-share-promo" style="width:100%; margin-top:6px;" onclick="bagikanPromoProdukAkun('${acc.id}')">
+          <i class="fa-solid fa-share-nodes"></i> Bagikan Promo
+        </button>
       </div>
     `;
     container.appendChild(card);
   });
+}
+
+// -------------------------------------------------------------------------
+// RENDER KATEGORI CHIP AKUN AI
+// -------------------------------------------------------------------------
+function renderAiAccountCategories() {
+  const container = document.getElementById("aiCategoriesContainer");
+  if (!container) return;
+
+  const categories = [
+    { key: "all", label: "Semua Akun AI" },
+    { key: "Design", label: "🎨 Desain & Gambar" },
+    { key: "Video", label: "🎬 Video Motion" },
+    { key: "AI", label: "🤖 AI & Smart Tools" },
+    { key: "Produktivitas", label: "⚡ Produktivitas & Streaming" }
+  ];
+
+  container.innerHTML = categories.map((cat, idx) => `
+    <button class="ai-chip ${idx === 0 ? 'active' : ''}" onclick="filterAiAccountByCategory('${cat.key}', this)">
+      ${cat.label}
+    </button>
+  `).join("");
+}
+
+function filterAiAccountByCategory(categoryKey, btnEl) {
+  document.querySelectorAll(".ai-chip").forEach(c => c.classList.remove("active"));
+  if (btnEl) btnEl.classList.add("active");
+
+  const cleanCat = (categoryKey || "").toLowerCase();
+  const allAccounts = getDatabaseAkun();
+
+  if (cleanCat === "all") {
+    renderKatalogAkun(allAccounts);
+    return;
+  }
+
+  const categoryFiltered = allAccounts.filter(item => {
+    const itemCat = (item.kategori || "").toLowerCase();
+    const itemSub = (item.subKategori || "").toLowerCase();
+    return itemCat.includes(cleanCat) || itemSub.includes(cleanCat);
+  });
+
+  renderKatalogAkun(categoryFiltered);
 }
 
 function eksekusiOrderAkun(productId, variantName) {
@@ -782,6 +887,7 @@ function bukaDetailPack(pack) {
   const secVideo = document.getElementById("sectionVideoAI");
   const secAkun = document.getElementById("sectionAkunAI");
   const secDetail = document.getElementById("sectionDetailPack");
+  const secComm = document.getElementById("sectionCommercialStudio");
   const heroHeader = document.getElementById("atelierMainHeader");
 
   if (heroHeader) heroHeader.classList.add("hidden");
@@ -789,6 +895,7 @@ function bukaDetailPack(pack) {
   if (secFoto) secFoto.classList.add("hidden");
   if (secVideo) secVideo.classList.add("hidden");
   if (secAkun) secAkun.classList.add("hidden");
+  if (secComm) secComm.classList.add("hidden");
   if (secDetail) secDetail.classList.remove("hidden");
 
   const isThirtyBundle = (pack.type === 'video');
@@ -837,7 +944,12 @@ function bukaDetailPack(pack) {
 function kembaliKeKatalog() {
   const secDetail = document.getElementById("sectionDetailPack");
   if (secDetail) secDetail.classList.add("hidden");
-  switchMainTab('atelier', document.getElementById('tabBtnAtelier'));
+  
+  if (activePack && (activePack.type === "product" || activePack.id.includes("umkm") || activePack.id.includes("sekolah") || activePack.id.includes("retouch"))) {
+    bukaHalamanKomersial();
+  } else {
+    switchMainTab('atelier', document.getElementById('tabBtnAtelier'));
+  }
 }
 
 // -------------------------------------------------------------------------
@@ -1338,7 +1450,7 @@ function tutupBannerPWA() {
 }
 
 // -------------------------------------------------------------------------
-// 16. PINTEREST SIMETRIS LIVE SEARCH
+// 16. PINTEREST SIMETRIS LIVE SEARCH & MESIN PENCARI AKUN AI
 // -------------------------------------------------------------------------
 function handleLiveAtelierSearch(keyword) {
   const cleanKey = (keyword || "").toLowerCase().trim();
@@ -1360,7 +1472,38 @@ function handleLiveAtelierSearch(keyword) {
     const isMatch = cleanKey === "" || text.includes(cleanKey);
     item.style.display = isMatch ? "" : "none";
   });
+
+  const homeAiCards = document.querySelectorAll("#gridHomeDigitalAi .catalog-card");
+  homeAiCards.forEach(card => {
+    const text = card.innerText.toLowerCase();
+    const isMatch = cleanKey === "" || text.includes(cleanKey);
+    card.style.display = isMatch ? "" : "none";
+  });
+
+  handleAiAccountSearch(cleanKey);
 }
+
+function handleAiAccountSearch(keyword) {
+  const cleanKey = (keyword || "").toLowerCase().trim();
+  const catalogGrid = document.getElementById("aiAccountCatalogGrid") || document.getElementById("gridAkunKatalog") || document.getElementById("gridAkunAI");
+  if (!catalogGrid) return;
+
+  const cards = catalogGrid.querySelectorAll(".catalog-card, .ai-card");
+  cards.forEach(card => {
+    const text = card.innerText.toLowerCase();
+    const isMatch = cleanKey === "" || text.includes(cleanKey);
+    card.style.display = isMatch ? "" : "none";
+  });
+}
+
+// Engine handler kompatibilitas pemanggilan pada index.html (AiAccountEngine.handleSearch)
+const AiAccountEngine = {
+  handleSearch: function(keyword) {
+    handleAiAccountSearch(keyword);
+  }
+};
+window.AiAccountEngine = AiAccountEngine;
+window.handleAiAccountSearch = handleAiAccountSearch;
 
 function resetLiveAtelierSearch() {
   const input = document.getElementById("globalAtelierSearch");
@@ -1384,6 +1527,11 @@ function filterByQuickChip(categoryTag, btnEl) {
 
   if (categoryTag === 'akun') {
     switchMainTab('akun');
+    return;
+  }
+
+  if (categoryTag === 'umkm') {
+    bukaHalamanKomersial();
     return;
   }
 
@@ -1495,4 +1643,133 @@ Berikut bukti transfernya. Tolong segera dikonfirmasi ya. Terima kasih!`;
   if (stepQRIS) stepQRIS.classList.remove("hidden");
 
   catatLogAktivitas("CHECKOUT_QRIS", currentOrderData.title, `${currentOrderData.tier} (${buyerName})`);
+}
+
+// -------------------------------------------------------------------------
+// 18. MODUL KHUSUS: STUDIO KOMERSIAL & UMKM (HUB & DEDICATED CATALOG)
+// -------------------------------------------------------------------------
+function getCommercialPacks() {
+  return getActiveRegistry().filter(item => 
+    item.type === "product" || 
+    item.id.includes("umkm") || 
+    item.id.includes("sekolah") || 
+    item.id.includes("retouch")
+  );
+}
+
+function renderHomeCommercialPreview() {
+  const container = document.getElementById("gridHomeCommercialPreview");
+  if (!container) return;
+  container.innerHTML = "";
+
+  const items = getCommercialPacks().slice(0, 3);
+  items.forEach(pack => {
+    const card = document.createElement("div");
+    card.className = "catalog-card";
+    card.onclick = () => bukaDetailPack(pack);
+    const coverSrc = pack.coverUrl || `images/${pack.folder}/cover.jpg`;
+
+    card.innerHTML = `
+      <div style="position:relative;">
+        <span class="badge-pill" style="background:#15803d; color:#fff; border:none;">PRO BISNIS</span>
+        <img src="${coverSrc}" alt="${pack.title}" class="aspect-9-16" loading="lazy" onload="this.classList.add('img-loaded')" onerror="this.onerror=null; this.src='images/velvet/cover.jpg'; this.classList.add('img-loaded');">
+      </div>
+      <div class="card-info">
+        <h3 class="card-title">${pack.title}</h3>
+        <div class="card-rating-badge" style="color:#22c55e;">★ ${pack.rating || '5.0/5'}</div>
+        <div style="font-weight:800; color:var(--gold-light); font-size:0.85rem; margin-top:4px;">Rp10.000 / Rp25.000</div>
+        <button class="btn-copy" style="margin-top:8px; padding:6px 12px; font-size:0.75rem; width:100%;">Lihat Formula</button>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+function bukaHalamanKomersial() {
+  const secAtelier = document.getElementById("sectionAtelier");
+  const secFoto = document.getElementById("sectionFotoAI");
+  const secVideo = document.getElementById("sectionVideoAI");
+  const secAkun = document.getElementById("sectionAkunAI");
+  const secDetail = document.getElementById("sectionDetailPack");
+  const secComm = document.getElementById("sectionCommercialStudio");
+  const heroHeader = document.getElementById("atelierMainHeader");
+
+  if (heroHeader) heroHeader.classList.add("hidden");
+  if (secAtelier) secAtelier.classList.add("hidden");
+  if (secFoto) secFoto.classList.add("hidden");
+  if (secVideo) secVideo.classList.add("hidden");
+  if (secAkun) secAkun.classList.add("hidden");
+  if (secDetail) secDetail.classList.add("hidden");
+  if (secComm) secComm.classList.remove("hidden");
+
+  renderAllCommercialItems();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function tutupHalamanKomersial() {
+  const secComm = document.getElementById("sectionCommercialStudio");
+  if (secComm) secComm.classList.add("hidden");
+  switchMainTab('atelier', document.getElementById('tabBtnAtelier'));
+}
+
+function renderAllCommercialItems(filterKey = "") {
+  const container = document.getElementById("gridAllCommercialItems");
+  if (!container) return;
+  container.innerHTML = "";
+
+  let list = getCommercialPacks();
+
+  // Filter berdasarkan Chip Kategori
+  if (activeCommercialChip !== "all") {
+    list = list.filter(item => {
+      const matchText = (item.id + " " + item.title + " " + (item.folder || "")).toLowerCase();
+      return matchText.includes(activeCommercialChip);
+    });
+  }
+
+  // Filter berdasarkan Input Live Search
+  if (filterKey.trim() !== "") {
+    const q = filterKey.toLowerCase();
+    list = list.filter(item => {
+      const matchText = (item.id + " " + item.title + " " + (item.folder || "")).toLowerCase();
+      return matchText.includes(q);
+    });
+  }
+
+  if (list.length === 0) {
+    container.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:30px; color:#888;">Belum ada katalog pada sub-kategori ini.</div>';
+    return;
+  }
+
+  list.forEach(pack => {
+    const card = document.createElement("div");
+    card.className = "catalog-card";
+    card.onclick = () => bukaDetailPack(pack);
+    const coverSrc = pack.coverUrl || `images/${pack.folder}/cover.jpg`;
+
+    card.innerHTML = `
+      <div style="position:relative;">
+        <span class="badge-pill" style="background:#15803d; color:#fff; border:none;">PRO BISNIS</span>
+        <img src="${coverSrc}" alt="${pack.title}" class="aspect-9-16" loading="lazy" onload="this.classList.add('img-loaded')" onerror="this.onerror=null; this.src='images/velvet/cover.jpg'; this.classList.add('img-loaded');">
+      </div>
+      <div class="card-info">
+        <h3 class="card-title">${pack.title}</h3>
+        <div class="card-rating-badge" style="color:#22c55e;">★ ${pack.rating || '5.0/5'}</div>
+        <div style="font-weight:800; color:var(--gold-light); font-size:0.85rem; margin-top:4px;">Rp10.000 / Rp25.000</div>
+        <button class="btn-copy" style="margin-top:8px; padding:6px 12px; font-size:0.75rem; width:100%;">Buka Formula</button>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+function filterChipKomersial(chipKey, btnEl) {
+  document.querySelectorAll("#commercialFilterChips .ai-chip").forEach(b => b.classList.remove("active"));
+  if (btnEl) btnEl.classList.add("active");
+  activeCommercialChip = chipKey;
+  renderAllCommercialItems();
+}
+
+function filterKomersialLive(keyword) {
+  renderAllCommercialItems(keyword);
 }
