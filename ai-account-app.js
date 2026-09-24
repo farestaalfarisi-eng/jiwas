@@ -2,7 +2,7 @@
 // JIWAS ATELIER & STORE — HYBRID SUPPLIER CONNECTOR (FULL VERSION)
 // =========================================================================
 
-const SupplierConnector = {
+window.SupplierConnector = window.SupplierConnector || {
   ADMIN_WA: "6285181780429",
   STORE_NAME: "JIWAS ATELIER DIGITAL STORE",
 
@@ -113,6 +113,8 @@ const SupplierConnector = {
     };
   }
 };
+
+var SupplierConnector = window.SupplierConnector;
 
 // Global helper agar onclick tombol beli langsung jalan
 window.SupplierConnector = SupplierConnector;
