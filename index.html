@@ -501,7 +501,14 @@
         <p style="font-size:0.75rem; color:var(--text-muted); margin-bottom:10px;">Order ID: <strong id="coOrderID" style="color:var(--accent-cyan); font-family:monospace;">-</strong></p>
 
         <div style="background:#fff; padding:10px; border-radius:10px; display:inline-block; margin-bottom:10px; box-shadow:0 4px 15px rgba(0,0,0,0.5);">
-          <img id="coQrisImage" src="images/qris-10k.jpg" alt="QRIS DANA JIWAS" style="width:100%; max-width:210px; display:block; border-radius:4px;" onerror="this.src='images/qris-dana.jpg';">
+          
+<img 
+  id="coQrisImage" 
+  src="images/qris-10k.jpg" 
+  alt="QRIS DANA JIWAS" 
+  style="width:100%; max-width:210px; display:block; border-radius:4px;" 
+  onerror="this.onerror=null; this.src='images/qris-dana.jpg';"
+>
         </div>
 
         <div style="background:#161622; border:1px solid var(--card-border); padding:8px 12px; border-radius:6px; margin-bottom:12px; display:flex; justify-content:space-between; align-items:center;">
@@ -559,8 +566,7 @@
   <script src="data.js"></script>
   <script src="showcase-data.js"></script>
   <script src="database.js?v=2"></script>
-  <script src="supplier-connector.js?v=2"></script>
-  <script src="components.js?v=2"></script>
+   <script src="components.js?v=2"></script>
   <script src="ai-account-app.js?v=2"></script>
   <script src="app.js?v=2"></script>
 </body>
