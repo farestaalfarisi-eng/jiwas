@@ -829,7 +829,7 @@ function filterAiAccountByCategory(categoryKey, btnEl) {
 function eksekusiOrderAkun(productId, variantName) {
   const list = getDatabaseAkun();
   const target = list.find(p => String(p.id) === String(productId));
-  const pName = target ? target.nama : "Akun AI";
+  const pName = target ? (target.nama || target.name) : "Akun AI";
   
   let hargaTeks = "Rp15.000";
   if (target && target.variants && Array.isArray(target.variants)) {
@@ -837,11 +837,14 @@ function eksekusiOrderAkun(productId, variantName) {
     if (vObj && vObj.price) {
       hargaTeks = `Rp${Number(vObj.price).toLocaleString("id-ID")}`;
     }
+  } else if (target && (target.hargaPromo || target.harga)) {
+    hargaTeks = `Rp${Number(target.hargaPromo || target.harga).toLocaleString("id-ID")}`;
   }
 
-  // Buka modal pop-up QRIS web (sama persis seperti foto & video)
+  // Buka modal pop-up QRIS web (sama persis seperti alur checkout foto & video)
   bukaModalCheckout(pName, variantName, hargaTeks);
 }
+
 // -------------------------------------------------------------------------
 // 10. DETAIL PACK & DYNAMIC PROMPT SCRIPT INJECTOR
 // -------------------------------------------------------------------------
