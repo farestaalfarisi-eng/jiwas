@@ -827,16 +827,21 @@ function filterAiAccountByCategory(categoryKey, btnEl) {
 }
 
 function eksekusiOrderAkun(productId, variantName) {
-  if (typeof SupplierConnector !== "undefined" && typeof SupplierConnector.orderAkunAuto === "function") {
-    SupplierConnector.orderAkunAuto(productId, variantName, 1);
-  } else {
-    const list = getDatabaseAkun();
-    const target = list.find(p => String(p.id) === String(productId));
-    const pName = target ? target.nama : "Akun AI";
-    kirimPesananLangsungWA(pName, variantName, "Menyesuaikan Varian");
+  const list = getDatabaseAkun();
+  const target = list.find(p => String(p.id) === String(productId));
+  const pName = target ? target.nama : "Akun AI";
+  
+  let hargaTeks = "Rp15.000";
+  if (target && target.variants && Array.isArray(target.variants)) {
+    const vObj = target.variants.find(v => v.name.toLowerCase().includes(variantName.toLowerCase()));
+    if (vObj && vObj.price) {
+      hargaTeks = `Rp${Number(vObj.price).toLocaleString("id-ID")}`;
+    }
   }
-}
 
+  // Buka modal pop-up QRIS web (sama persis seperti foto & video)
+  bukaModalCheckout(pName, variantName, hargaTeks);
+}
 // -------------------------------------------------------------------------
 // 10. DETAIL PACK & DYNAMIC PROMPT SCRIPT INJECTOR
 // -------------------------------------------------------------------------
