@@ -104,7 +104,7 @@
             type="text" 
             id="globalAtelierSearch" 
             class="search-pill-input" 
-            placeholder="Cari formula atelier: Hijab, Velvet, Keluarga, CEO, Video..."
+            placeholder="Cari formula atelier: UMKM, Hijab, Velvet, Keluarga, CEO, Video..."
             oninput="handleLiveAtelierSearch(this.value)"
             autocomplete="off"
           >
@@ -116,6 +116,7 @@
         <!-- QUICK FILTER CHIPS SIMETRIS -->
         <div class="search-quick-tags">
           <button class="quick-tag-chip active" onclick="filterByQuickChip('all', this)">Semua</button>
+          <button class="quick-tag-chip" onclick="filterByQuickChip('umkm', this)">#UMKM</button>
           <button class="quick-tag-chip" onclick="filterByQuickChip('keluarga', this)">#Keluarga</button>
           <button class="quick-tag-chip" onclick="filterByQuickChip('hijab', this)">#Hijab</button>
           <button class="quick-tag-chip" onclick="filterByQuickChip('ceo', this)">#CEO</button>
@@ -132,6 +133,28 @@
           <h2 class="hero-title" style="font-size:1.15rem;">Katalog Studio Pilihan</h2>
         </div>
         <div class="grid-catalog" id="gridHomeCategories"></div>
+      </section>
+
+
+<!-- HUB STUDIO KOMERSIAL & UMKM DI HOME -->
+      <hr class="section-divider">
+
+      <section id="commercialHubSection" style="margin-bottom:28px;">
+        <div class="hero-box" style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:14px;">
+          <div>
+            <span class="hero-badge" style="background:rgba(34,197,94,0.15); color:#22c55e; border:1px solid #22c55e;">
+              <i class="fa-solid fa-briefcase"></i> STUDIO BISNIS & KOMERSIAL
+            </span>
+            <h2 class="hero-title" style="font-size:1.15rem;">Komersial, UMKM & Identitas</h2>
+            <p class="brand-tagline">Formula visual produk jualan, pasfoto sekolah, dan buku kenangan.</p>
+          </div>
+          <button class="btn-copy" style="font-size:0.7rem; padding:4px 10px;" onclick="bukaHalamanKomersial()">
+            Lihat Semua <i class="fa-solid fa-arrow-right"></i>
+          </button>
+        </div>
+
+        <!-- 3 Kartu Sorotan Utama -->
+        <div class="grid-catalog" id="gridHomeCommercialPreview"></div>
       </section>
 
       <!-- ETALASE RESMI DIGITAL AI & AKUN DI HOME -->
@@ -247,6 +270,45 @@
         <div class="ai-grid-catalog" id="aiAccountCatalogGrid"></div>
       </div>
     </section>
+
+
+<!-- SECTION KHUSUS: KATALOG KOMERSIAL & UMKM (SCALABLE) -->
+    <section id="sectionCommercialStudio" class="hidden">
+      <div class="detail-header" style="margin-bottom:14px;">
+        <button class="btn-back" onclick="tutupHalamanKomersial()"><i class="fa-solid fa-arrow-left"></i> Kembali</button>
+        <div>
+          <span class="hero-badge" style="background:rgba(34,197,94,0.15); color:#22c55e; border:1px solid #22c55e;">COMMERCIAL SUITE</span>
+          <h2 class="hero-title" style="font-size:1.15rem;">Studio Komersial & Produk UMKM</h2>
+        </div>
+      </div>
+
+      <!-- Search Box & Sub-Category Chips Geser -->
+      <div class="ai-account-wrapper" style="margin-bottom:18px;">
+        <div class="ai-search-box">
+          <i class="fa-solid fa-magnifying-glass ai-search-icon"></i>
+          <input 
+            type="text" 
+            class="ai-search-input" 
+            placeholder="Cari tema produk: FnB, fashion, kosmetik, mockup, sekolah..." 
+            oninput="filterKomersialLive(this.value)"
+          >
+        </div>
+
+        <div class="ai-categories-scroll" id="commercialFilterChips">
+          <button class="ai-chip active" onclick="filterChipKomersial('all', this)">Semua Kategori</button>
+          <button class="ai-chip" onclick="filterChipKomersial('umkm', this)">📦 Produk UMKM</button>
+          <button class="ai-chip" onclick="filterChipKomersial('fnb', this)">🍔 Kuliner & Minuman</button>
+          <button class="ai-chip" onclick="filterChipKomersial('fashion', this)">👗 Fashion & Hijab</button>
+          <button class="ai-chip" onclick="filterChipKomersial('skincare', this)">💄 Skincare & Beauty</button>
+          <button class="ai-chip" onclick="filterChipKomersial('sekolah', this)">🎓 Yearbook & Sekolah</button>
+          <button class="ai-chip" onclick="filterChipKomersial('retouch', this)">🛠️ Pasfoto & Retouch</button>
+        </div>
+      </div>
+
+      <!-- Grid Semua Produk Komersial -->
+      <div class="grid-catalog" id="gridAllCommercialItems"></div>
+    </section>
+
 
     <!-- 7. SECTION DETAIL PACK (100 PROMPT) -->
     <section id="sectionDetailPack" class="hidden">
