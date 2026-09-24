@@ -27,3 +27,4 @@ window.LIST_PIN_KATALOG = {
   // --- VIDEO AI (LIVE) ---
   "video-cinematic": { pin10k: "VID10K", pin25k: "VIDVIP25" }
 };
+```[cite: 7]
