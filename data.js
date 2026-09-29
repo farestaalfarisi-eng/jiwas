@@ -244,7 +244,53 @@ window.KATALOG_REGISTRY = [
     status: "live",
     priceText: "Rp15.000",
     description: "Akun Canva Pro Lifetime invite untuk template premium dan hapus background instan."
-  }
+  },
+{
+    id: "zen-relaxation",
+    title: "Zen & Shinkai Serenity 9:16",
+    folder: "zen-relaxation",
+    category: "Video AI",
+    type: "video",
+    status: "live",
+    totalItems: 36,
+    promptVarName: "PROMPTS_ZEN_RELAXATION",
+    scriptUrl: "prompts/videos/zen-relaxation.js",
+    coverUrl: "videos/zen-relaxation/cover.mp4",
+    rating: "5.0/5",
+    sales: "Baru Rilis",
+    description: "36 Formula video sinematik relaksasi vertikal 9:16 bergaya anime Makoto Shinkai fotorealistik 8K HDR."
+  },
+{
+    id: "nature-cinematic",
+    title: "Nature & Forest Cinematic 9:16",
+    folder: "nature-cinematic",
+    category: "Video AI",
+    type: "video",
+    status: "live",
+    totalItems: 36,
+    promptVarName: "PROMPTS_NATURE_CINEMATIC",
+    scriptUrl: "prompts/videos/nature-cinematic.js",
+    coverUrl: "videos/nature-cinematic/cover.mp4",
+    rating: "5.0/5",
+    sales: "Baru Rilis",
+    description: "36 Formula video sinematik alam vertikal 9:16: terowongan pohon kanopi, danau cermin, dan hutan purba 8K HDR."
+  },
+{
+  id: "slow-natural",
+  title: "Slow Natural 9:16",
+  folder: "slow-natural",
+  category: "Video AI",
+  type: "video",
+  status: "live",
+  totalItems: 36,
+  promptVarName: "PROMPTS_SLOW_NATURAL",
+  scriptUrl: "prompts/videos/slow-natural.js",
+  coverUrl: "videos/slow-natural/cover.mp4",
+  rating: "5.0/5",
+  sales: "Baru Rilis",
+  description: "Koleksi sinematik vertikal 9:16 perjalanan santai menembus lekuk jalan pesisir, tebing samudra, dan perbukitan hijau dengan visual bergaya Makoto Shinkai berpadu fotorealisme 8K berawan megah."
+}
+
 ];
 
 // Backward Compatibility Aliases & Global Attachment
