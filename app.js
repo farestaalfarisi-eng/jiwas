@@ -31,7 +31,8 @@ const DEFAULT_FALLBACK_KATALOG = [
   { id: "fantasi-gold", folder: "fantasi", title: "Luxury Fantasy Gold", type: "foto", status: "live", rating: "4.9/5", sales: "115+ Terjual" },
   { id: "makeup-glam", folder: "makeup", title: "Luxury Beauty & Makeover", type: "foto", status: "live", rating: "5.0/5", sales: "160+ Terjual" },
   { id: "lifestyle-lux", folder: "lifestyle", title: "Luxury Urban Lifestyle", type: "foto", status: "live", rating: "4.7/5", sales: "50+ Terjual" },
-  { id: "video-cinematic", folder: "video", title: "Cinematic Motion Suite", type: "video", status: "live", rating: "5.0/5", sales: "220+ Terjual" }
+  { id: "video-cinematic", folder: "video", title: "Cinematic Motion Suite", type: "video", status: "live", rating: "5.0/5", sales: "220+ Terjual" },
+  { id: "zen-relaxation", folder: "zen-relaxation", title: "Zen & Shinkai Serenity 9:16", type: "video", status: "live", rating: "5.0/5", sales: "Baru Rilis" }
 ];
 
 function getActiveRegistry() {
@@ -452,27 +453,37 @@ function renderAtelierFeed() {
 
       const freeBadge = (idx <= 3) ? `<span class="pin-badge-free-elegant">SAMPLE GRATIS</span>` : '';
 
-      let mediaElementHTML = "";
+      // Perbaikan: gunakan pack.folder dan idx (bukan activePack dan i)
+      let mediaHTML = "";
       if (isVideo) {
-        mediaElementHTML = `
-          <video 
-            src="videos/${pack.folder}/${idx}.mp4" 
-            class="aspect-9-16" 
-            autoplay loop muted playsinline 
-            style="width:100%; object-fit:cover; display:block;"
-            onloadeddata="this.classList.add('img-loaded')"
-          ></video>
+        mediaHTML = `
+          <img 
+            src="videos/${pack.folder}/${idx}.jpg" 
+            alt="Item ${idx}" 
+            class="aspect-9-16 img-loaded" 
+            loading="lazy"
+            style="width:100%; height:100%; object-fit:cover; display:block; opacity:1 !important;"
+            onerror="this.onerror=null; this.src='images/velvet/cover.jpg'; this.classList.add('img-loaded');"
+          >
         `;
       } else {
-        let srcImg = `images/${pack.folder}/${idx}.jpg`;
-        mediaElementHTML = `
-          <img src="${srcImg}" alt="${pack.title}" loading="lazy" onload="this.classList.add('img-loaded')" onerror="this.onerror=null; this.src='images/velvet/cover.jpg'; this.classList.add('img-loaded');">
+        let imgSrc = `images/${pack.folder}/${idx}.jpg`;
+        mediaHTML = `
+          <img 
+            src="${imgSrc}" 
+            loading="lazy" 
+            alt="Item ${idx}" 
+            class="img-loaded" 
+            style="opacity:1 !important;" 
+            onerror="this.onerror=null; this.src='images/velvet/cover.jpg';"
+          >
         `;
       }
 
+      // Perbaikan: gunakan ${mediaHTML} bukan${mediaElementHTML}
       card.innerHTML = `
         ${freeBadge}
-        ${mediaElementHTML}
+        ${mediaHTML}
         <div class="pin-info-overlay">
           <div class="pin-title">${pack.title}</div>
           <div class="pin-sub">${subLabel}</div>
@@ -556,14 +567,51 @@ function renderHomeCategories() {
 
     if (item.type === 'video') {
       badgeText = '🎥 VIDEO AI (30)';
+      
+      // Ambil path cover jika ditentukan, atau gunakan default
+      const videoCoverMp4 = `videos/${item.folder}/cover.mp4`;
+      const video1Mp4 = `videos/${item.folder}/1.mp4`;
+      const imageCoverJpg = item.coverUrl || `videos/${item.folder}/cover.jpg`;
+      const image1Jpg = `videos/${item.folder}/1.jpg`;
+
       mediaDisplayHTML = `
-        <video 
-          src="videos/${item.folder}/1.mp4" 
-          class="aspect-9-16" 
-          autoplay loop muted playsinline 
-          style="width:100%; object-fit:cover; display:block;"
-          onloadeddata="this.classList.add('img-loaded')"
-        ></video>
+        <div style="position:relative; width:100%; height:100%; overflow:hidden;">
+          <!-- 1. Coba cover.mp4 terlebih dahulu -->
+          <video 
+            src="${videoCoverMp4}" 
+            class="aspect-9-16" 
+            autoplay loop muted playsinline 
+            style="width:100%; object-fit:cover; display:block;"
+            onloadeddata="this.classList.add('img-loaded')"
+            onerror="
+              if (!this.dataset.tried1) {
+                this.dataset.tried1 = 'true';
+                this.src = '${video1Mp4}'; // Coba 1.mp4 jika cover.mp4 tidak ada
+              } else {
+                this.style.display = 'none';
+                this.nextElementSibling.style.display = 'block'; // Pindah ke JPG
+              }
+            "
+          ></video>
+
+          <!-- 2. Fallback jika MP4 tidak ada: Baca cover.jpg atau 1.jpg -->
+          <img 
+            src="${imageCoverJpg}" 
+            alt="${item.title}" 
+            class="aspect-9-16 img-loaded" 
+            loading="lazy" 
+            style="display:none; width:100%; object-fit:cover;"
+            onerror="
+              if (!this.dataset.triedImg1) {
+                this.dataset.triedImg1 = 'true';
+                this.src = '${image1Jpg}'; // Coba 1.jpg
+              } else {
+                this.onerror = null;
+                this.src = 'images/velvet/cover.jpg'; // Cadangan darurat terakhir
+              }
+            "
+          >
+        </div>
       `;
     } else {
       let coverSrc = item.coverUrl || `images/${item.folder}/cover.jpg`;
@@ -693,26 +741,56 @@ function renderKatalogVideo() {
   const list = getActiveRegistry().filter(item => item.type === "video" && item.status === "live");
 
   list.forEach(pack => {
-    const videoSrc = `videos/${pack.folder}/1.mp4`;
+    const videoCoverMp4 = `videos/${pack.folder}/cover.mp4`;
+    const video1Mp4 = `videos/${pack.folder}/1.mp4`;
+    const imageCoverJpg = pack.coverUrl || `videos/${pack.folder}/cover.jpg`;
+    const image1Jpg = `videos/${pack.folder}/1.jpg`;
+
     const card = document.createElement("div");
     card.className = "catalog-card";
     card.onclick = () => bukaDetailPack(pack);
     card.innerHTML = `
       <div style="position:relative;">
         <span class="badge-pill badge-video">🎥 VIDEO SUITE (30)</span>
+        
         <video 
-          src="${videoSrc}" 
+          src="${videoCoverMp4}" 
           class="aspect-9-16" 
           autoplay loop muted playsinline 
           style="width:100%; object-fit:cover; display:block;"
           onloadeddata="this.classList.add('img-loaded')"
+          onerror="
+            if (!this.dataset.tried1) {
+              this.dataset.tried1 = 'true';
+              this.src = '${video1Mp4}';
+            } else {
+              this.style.display = 'none';
+              this.nextElementSibling.style.display = 'block';
+            }
+          "
         ></video>
+
+        <img 
+          src="${imageCoverJpg}" 
+          alt="${pack.title}" 
+          class="aspect-9-16 img-loaded" 
+          style="display:none; width:100%; object-fit:cover;"
+          onerror="
+            if (!this.dataset.triedImg1) {
+              this.dataset.triedImg1 = 'true';
+              this.src = '${image1Jpg}';
+            } else {
+              this.onerror = null;
+              this.src = 'images/velvet/cover.jpg';
+            }
+          "
+        >
       </div>
       <div class="card-info">
         <h3 class="card-title">${pack.title}</h3>
         <div class="card-rating-badge">★ ${pack.rating || '5.0/5'}</div>
         <div style="font-weight:800; color:var(--gold-light); font-size:0.85rem; margin-top:4px;">Rp10.000 / Rp25.000</div>
-        <button class="btn-copy" style="margin-top:8px; padding:6px 12px; font-size:0.75rem; width:100%;">Buka 30 Video Formula</button>
+        <button class="btn-copy" style="margin-top:8px; padding:6px 12px; font-size:0.75rem; width:100%;">Buka 36 Video Formula</button>
       </div>
     `;
     container.appendChild(card);
@@ -906,8 +984,8 @@ function bukaDetailPack(pack) {
   if (secComm) secComm.classList.add("hidden");
   if (secDetail) secDetail.classList.remove("hidden");
 
-  const isThirtyBundle = (pack.type === 'video');
-  const totalCount = isThirtyBundle ? 30 : 100;
+const isThirtyBundle = (pack.type === 'video');
+  const totalCount = pack.totalItems || (isThirtyBundle ? 30 : 100);
 
   const titleEl = document.getElementById("detailTitle");
   const summaryEl = document.getElementById("packSummaryTitle");
@@ -994,7 +1072,7 @@ function renderDetailItemCards() {
   grid.innerHTML = "";
 
   const isVideo = activePack.type === 'video';
-  const totalItems = isVideo ? 30 : 100;
+  const totalItems = activePack.totalItems || (activePack.type === 'video' ? 30 : 100);
 
   const cleanFolder = activePack.folder.toUpperCase().replace(/[^A-Z0-9]/g, '_');
   const varName = activePack.promptVarName || `PROMPTS_${cleanFolder}`;
@@ -1004,28 +1082,55 @@ function renderDetailItemCards() {
     const card = document.createElement("div");
     card.className = "item-card";
 
-    let mediaHTML = "";
-    if (isVideo) {
-      mediaHTML = `
-        <video 
-          src="videos/${activePack.folder}/${i}.mp4" 
-          autoplay loop muted playsinline 
-          style="width:100%; height:100%; object-fit:cover; display:block;"
-          onloadeddata="this.classList.add('img-loaded')"
-        ></video>
-      `;
-    } else {
-      let imgSrc = `images/${activePack.folder}/${i}.jpg`;
-      mediaHTML = `
-        <img src="${imgSrc}" loading="lazy" alt="Item ${i}" onload="this.classList.add('img-loaded')" onerror="this.onerror=null; this.src='images/velvet/cover.jpg'; this.classList.add('img-loaded');">
-      `;
-    }
+   // Ganti bagian pembentukan mediaHTML di dalam perulangan for (let i = 1; i <= totalItems; i++)
+let mediaHTML = "";
 
+if (isVideo) {
+  const basePath = `videos/${activePack.folder}/${i}`;
+  mediaHTML = `
+    <!-- Coba memuat MP4 -->
+    <video 
+      src="${basePath}.mp4" 
+      autoplay loop muted playsinline 
+      style="width:100%; height:100%; object-fit:cover; display:block;"
+      onloadeddata="this.classList.add('img-loaded')"
+      onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
+    ></video>
+    
+    <!-- Otomatis beralih ke JPG jika MP4 tidak ada -->
+    <img 
+      src="${basePath}.jpg" 
+      alt="Item ${i}" 
+      loading="lazy" 
+      class="img-loaded"
+      style="display:none; width:100%; height:100%; object-fit:cover;" 
+      onerror="this.onerror=null; this.src='images/velvet/cover.jpg';"
+    />
+  `;
+} else {
+  let imgSrc = `images/${activePack.folder}/${i}.jpg`;
+  mediaHTML = `
+    <img 
+      src="${imgSrc}" 
+      loading="lazy" 
+      alt="Item ${i}" 
+      class="img-loaded" 
+      onerror="this.onerror=null; this.src='images/velvet/cover.jpg';"
+    />
+  `;
+}
+
+   
     let promptText = "";
-    if (promptArray && promptArray[i - 1]) {
-      const raw = promptArray[i - 1];
-      promptText = (typeof raw === "object") ? (raw.rawPrompt || raw.prompt || "") : String(raw);
-    }
+let motionText = ""; // <--- TAMBAHKAN INI
+
+if (promptArray && promptArray[i - 1]) {
+  const raw = promptArray[i - 1];
+  promptText = (typeof raw === "object") ? (raw.rawPrompt || raw.prompt || "") : String(raw);
+  if (typeof raw === "object" && raw.motion) {
+    motionText = raw.motion; // <--- BACA MOTION DARI FILE JS
+  }
+}
 
     if (!promptText) {
       if (isVideo) {
@@ -1064,17 +1169,41 @@ function renderDetailItemCards() {
       }
     }
 
-    const promptBoxHTML = !isLocked 
-      ? `<div class="prompt-text-box" id="promptText_${i}">${promptText}</div>`
-      : `<div class="prompt-text-box prompt-locked-text">🔒 Formula prompt dikunci. Masukkan PIN ${tier.toUpperCase()} (${tier === 'starter' ? '10K' : '25K'}) untuk membuka teks formula ini.</div>`;
+    const motionBoxHTML = (isVideo && motionText) ? `
+  <div style="margin-top: 10px; border-top: 1px dashed rgba(212,175,55,0.25); padding-top: 8px;">
+    <div style="font-size: 0.7rem; font-weight: 700; color: #4ade80; margin-bottom: 4px;">
+      🎬 PROMPT MOTION VIDEO (Runway / Kling / Luma):
+    </div>
+    <div class="prompt-text-box" id="motionText_${i}" style="border-color: rgba(74, 222, 128, 0.3);">${motionText}</div>
+  </div>
+` : '';
+
+const promptBoxHTML = !isLocked 
+  ? `<div>
+       <div style="font-size: 0.7rem; font-weight: 700; color: var(--gold-light); margin-bottom: 4px;">
+         🎨 PROMPT VISUAL / BASE IMAGE:
+       </div>
+       <div class="prompt-text-box" id="promptText_${i}">${promptText}</div>
+       ${motionBoxHTML}
+     </div>`
+  : `<div class="prompt-text-box prompt-locked-text">🔒 Formula prompt dikunci. Masukkan PIN ${tier.toUpperCase()} (${tier === 'starter' ? '10K' : '25K'}) untuk membuka teks formula ini.</div>`;
 
     let directBtnText = isVideo ? "🚀 Video AI" : "🚀 Bing";
     let directUrl = isVideo ? "https://runwayml.com/" : "https://www.bing.com/images/create";
 
     const actionButtons = !isLocked 
       ? `
-        <div class="action-buttons">
-          <button class="btn-copy" onclick="copasPromptFromElement('promptText_${i}', '${activePack.title}', ${i})">📋 Salin Formula</button>
+        <div class="action-buttons" style="display: flex; flex-wrap: wrap; gap: 6px;">
+          <button class="btn-copy" onclick="copasPromptFromElement('promptText_${i}', '${activePack.title}', ${i})">
+            📋 Salin Visual
+          </button>
+
+          ${(isVideo && motionText) ? `
+          <button class="btn-copy" style="border-color: #22c55e; color: #4ade80;" onclick="copasPromptFromElement('motionText_${i}', '${activePack.title}',${i})">
+            🎬 Salin Motion
+          </button>
+          ` : ''}
+
           <button class="btn-share-promo" onclick="bagikanKoleksiKeWA('${activePack.title}')"><i class="fa-brands fa-whatsapp"></i> Bagikan</button>
           <a href="${directUrl}" target="_blank" class="btn-direct-ai">${directBtnText}</a>
         </div>`
