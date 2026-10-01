@@ -15,6 +15,68 @@ const loadedPromptScripts = new Set();
 let activeCommercialChip = "all";
 
 // -------------------------------------------------------------------------
+// DYNAMIC PROMPT MUTATION ENGINE (Anti Reused / Duplicate Content)
+// -------------------------------------------------------------------------
+const PROMPT_VARIATION_POOLS = {
+  lighting: [
+    "subtle cinematic rim light with golden hour glow",
+    "soft diffused high-key studio light with gentle shadows",
+    "dramatic chiaroscuro lighting, deep natural contrast",
+    "moody split lighting with subtle amber bounce",
+    "pure north window daylight ambiance, editorial look"
+  ],
+  grading: [
+    "subtle Kodak Portra 400 color science, natural skin warmth",
+    "cinematic desaturated film tones with clean highlights",
+    "Fuji Pro 400H pastel hue fidelity, delicate gradients",
+    "subtle bronze and obsidian tones, high-end editorial color grade",
+    "clean modern neutral palette, true-to-life color depth"
+  ],
+  angles: [
+    "slight low-angle perspective (12 degrees)",
+    "straight-on eye-level intimate framing",
+    "gentle high-angle three-quarters composition",
+    "dynamic slight off-center alignment with negative space",
+    "cinematic Dutch angle micro-tilt (5 degrees)"
+  ],
+  optics: [
+    "Hasselblad H6D-100c, 85mm prime lens f/1.8, shallow depth of field",
+    "Sony A7R V, 50mm f/1.4 GM lens, natural optical bokeh",
+    "Leica SL3, 90mm APO lens f/2.0, razor-sharp subject isolation",
+    "Canon EOS R5, 85mm f/1.2L USM, creamy blurred background"
+  ],
+  videoMotion: [
+    "micro slow push-in dolly movement at 0.6x speed",
+    "gentle lateral tracking pan from left to right",
+    "static tripod composition with organic focal depth breathing",
+    "ultra-slow crane downward pedestal movement"
+  ]
+};
+
+function getRandomPoolItem(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+function randomizePromptOutput(basePrompt, isVideo = false) {
+  if (!basePrompt || typeof basePrompt !== "string") return basePrompt;
+  
+  let cleanPrompt = basePrompt.replace(/--ar\s+[0-9:]+/gi, "").trim();
+
+  const lighting = getRandomPoolItem(PROMPT_VARIATION_POOLS.lighting);
+  const color = getRandomPoolItem(PROMPT_VARIATION_POOLS.grading);
+  const camera = getRandomPoolItem(PROMPT_VARIATION_POOLS.optics);
+  const seed = Math.floor(100000 + Math.random() * 900000);
+
+  if (isVideo) {
+    const motion = getRandomPoolItem(PROMPT_VARIATION_POOLS.videoMotion);
+    return `${cleanPrompt}, ${motion}, ${lighting}, ${color}, 8K HDR, 9:16 vertical orientation --seed ${seed}`;
+  }
+
+  const angle = getRandomPoolItem(PROMPT_VARIATION_POOLS.angles);
+  return `${cleanPrompt}, ${angle}, ${lighting}, ${color}, captured on ${camera}, authentic skin textures, volumetric atmosphere, 8K ultra-detailed --ar 9:16 --seed ${seed}`;
+}
+
+// -------------------------------------------------------------------------
 // 1. REGISTRY UTAMA KATALOG ATELIER
 // -------------------------------------------------------------------------
 const DEFAULT_FALLBACK_KATALOG = [
@@ -460,7 +522,6 @@ function renderAtelierFeed() {
 
       const freeBadge = (idx <= 3) ? `<span class="pin-badge-free-elegant">SAMPLE GRATIS</span>` : '';
 
-      // Perbaikan: gunakan pack.folder dan idx (bukan activePack dan i)
       let mediaHTML = "";
       if (isVideo) {
         mediaHTML = `
@@ -487,7 +548,6 @@ function renderAtelierFeed() {
         `;
       }
 
-      // Perbaikan: gunakan ${mediaHTML} bukan${mediaElementHTML}
       card.innerHTML = `
         ${freeBadge}
         ${mediaHTML}
@@ -575,7 +635,6 @@ function renderHomeCategories() {
     if (item.type === 'video') {
       badgeText = (item.workflow === "frame-to-frame") ? '🎞️ DUAL FRAME (36)' : '🎥 VIDEO AI (30)';
       
-      // Ambil path cover jika ditentukan, atau gunakan default
       const videoCoverMp4 = `videos/${item.folder}/cover.mp4`;
       const video1Mp4 = `videos/${item.folder}/1.mp4`;
       const imageCoverJpg = item.coverUrl || `videos/${item.folder}/cover.jpg`;
@@ -583,7 +642,6 @@ function renderHomeCategories() {
 
       mediaDisplayHTML = `
         <div style="position:relative; width:100%; height:100%; overflow:hidden;">
-          <!-- 1. Coba cover.mp4 terlebih dahulu -->
           <video 
             src="${videoCoverMp4}" 
             class="aspect-9-16" 
@@ -593,15 +651,14 @@ function renderHomeCategories() {
             onerror="
               if (!this.dataset.tried1) {
                 this.dataset.tried1 = 'true';
-                this.src = '${video1Mp4}'; // Coba 1.mp4 jika cover.mp4 tidak ada
+                this.src = '${video1Mp4}';
               } else {
                 this.style.display = 'none';
-                this.nextElementSibling.style.display = 'block'; // Pindah ke JPG
+                this.nextElementSibling.style.display = 'block';
               }
             "
           ></video>
 
-          <!-- 2. Fallback jika MP4 tidak ada: Baca cover.jpg atau 1.jpg -->
           <img 
             src="${imageCoverJpg}" 
             alt="${item.title}" 
@@ -611,10 +668,10 @@ function renderHomeCategories() {
             onerror="
               if (!this.dataset.triedImg1) {
                 this.dataset.triedImg1 = 'true';
-                this.src = '${image1Jpg}'; // Coba 1.jpg
+                this.src = '${image1Jpg}';
               } else {
                 this.onerror = null;
-                this.src = 'images/velvet/cover.jpg'; // Cadangan darurat terakhir
+                this.src = 'images/velvet/cover.jpg';
               }
             "
           >
@@ -710,7 +767,6 @@ function renderKatalogFoto() {
   if (!container) return;
   container.innerHTML = "";
   
-  // Kecualikan katalog komersial agar tidak campur aduk di menu Foto AI
   const list = getActiveRegistry().filter(item => 
     item.type === "foto" && 
     item.status === "live" &&
@@ -930,7 +986,6 @@ function eksekusiOrderAkun(productId, variantName) {
     hargaTeks = `Rp${Number(target.hargaPromo || target.harga).toLocaleString("id-ID")}`;
   }
 
-  // Buka modal pop-up QRIS web (sama persis seperti alur checkout foto & video)
   bukaModalCheckout(pName, variantName, hargaTeks);
 }
 
@@ -1093,7 +1148,6 @@ function renderDetailItemCards() {
   for (let i = 1; i <= totalItems; i++) {
     const raw = (promptArray && promptArray[i - 1]) ? promptArray[i - 1] : null;
     
-    // Deteksi status On-Demand vs Live
     let isOnDemand = false;
     let itemTitle = `${activePack.title} #${i}`;
     let itemBadge = "";
@@ -1119,7 +1173,6 @@ function renderDetailItemCards() {
     const card = document.createElement("div");
     card.className = "item-card";
 
-    // JIKA STATUS ON-DEMAND (DAFTAR ROADMAP / TREN BY REQUEST)
     if (isOnDemand) {
       const fallbackPoster = activePack.coverUrl || `images/${activePack.folder}/cover.jpg`;
       const badgeStyle = "background:rgba(212,175,55,0.2); color:var(--gold-light); border:1px solid var(--gold-primary);";
@@ -1170,12 +1223,10 @@ function renderDetailItemCards() {
       continue;
     }
 
-    // JIKA STATUS LIVE / REGULER
     let mediaHTML = "";
     if (isVideo) {
       const basePath = `videos/${activePack.folder}/${i}`;
       mediaHTML = `
-        <!-- Coba memuat MP4 -->
         <video 
           src="${basePath}.mp4" 
           autoplay loop muted playsinline 
@@ -1184,7 +1235,6 @@ function renderDetailItemCards() {
           onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
         ></video>
         
-        <!-- Otomatis beralih ke JPG jika MP4 tidak ada -->
         <img 
           src="${basePath}.jpg" 
           alt="Item ${i}" 
@@ -1209,14 +1259,18 @@ function renderDetailItemCards() {
 
     if (!promptText && !isFrameToFrame) {
       if (isVideo) {
-        promptText = `Cinematic video sequence of ${activePack.title}, item #${i}. Camera slow continuous push-in dolly shot, ARRI Alexa LF, 50mm anamorphic lens, vertical 9:16 layout.`;
+        promptText = `Cinematic video sequence of ${activePack.title}, item #${i}`;
       } else {
-        promptText = `A high-end luxury portrait of ${activePack.title}, item #${i}, 8k studio lighting, master quality --ar 9:16. Subtle watermark "JIWAS".`;
+        promptText = `A high-end luxury portrait of ${activePack.title}, item #${i}`;
       }
     }
 
     if (isFamilyCatalog(activePack) && currentAppliedFormationPrompt) {
       promptText = currentAppliedFormationPrompt + " " + promptText;
+    }
+
+    if (!isFrameToFrame && promptText) {
+      promptText = randomizePromptOutput(promptText, isVideo);
     }
 
     let tier = "free";
@@ -1272,7 +1326,6 @@ function renderDetailItemCards() {
 
         actionButtons = `
   <div class="action-buttons" style="display: flex; flex-wrap: wrap; gap: 6px;">
-    <!-- Tombol Unduh Bahan Gambar -->
     <a href="videos/${activePack.folder}/${i}_start.jpg" download class="btn-copy" style="border-color:#38bdf8; color:#38bdf8; text-decoration:none; display:inline-flex; align-items:center; gap:4px;">
       📥 Bahan Stik
     </a>
@@ -1280,7 +1333,6 @@ function renderDetailItemCards() {
       📥 Bahan Jadi
     </a>
 
-    <!-- Tombol Salin Prompt -->
     <button class="btn-copy" onclick="copasPromptFromElement('startFrameText_${i}', '${activePack.title}', ${i})">🟢 Start</button>
     <button class="btn-copy" onclick="copasPromptFromElement('endFrameText_${i}', '${activePack.title}', ${i})">👑 End</button>
     ${motionText ? `<button class="btn-copy" style="border-color:#22c55e; color:#4ade80;" onclick="copasPromptFromElement('motionText_${i}', '${activePack.title}',${i})">🎬 Motion</button>` : ""}
@@ -1420,7 +1472,13 @@ function verifikasiPIN() {
 function copasPromptFromElement(elementId, packTitle, itemIdx) {
   const el = document.getElementById(elementId);
   if (el) {
-    const text = el.innerText || el.textContent;
+    let text = el.innerText || el.textContent;
+
+    if (activePack && activePack.workflow !== "frame-to-frame") {
+      text = randomizePromptOutput(text, activePack.type === "video");
+      el.innerText = text;
+    }
+
     copasPrompt(text);
     catatLogAktivitas("COPY_PROMPT", packTitle, `Item #${itemIdx}`);
   }
@@ -1989,7 +2047,6 @@ function renderAllCommercialItems(filterKey = "") {
 
   let list = getCommercialPacks();
 
-  // Filter berdasarkan Chip Kategori
   if (activeCommercialChip !== "all") {
     list = list.filter(item => {
       const matchText = (item.id + " " + item.title + " " + (item.folder || "")).toLowerCase();
@@ -1997,7 +2054,6 @@ function renderAllCommercialItems(filterKey = "") {
     });
   }
 
-  // Filter berdasarkan Input Live Search
   if (filterKey.trim() !== "") {
     const q = filterKey.toLowerCase();
     list = list.filter(item => {
