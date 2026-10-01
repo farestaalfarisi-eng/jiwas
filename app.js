@@ -347,6 +347,18 @@ function initSocialProofPopups() {
   }, 25000);
 }
 
+function toggleCardDropdownMenu(packId, btnEl) {
+  document.querySelectorAll(".card-dropdown-menu").forEach(el => {
+    if (el.id !== `cardDropdown_${packId}`) {
+      el.classList.add("hidden");
+    }
+  });
+  const targetMenu = document.getElementById(`cardDropdown_${packId}`);
+  if (targetMenu) {
+    targetMenu.classList.toggle("hidden");
+  }
+}
+
 function initGlobalClickListener() {
   document.addEventListener("click", (e) => {
     if (!e.target.closest(".card-menu-container")) {
@@ -690,6 +702,19 @@ function renderHomeCategories() {
     card.innerHTML = `
       <div style="position:relative;">
         <span class="badge-pill">${badgeText}</span>
+        <div class="card-menu-container" style="position:absolute; top:8px; right:8px; z-index:10;">
+          <button class="btn-card-menu" onclick="event.stopPropagation(); toggleCardDropdownMenu('${item.id}', this)" aria-label="Menu Pilihan" style="background:rgba(0,0,0,0.6); border:1px solid rgba(212,175,55,0.3); color:#fff; width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer;">
+            <i class="fa-solid fa-ellipsis-vertical"></i>
+          </button>
+          <div id="cardDropdown_${item.id}" class="card-dropdown-menu hidden" style="position:absolute; right:0; top:32px; background:#12121a; border:1px solid rgba(212,175,55,0.3); border-radius:8px; padding:6px; min-width:140px; box-shadow:0 8px 20px rgba(0,0,0,0.8); z-index:20;">
+            <button onclick="event.stopPropagation(); bagikanKoleksiKeWA('${item.title}')" style="width:100%; text-align:left; background:none; border:none; color:#e2e8f0; font-size:0.75rem; padding:6px 8px; cursor:pointer; display:flex; align-items:center; gap:6px;">
+              <i class="fa-brands fa-whatsapp" style="color:#22c55e;"></i> Bagikan WA
+            </button>
+            <button onclick="event.stopPropagation(); copasPrompt('${window.location.origin + window.location.pathname}?pack=${item.id}')" style="width:100%; text-align:left; background:none; border:none; color:#e2e8f0; font-size:0.75rem; padding:6px 8px; cursor:pointer; display:flex; align-items:center; gap:6px;">
+              <i class="fa-solid fa-link" style="color:var(--gold-light);"></i> Salin Tautan
+            </button>
+          </div>
+        </div>
         ${mediaDisplayHTML}
       </div>
       <div class="card-info">
@@ -784,6 +809,19 @@ function renderKatalogFoto() {
     card.innerHTML = `
       <div style="position:relative;">
         <span class="badge-pill badge-foto">📸 100 ITEMS</span>
+        <div class="card-menu-container" style="position:absolute; top:8px; right:8px; z-index:10;">
+          <button class="btn-card-menu" onclick="event.stopPropagation(); toggleCardDropdownMenu('${pack.id}', this)" aria-label="Menu Pilihan" style="background:rgba(0,0,0,0.6); border:1px solid rgba(212,175,55,0.3); color:#fff; width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer;">
+            <i class="fa-solid fa-ellipsis-vertical"></i>
+          </button>
+          <div id="cardDropdown_${pack.id}" class="card-dropdown-menu hidden" style="position:absolute; right:0; top:32px; background:#12121a; border:1px solid rgba(212,175,55,0.3); border-radius:8px; padding:6px; min-width:140px; box-shadow:0 8px 20px rgba(0,0,0,0.8); z-index:20;">
+            <button onclick="event.stopPropagation(); bagikanKoleksiKeWA('${pack.title}')" style="width:100%; text-align:left; background:none; border:none; color:#e2e8f0; font-size:0.75rem; padding:6px 8px; cursor:pointer; display:flex; align-items:center; gap:6px;">
+              <i class="fa-brands fa-whatsapp" style="color:#22c55e;"></i> Bagikan WA
+            </button>
+            <button onclick="event.stopPropagation(); copasPrompt('${window.location.origin + window.location.pathname}?pack=${pack.id}')" style="width:100%; text-align:left; background:none; border:none; color:#e2e8f0; font-size:0.75rem; padding:6px 8px; cursor:pointer; display:flex; align-items:center; gap:6px;">
+              <i class="fa-solid fa-link" style="color:var(--gold-light);"></i> Salin Tautan
+            </button>
+          </div>
+        </div>
         <img src="${coverSrc}" alt="${pack.title}" class="aspect-9-16" loading="lazy" onload="this.classList.add('img-loaded')" onerror="this.onerror=null; this.src='images/velvet/cover.jpg'; this.classList.add('img-loaded');">
       </div>
       <div class="card-info">
@@ -819,6 +857,19 @@ function renderKatalogVideo() {
     card.innerHTML = `
       <div style="position:relative;">
         <span class="badge-pill badge-video">${badgeText}</span>
+        <div class="card-menu-container" style="position:absolute; top:8px; right:8px; z-index:10;">
+          <button class="btn-card-menu" onclick="event.stopPropagation(); toggleCardDropdownMenu('${pack.id}', this)" aria-label="Menu Pilihan" style="background:rgba(0,0,0,0.6); border:1px solid rgba(212,175,55,0.3); color:#fff; width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer;">
+            <i class="fa-solid fa-ellipsis-vertical"></i>
+          </button>
+          <div id="cardDropdown_${pack.id}" class="card-dropdown-menu hidden" style="position:absolute; right:0; top:32px; background:#12121a; border:1px solid rgba(212,175,55,0.3); border-radius:8px; padding:6px; min-width:140px; box-shadow:0 8px 20px rgba(0,0,0,0.8); z-index:20;">
+            <button onclick="event.stopPropagation(); bagikanKoleksiKeWA('${pack.title}')" style="width:100%; text-align:left; background:none; border:none; color:#e2e8f0; font-size:0.75rem; padding:6px 8px; cursor:pointer; display:flex; align-items:center; gap:6px;">
+              <i class="fa-brands fa-whatsapp" style="color:#22c55e;"></i> Bagikan WA
+            </button>
+            <button onclick="event.stopPropagation(); copasPrompt('${window.location.origin + window.location.pathname}?pack=${pack.id}')" style="width:100%; text-align:left; background:none; border:none; color:#e2e8f0; font-size:0.75rem; padding:6px 8px; cursor:pointer; display:flex; align-items:center; gap:6px;">
+              <i class="fa-solid fa-link" style="color:var(--gold-light);"></i> Salin Tautan
+            </button>
+          </div>
+        </div>
         
         <video 
           src="${videoCoverMp4}" 
@@ -2000,6 +2051,19 @@ function renderHomeCommercialPreview() {
     card.innerHTML = `
       <div style="position:relative;">
         <span class="badge-pill" style="background:#15803d; color:#fff; border:none;">PRO BISNIS</span>
+        <div class="card-menu-container" style="position:absolute; top:8px; right:8px; z-index:10;">
+          <button class="btn-card-menu" onclick="event.stopPropagation(); toggleCardDropdownMenu('${pack.id}', this)" aria-label="Menu Pilihan" style="background:rgba(0,0,0,0.6); border:1px solid rgba(212,175,55,0.3); color:#fff; width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer;">
+            <i class="fa-solid fa-ellipsis-vertical"></i>
+          </button>
+          <div id="cardDropdown_${pack.id}" class="card-dropdown-menu hidden" style="position:absolute; right:0; top:32px; background:#12121a; border:1px solid rgba(212,175,55,0.3); border-radius:8px; padding:6px; min-width:140px; box-shadow:0 8px 20px rgba(0,0,0,0.8); z-index:20;">
+            <button onclick="event.stopPropagation(); bagikanKoleksiKeWA('${pack.title}')" style="width:100%; text-align:left; background:none; border:none; color:#e2e8f0; font-size:0.75rem; padding:6px 8px; cursor:pointer; display:flex; align-items:center; gap:6px;">
+              <i class="fa-brands fa-whatsapp" style="color:#22c55e;"></i> Bagikan WA
+            </button>
+            <button onclick="event.stopPropagation(); copasPrompt('${window.location.origin + window.location.pathname}?pack=${pack.id}')" style="width:100%; text-align:left; background:none; border:none; color:#e2e8f0; font-size:0.75rem; padding:6px 8px; cursor:pointer; display:flex; align-items:center; gap:6px;">
+              <i class="fa-solid fa-link" style="color:var(--gold-light);"></i> Salin Tautan
+            </button>
+          </div>
+        </div>
         <img src="${coverSrc}" alt="${pack.title}" class="aspect-9-16" loading="lazy" onload="this.classList.add('img-loaded')" onerror="this.onerror=null; this.src='images/velvet/cover.jpg'; this.classList.add('img-loaded');">
       </div>
       <div class="card-info">
@@ -2076,6 +2140,19 @@ function renderAllCommercialItems(filterKey = "") {
     card.innerHTML = `
       <div style="position:relative;">
         <span class="badge-pill" style="background:#15803d; color:#fff; border:none;">PRO BISNIS</span>
+        <div class="card-menu-container" style="position:absolute; top:8px; right:8px; z-index:10;">
+          <button class="btn-card-menu" onclick="event.stopPropagation(); toggleCardDropdownMenu('${pack.id}', this)" aria-label="Menu Pilihan" style="background:rgba(0,0,0,0.6); border:1px solid rgba(212,175,55,0.3); color:#fff; width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer;">
+            <i class="fa-solid fa-ellipsis-vertical"></i>
+          </button>
+          <div id="cardDropdown_${pack.id}" class="card-dropdown-menu hidden" style="position:absolute; right:0; top:32px; background:#12121a; border:1px solid rgba(212,175,55,0.3); border-radius:8px; padding:6px; min-width:140px; box-shadow:0 8px 20px rgba(0,0,0,0.8); z-index:20;">
+            <button onclick="event.stopPropagation(); bagikanKoleksiKeWA('${pack.title}')" style="width:100%; text-align:left; background:none; border:none; color:#e2e8f0; font-size:0.75rem; padding:6px 8px; cursor:pointer; display:flex; align-items:center; gap:6px;">
+              <i class="fa-brands fa-whatsapp" style="color:#22c55e;"></i> Bagikan WA
+            </button>
+            <button onclick="event.stopPropagation(); copasPrompt('${window.location.origin + window.location.pathname}?pack=${pack.id}')" style="width:100%; text-align:left; background:none; border:none; color:#e2e8f0; font-size:0.75rem; padding:6px 8px; cursor:pointer; display:flex; align-items:center; gap:6px;">
+              <i class="fa-solid fa-link" style="color:var(--gold-light);"></i> Salin Tautan
+            </button>
+          </div>
+        </div>
         <img src="${coverSrc}" alt="${pack.title}" class="aspect-9-16" loading="lazy" onload="this.classList.add('img-loaded')" onerror="this.onerror=null; this.src='images/velvet/cover.jpg'; this.classList.add('img-loaded');">
       </div>
       <div class="card-info">
