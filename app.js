@@ -401,6 +401,126 @@ function bagikanKoleksiKeWA(packTitle) {
   window.open("https://api.whatsapp.com/send?text=" + encodeURIComponent(teksPesan), "_blank");
 }
 
+let activeSharePack = null;
+
+function bukaModalShareSosmed(packTitle, packFolder, packId) {
+  document.querySelectorAll(".card-dropdown-menu").forEach(el => el.classList.add("hidden"));
+  activeSharePack = { title: packTitle, folder: packFolder, id: packId };
+
+  let modal = document.getElementById("jiwasShareModal");
+  if (!modal) {
+    modal = document.createElement("div");
+    modal.id = "jiwasShareModal";
+    modal.className = "modal-overlay hidden";
+    modal.innerHTML = `
+      <div class="modal-content" style="max-width:390px; text-align:left; padding:20px; background:#0f0f15; border:1px solid rgba(212,175,55,0.3); border-radius:12px; position:relative; box-shadow:0 10px 30px rgba(0,0,0,0.9);">
+        <button class="btn-modal-close" onclick="tutupModalShareSosmed()" aria-label="Tutup" style="position:absolute; top:12px; right:12px; background:none; border:none; color:#9ca3af; font-size:1.1rem; cursor:pointer;"><i class="fa-solid fa-xmark"></i></button>
+        <span class="badge-pill" style="margin-bottom:8px; display:inline-block; font-size:0.62rem; background:rgba(212,175,55,0.15); color:var(--gold-light); border:1px solid rgba(212,175,55,0.3);">MULTI-CHANNEL SHARE</span>
+        <h3 id="jiwasShareModalTitle" style="font-family:'Cinzel', serif; color:var(--gold-light); font-size:1.05rem; margin-bottom:4px; line-height:1.3;">Bagikan Koleksi</h3>
+        <p style="font-size:0.72rem; color:var(--text-muted); margin-bottom:14px;">Pilih saluran media sosial atau pasar untuk mempromosikan katalog ini:</p>
+        
+        <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:10px; margin-bottom:16px;">
+          <button onclick="eksekusiShareTarget('wa')" style="display:flex; flex-direction:column; align-items:center; gap:5px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:8px; padding:10px 4px; color:#fff; cursor:pointer;">
+            <i class="fa-brands fa-whatsapp" style="font-size:1.4rem; color:#22c55e;"></i>
+            <span style="font-size:0.68rem;">WhatsApp</span>
+          </button>
+          <button onclick="eksekusiShareTarget('fb')" style="display:flex; flex-direction:column; align-items:center; gap:5px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:8px; padding:10px 4px; color:#fff; cursor:pointer;">
+            <i class="fa-brands fa-facebook" style="font-size:1.4rem; color:#1877f2;"></i>
+            <span style="font-size:0.68rem;">Facebook</span>
+          </button>
+          <button onclick="eksekusiShareTarget('telegram')" style="display:flex; flex-direction:column; align-items:center; gap:5px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:8px; padding:10px 4px; color:#fff; cursor:pointer;">
+            <i class="fa-brands fa-telegram" style="font-size:1.4rem; color:#0088cc;"></i>
+            <span style="font-size:0.68rem;">Telegram</span>
+          </button>
+          <button onclick="eksekusiShareTarget('x')" style="display:flex; flex-direction:column; align-items:center; gap:5px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:8px; padding:10px 4px; color:#fff; cursor:pointer;">
+            <i class="fa-brands fa-x-twitter" style="font-size:1.4rem; color:#fff;"></i>
+            <span style="font-size:0.68rem;">X / Twitter</span>
+          </button>
+          <button onclick="eksekusiShareTarget('ig')" style="display:flex; flex-direction:column; align-items:center; gap:5px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:8px; padding:10px 4px; color:#fff; cursor:pointer;">
+            <i class="fa-brands fa-instagram" style="font-size:1.4rem; color:#e1306c;"></i>
+            <span style="font-size:0.68rem;">Instagram</span>
+          </button>
+          <button onclick="eksekusiShareTarget('shopee')" style="display:flex; flex-direction:column; align-items:center; gap:5px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:8px; padding:10px 4px; color:#fff; cursor:pointer;">
+            <i class="fa-solid fa-bag-shopping" style="font-size:1.4rem; color:#ee4d2d;"></i>
+            <span style="font-size:0.68rem;">Shopee</span>
+          </button>
+          <button onclick="eksekusiShareTarget('tokopedia')" style="display:flex; flex-direction:column; align-items:center; gap:5px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:8px; padding:10px 4px; color:#fff; cursor:pointer;">
+            <i class="fa-solid fa-store" style="font-size:1.4rem; color:#03ac0e;"></i>
+            <span style="font-size:0.68rem;">Tokopedia</span>
+          </button>
+          <button onclick="eksekusiShareTarget('tiktok')" style="display:flex; flex-direction:column; align-items:center; gap:5px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:8px; padding:10px 4px; color:#fff; cursor:pointer;">
+            <i class="fa-brands fa-tiktok" style="font-size:1.4rem; color:#ff0050;"></i>
+            <span style="font-size:0.68rem;">TikTok</span>
+          </button>
+        </div>
+
+        <div style="background:rgba(255,255,255,0.02); border:1px dashed rgba(212,175,55,0.25); border-radius:8px; padding:10px; margin-bottom:12px; display:flex; gap:10px; align-items:center;">
+          <img id="jiwasShareThumb" src="images/velvet/cover.jpg" alt="Cover" style="width:48px; height:64px; object-fit:cover; border-radius:4px; border:1px solid rgba(212,175,55,0.3);">
+          <div style="flex:1;">
+            <div style="font-size:0.72rem; color:var(--gold-light); font-weight:700;">Unduh Lembar Gambar:</div>
+            <div style="font-size:0.65rem; color:#9ca3af; margin-bottom:6px;">Simpan cover resolusi tinggi untuk diposting langsung.</div>
+            <a id="jiwasShareDownloadBtn" href="images/velvet/cover.jpg" download class="btn-copy" style="font-size:0.65rem; padding:4px 8px; display:inline-flex; align-items:center; gap:4px; text-decoration:none;">
+              <i class="fa-solid fa-download"></i> Unduh Gambar
+            </a>
+          </div>
+        </div>
+
+        <button onclick="eksekusiShareTarget('copy_all')" class="btn-copy" style="width:100%; justify-content:center; background:var(--gold-gradient); color:#000; font-weight:800; font-size:0.75rem; padding:8px 12px;">
+          <i class="fa-solid fa-copy"></i> Salin Deskripsi Promo + Tautan
+        </button>
+      </div>
+    `;
+    document.body.appendChild(modal);
+  }
+
+  const titleEl = document.getElementById("jiwasShareModalTitle");
+  const thumbEl = document.getElementById("jiwasShareThumb");
+  const dlBtn = document.getElementById("jiwasShareDownloadBtn");
+  
+  if (titleEl) titleEl.innerText = packTitle;
+  const imagePath = `images/${packFolder}/cover.jpg`;
+  if (thumbEl) thumbEl.src = imagePath;
+  if (dlBtn) {
+    dlBtn.href = imagePath;
+    dlBtn.download = `${packFolder}-cover.jpg`;
+  }
+
+  modal.classList.remove("hidden");
+}
+
+function tutupModalShareSosmed() {
+  const modal = document.getElementById("jiwasShareModal");
+  if (modal) modal.classList.add("hidden");
+}
+
+function eksekusiShareTarget(channel) {
+  if (!activeSharePack) return;
+  const currentUrl = `${window.location.origin}${window.location.pathname}?pack=${encodeURIComponent(activeSharePack.id)}`;
+  const promoText = `🔥 Formula Foto Studio & Video AI: *${activeSharePack.title}* di JIWAS Atelier.\n\nKualitas 8K Masterpiece siap pakai langsung. Cek detail formula dan katalog lengkap di sini:\n${currentUrl}`;
+
+  catatLogAktivitas("SHARE_CHANNEL", activeSharePack.title, channel.toUpperCase());
+
+  if (channel === 'wa') {
+    window.open("https://api.whatsapp.com/send?text=" + encodeURIComponent(promoText), "_blank");
+  } else if (channel === 'fb') {
+    window.open("https://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(currentUrl), "_blank");
+  } else if (channel === 'telegram') {
+    window.open("https://t.me/share/url?url=" + encodeURIComponent(currentUrl) + "&text=" + encodeURIComponent(`🔥 Formula Studio AI: ${activeSharePack.title}`), "_blank");
+  } else if (channel === 'x') {
+    window.open("https://twitter.com/intent/tweet?text=" + encodeURIComponent(promoText), "_blank");
+  } else if (channel === 'ig' || channel === 'tiktok' || channel === 'shopee' || channel === 'tokopedia') {
+    copasPrompt(promoText);
+    tampilkanToast(`✅ Teks promo tersalin! Silakan paste pada postingan / deskripsi produk ${channel.toUpperCase()}.`);
+  } else if (channel === 'copy_all') {
+    copasPrompt(promoText);
+    tampilkanToast("✅ Teks promosi & link lengkap tersalin!");
+  }
+}
+
+async function bagikanKoleksiUniversal(packTitle, packFolder, packId) {
+  bukaModalShareSosmed(packTitle, packFolder, packId);
+}
+
 function requestFormulaOnDemand(catalogTitle, itemTitle, itemIdx) {
   catatLogAktivitas("REQUEST_ONDEMAND", catalogTitle, `Item #${itemIdx}: ${itemTitle}`);
   const waNumber = getAdminWhatsAppNumber();
@@ -706,9 +826,9 @@ function renderHomeCategories() {
           <button class="btn-card-menu" onclick="event.stopPropagation(); toggleCardDropdownMenu('${item.id}', this)" aria-label="Menu Pilihan" style="background:rgba(0,0,0,0.6); border:1px solid rgba(212,175,55,0.3); color:#fff; width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer;">
             <i class="fa-solid fa-ellipsis-vertical"></i>
           </button>
-          <div id="cardDropdown_${item.id}" class="card-dropdown-menu hidden" style="position:absolute; right:0; top:32px; background:#12121a; border:1px solid rgba(212,175,55,0.3); border-radius:8px; padding:6px; min-width:140px; box-shadow:0 8px 20px rgba(0,0,0,0.8); z-index:20;">
-            <button onclick="event.stopPropagation(); bagikanKoleksiKeWA('${item.title}')" style="width:100%; text-align:left; background:none; border:none; color:#e2e8f0; font-size:0.75rem; padding:6px 8px; cursor:pointer; display:flex; align-items:center; gap:6px;">
-              <i class="fa-brands fa-whatsapp" style="color:#22c55e;"></i> Bagikan WA
+          <div id="cardDropdown_${item.id}" class="card-dropdown-menu hidden" style="position:absolute; right:0; top:32px; background:#12121a; border:1px solid rgba(212,175,55,0.3); border-radius:8px; padding:6px; min-width:160px; box-shadow:0 8px 20px rgba(0,0,0,0.8); z-index:20;">
+            <button onclick="event.stopPropagation(); bukaModalShareSosmed('${item.title}', '${item.folder}', '${item.id}')" style="width:100%; text-align:left; background:none; border:none; color:#e2e8f0; font-size:0.75rem; padding:6px 8px; cursor:pointer; display:flex; align-items:center; gap:6px;">
+              <i class="fa-solid fa-share-nodes" style="color:#38bdf8;"></i> Bagikan Sosmed / Pasar
             </button>
             <button onclick="event.stopPropagation(); copasPrompt('${window.location.origin + window.location.pathname}?pack=${item.id}')" style="width:100%; text-align:left; background:none; border:none; color:#e2e8f0; font-size:0.75rem; padding:6px 8px; cursor:pointer; display:flex; align-items:center; gap:6px;">
               <i class="fa-solid fa-link" style="color:var(--gold-light);"></i> Salin Tautan
@@ -813,9 +933,9 @@ function renderKatalogFoto() {
           <button class="btn-card-menu" onclick="event.stopPropagation(); toggleCardDropdownMenu('${pack.id}', this)" aria-label="Menu Pilihan" style="background:rgba(0,0,0,0.6); border:1px solid rgba(212,175,55,0.3); color:#fff; width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer;">
             <i class="fa-solid fa-ellipsis-vertical"></i>
           </button>
-          <div id="cardDropdown_${pack.id}" class="card-dropdown-menu hidden" style="position:absolute; right:0; top:32px; background:#12121a; border:1px solid rgba(212,175,55,0.3); border-radius:8px; padding:6px; min-width:140px; box-shadow:0 8px 20px rgba(0,0,0,0.8); z-index:20;">
-            <button onclick="event.stopPropagation(); bagikanKoleksiKeWA('${pack.title}')" style="width:100%; text-align:left; background:none; border:none; color:#e2e8f0; font-size:0.75rem; padding:6px 8px; cursor:pointer; display:flex; align-items:center; gap:6px;">
-              <i class="fa-brands fa-whatsapp" style="color:#22c55e;"></i> Bagikan WA
+          <div id="cardDropdown_${pack.id}" class="card-dropdown-menu hidden" style="position:absolute; right:0; top:32px; background:#12121a; border:1px solid rgba(212,175,55,0.3); border-radius:8px; padding:6px; min-width:160px; box-shadow:0 8px 20px rgba(0,0,0,0.8); z-index:20;">
+            <button onclick="event.stopPropagation(); bukaModalShareSosmed('${pack.title}', '${pack.folder}', '${pack.id}')" style="width:100%; text-align:left; background:none; border:none; color:#e2e8f0; font-size:0.75rem; padding:6px 8px; cursor:pointer; display:flex; align-items:center; gap:6px;">
+              <i class="fa-solid fa-share-nodes" style="color:#38bdf8;"></i> Bagikan Sosmed / Pasar
             </button>
             <button onclick="event.stopPropagation(); copasPrompt('${window.location.origin + window.location.pathname}?pack=${pack.id}')" style="width:100%; text-align:left; background:none; border:none; color:#e2e8f0; font-size:0.75rem; padding:6px 8px; cursor:pointer; display:flex; align-items:center; gap:6px;">
               <i class="fa-solid fa-link" style="color:var(--gold-light);"></i> Salin Tautan
@@ -861,9 +981,9 @@ function renderKatalogVideo() {
           <button class="btn-card-menu" onclick="event.stopPropagation(); toggleCardDropdownMenu('${pack.id}', this)" aria-label="Menu Pilihan" style="background:rgba(0,0,0,0.6); border:1px solid rgba(212,175,55,0.3); color:#fff; width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer;">
             <i class="fa-solid fa-ellipsis-vertical"></i>
           </button>
-          <div id="cardDropdown_${pack.id}" class="card-dropdown-menu hidden" style="position:absolute; right:0; top:32px; background:#12121a; border:1px solid rgba(212,175,55,0.3); border-radius:8px; padding:6px; min-width:140px; box-shadow:0 8px 20px rgba(0,0,0,0.8); z-index:20;">
-            <button onclick="event.stopPropagation(); bagikanKoleksiKeWA('${pack.title}')" style="width:100%; text-align:left; background:none; border:none; color:#e2e8f0; font-size:0.75rem; padding:6px 8px; cursor:pointer; display:flex; align-items:center; gap:6px;">
-              <i class="fa-brands fa-whatsapp" style="color:#22c55e;"></i> Bagikan WA
+          <div id="cardDropdown_${pack.id}" class="card-dropdown-menu hidden" style="position:absolute; right:0; top:32px; background:#12121a; border:1px solid rgba(212,175,55,0.3); border-radius:8px; padding:6px; min-width:160px; box-shadow:0 8px 20px rgba(0,0,0,0.8); z-index:20;">
+            <button onclick="event.stopPropagation(); bukaModalShareSosmed('${pack.title}', '${pack.folder}', '${pack.id}')" style="width:100%; text-align:left; background:none; border:none; color:#e2e8f0; font-size:0.75rem; padding:6px 8px; cursor:pointer; display:flex; align-items:center; gap:6px;">
+              <i class="fa-solid fa-share-nodes" style="color:#38bdf8;"></i> Bagikan Sosmed / Pasar
             </button>
             <button onclick="event.stopPropagation(); copasPrompt('${window.location.origin + window.location.pathname}?pack=${pack.id}')" style="width:100%; text-align:left; background:none; border:none; color:#e2e8f0; font-size:0.75rem; padding:6px 8px; cursor:pointer; display:flex; align-items:center; gap:6px;">
               <i class="fa-solid fa-link" style="color:var(--gold-light);"></i> Salin Tautan
@@ -2055,9 +2175,9 @@ function renderHomeCommercialPreview() {
           <button class="btn-card-menu" onclick="event.stopPropagation(); toggleCardDropdownMenu('${pack.id}', this)" aria-label="Menu Pilihan" style="background:rgba(0,0,0,0.6); border:1px solid rgba(212,175,55,0.3); color:#fff; width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer;">
             <i class="fa-solid fa-ellipsis-vertical"></i>
           </button>
-          <div id="cardDropdown_${pack.id}" class="card-dropdown-menu hidden" style="position:absolute; right:0; top:32px; background:#12121a; border:1px solid rgba(212,175,55,0.3); border-radius:8px; padding:6px; min-width:140px; box-shadow:0 8px 20px rgba(0,0,0,0.8); z-index:20;">
-            <button onclick="event.stopPropagation(); bagikanKoleksiKeWA('${pack.title}')" style="width:100%; text-align:left; background:none; border:none; color:#e2e8f0; font-size:0.75rem; padding:6px 8px; cursor:pointer; display:flex; align-items:center; gap:6px;">
-              <i class="fa-brands fa-whatsapp" style="color:#22c55e;"></i> Bagikan WA
+          <div id="cardDropdown_${pack.id}" class="card-dropdown-menu hidden" style="position:absolute; right:0; top:32px; background:#12121a; border:1px solid rgba(212,175,55,0.3); border-radius:8px; padding:6px; min-width:160px; box-shadow:0 8px 20px rgba(0,0,0,0.8); z-index:20;">
+            <button onclick="event.stopPropagation(); bukaModalShareSosmed('${pack.title}', '${pack.folder}', '${pack.id}')" style="width:100%; text-align:left; background:none; border:none; color:#e2e8f0; font-size:0.75rem; padding:6px 8px; cursor:pointer; display:flex; align-items:center; gap:6px;">
+              <i class="fa-solid fa-share-nodes" style="color:#38bdf8;"></i> Bagikan Sosmed / Pasar
             </button>
             <button onclick="event.stopPropagation(); copasPrompt('${window.location.origin + window.location.pathname}?pack=${pack.id}')" style="width:100%; text-align:left; background:none; border:none; color:#e2e8f0; font-size:0.75rem; padding:6px 8px; cursor:pointer; display:flex; align-items:center; gap:6px;">
               <i class="fa-solid fa-link" style="color:var(--gold-light);"></i> Salin Tautan
@@ -2144,9 +2264,9 @@ function renderAllCommercialItems(filterKey = "") {
           <button class="btn-card-menu" onclick="event.stopPropagation(); toggleCardDropdownMenu('${pack.id}', this)" aria-label="Menu Pilihan" style="background:rgba(0,0,0,0.6); border:1px solid rgba(212,175,55,0.3); color:#fff; width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer;">
             <i class="fa-solid fa-ellipsis-vertical"></i>
           </button>
-          <div id="cardDropdown_${pack.id}" class="card-dropdown-menu hidden" style="position:absolute; right:0; top:32px; background:#12121a; border:1px solid rgba(212,175,55,0.3); border-radius:8px; padding:6px; min-width:140px; box-shadow:0 8px 20px rgba(0,0,0,0.8); z-index:20;">
-            <button onclick="event.stopPropagation(); bagikanKoleksiKeWA('${pack.title}')" style="width:100%; text-align:left; background:none; border:none; color:#e2e8f0; font-size:0.75rem; padding:6px 8px; cursor:pointer; display:flex; align-items:center; gap:6px;">
-              <i class="fa-brands fa-whatsapp" style="color:#22c55e;"></i> Bagikan WA
+          <div id="cardDropdown_${pack.id}" class="card-dropdown-menu hidden" style="position:absolute; right:0; top:32px; background:#12121a; border:1px solid rgba(212,175,55,0.3); border-radius:8px; padding:6px; min-width:160px; box-shadow:0 8px 20px rgba(0,0,0,0.8); z-index:20;">
+            <button onclick="event.stopPropagation(); bukaModalShareSosmed('${pack.title}', '${pack.folder}', '${pack.id}')" style="width:100%; text-align:left; background:none; border:none; color:#e2e8f0; font-size:0.75rem; padding:6px 8px; cursor:pointer; display:flex; align-items:center; gap:6px;">
+              <i class="fa-solid fa-share-nodes" style="color:#38bdf8;"></i> Bagikan Sosmed / Pasar
             </button>
             <button onclick="event.stopPropagation(); copasPrompt('${window.location.origin + window.location.pathname}?pack=${pack.id}')" style="width:100%; text-align:left; background:none; border:none; color:#e2e8f0; font-size:0.75rem; padding:6px 8px; cursor:pointer; display:flex; align-items:center; gap:6px;">
               <i class="fa-solid fa-link" style="color:var(--gold-light);"></i> Salin Tautan
