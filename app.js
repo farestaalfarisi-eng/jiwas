@@ -327,6 +327,13 @@ function bagikanKoleksiKeWA(packTitle) {
   window.open("https://api.whatsapp.com/send?text=" + encodeURIComponent(teksPesan), "_blank");
 }
 
+function requestFormulaOnDemand(catalogTitle, itemTitle, itemIdx) {
+  catatLogAktivitas("REQUEST_ONDEMAND", catalogTitle, `Item #${itemIdx}: ${itemTitle}`);
+  const waNumber = getAdminWhatsAppNumber();
+  const pesan = `Halo Admin JIWAS,%0A%0ASaya tertarik dan ingin me-request formula khusus untuk tema berikut:%0A- Katalog: *${catalogTitle}*%0A- Konsep/Judul: *#${itemIdx}. ${itemTitle}*%0A%0AMohon info cara pemesanan dan proses pengerjaan formulanya. Terima kasih!`;
+  window.open("https://wa.me/" + waNumber + "?text=" + pesan, "_blank");
+}
+
 // -------------------------------------------------------------------------
 // FITUR BAGIKAN PROMOSI SOSMED PRODUK AKUN AI
 // -------------------------------------------------------------------------
@@ -461,7 +468,7 @@ function renderAtelierFeed() {
             src="videos/${pack.folder}/${idx}.jpg" 
             alt="Item ${idx}" 
             class="aspect-9-16 img-loaded" 
-            loading="lazy"
+            loading="lazy" 
             style="width:100%; height:100%; object-fit:cover; display:block; opacity:1 !important;"
             onerror="this.onerror=null; this.src='images/velvet/cover.jpg'; this.classList.add('img-loaded');"
           >
@@ -566,7 +573,7 @@ function renderHomeCategories() {
     let mediaDisplayHTML = "";
 
     if (item.type === 'video') {
-      badgeText = '🎥 VIDEO AI (30)';
+      badgeText = (item.workflow === "frame-to-frame") ? '🎞️ DUAL FRAME (36)' : '🎥 VIDEO AI (30)';
       
       // Ambil path cover jika ditentukan, atau gunakan default
       const videoCoverMp4 = `videos/${item.folder}/cover.mp4`;
@@ -741,6 +748,10 @@ function renderKatalogVideo() {
   const list = getActiveRegistry().filter(item => item.type === "video" && item.status === "live");
 
   list.forEach(pack => {
+    const isFrameToFrame = (pack.workflow === "frame-to-frame");
+    const badgeText = isFrameToFrame ? '🎞️ DUAL FRAME (36)' : '🎥 VIDEO SUITE (30)';
+    const btnText = isFrameToFrame ? 'Buka 36 Dual Frame' : 'Buka 36 Video Formula';
+
     const videoCoverMp4 = `videos/${pack.folder}/cover.mp4`;
     const video1Mp4 = `videos/${pack.folder}/1.mp4`;
     const imageCoverJpg = pack.coverUrl || `videos/${pack.folder}/cover.jpg`;
@@ -751,7 +762,7 @@ function renderKatalogVideo() {
     card.onclick = () => bukaDetailPack(pack);
     card.innerHTML = `
       <div style="position:relative;">
-        <span class="badge-pill badge-video">🎥 VIDEO SUITE (30)</span>
+        <span class="badge-pill badge-video">${badgeText}</span>
         
         <video 
           src="${videoCoverMp4}" 
@@ -790,7 +801,7 @@ function renderKatalogVideo() {
         <h3 class="card-title">${pack.title}</h3>
         <div class="card-rating-badge">★ ${pack.rating || '5.0/5'}</div>
         <div style="font-weight:800; color:var(--gold-light); font-size:0.85rem; margin-top:4px;">Rp10.000 / Rp25.000</div>
-        <button class="btn-copy" style="margin-top:8px; padding:6px 12px; font-size:0.75rem; width:100%;">Buka 36 Video Formula</button>
+        <button class="btn-copy" style="margin-top:8px; padding:6px 12px; font-size:0.75rem; width:100%;">${btnText}</button>
       </div>
     `;
     container.appendChild(card);
@@ -984,7 +995,7 @@ function bukaDetailPack(pack) {
   if (secComm) secComm.classList.add("hidden");
   if (secDetail) secDetail.classList.remove("hidden");
 
-const isThirtyBundle = (pack.type === 'video');
+  const isThirtyBundle = (pack.type === 'video');
   const totalCount = pack.totalItems || (isThirtyBundle ? 30 : 100);
 
   const titleEl = document.getElementById("detailTitle");
@@ -1072,67 +1083,131 @@ function renderDetailItemCards() {
   grid.innerHTML = "";
 
   const isVideo = activePack.type === 'video';
-  const totalItems = activePack.totalItems || (activePack.type === 'video' ? 30 : 100);
-
+  const isFrameToFrame = (activePack.workflow === "frame-to-frame");
   const cleanFolder = activePack.folder.toUpperCase().replace(/[^A-Z0-9]/g, '_');
   const varName = activePack.promptVarName || `PROMPTS_${cleanFolder}`;
   const promptArray = (window[varName] && Array.isArray(window[varName])) ? window[varName] : null;
 
+  const totalItems = promptArray ? promptArray.length : (activePack.totalItems || (isVideo ? 30 : 100));
+
   for (let i = 1; i <= totalItems; i++) {
+    const raw = (promptArray && promptArray[i - 1]) ? promptArray[i - 1] : null;
+    
+    // Deteksi status On-Demand vs Live
+    let isOnDemand = false;
+    let itemTitle = `${activePack.title} #${i}`;
+    let itemBadge = "";
+    let itemDesc = "";
+    let promptText = "";
+    let motionText = "";
+    let startFrameText = "";
+    let endFrameText = "";
+
+    if (raw && typeof raw === "object") {
+      isOnDemand = (raw.status === "on_demand");
+      itemTitle = raw.title || itemTitle;
+      itemBadge = raw.badge || (isOnDemand ? "✨ BY REQUEST" : "");
+      itemDesc = raw.deskripsi || raw.desc || "";
+      promptText = raw.rawPrompt || raw.prompt || "";
+      motionText = raw.motion || "";
+      startFrameText = raw.startFramePrompt || raw.startFrame || "";
+      endFrameText = raw.endFramePrompt || raw.endFrame || "";
+    } else if (raw && typeof raw === "string") {
+      promptText = raw;
+    }
+
     const card = document.createElement("div");
     card.className = "item-card";
 
-   // Ganti bagian pembentukan mediaHTML di dalam perulangan for (let i = 1; i <= totalItems; i++)
-let mediaHTML = "";
+    // JIKA STATUS ON-DEMAND (DAFTAR ROADMAP / TREN BY REQUEST)
+    if (isOnDemand) {
+      const fallbackPoster = activePack.coverUrl || `images/${activePack.folder}/cover.jpg`;
+      const badgeStyle = "background:rgba(212,175,55,0.2); color:var(--gold-light); border:1px solid var(--gold-primary);";
 
-if (isVideo) {
-  const basePath = `videos/${activePack.folder}/${i}`;
-  mediaHTML = `
-    <!-- Coba memuat MP4 -->
-    <video 
-      src="${basePath}.mp4" 
-      autoplay loop muted playsinline 
-      style="width:100%; height:100%; object-fit:cover; display:block;"
-      onloadeddata="this.classList.add('img-loaded')"
-      onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
-    ></video>
-    
-    <!-- Otomatis beralih ke JPG jika MP4 tidak ada -->
-    <img 
-      src="${basePath}.jpg" 
-      alt="Item ${i}" 
-      loading="lazy" 
-      class="img-loaded"
-      style="display:none; width:100%; height:100%; object-fit:cover;" 
-      onerror="this.onerror=null; this.src='images/velvet/cover.jpg';"
-    />
-  `;
-} else {
-  let imgSrc = `images/${activePack.folder}/${i}.jpg`;
-  mediaHTML = `
-    <img 
-      src="${imgSrc}" 
-      loading="lazy" 
-      alt="Item ${i}" 
-      class="img-loaded" 
-      onerror="this.onerror=null; this.src='images/velvet/cover.jpg';"
-    />
-  `;
-}
+      card.innerHTML = `
+        <div class="item-image-wrapper">
+          <span class="badge-pill" style="top:8px; left:8px; font-size:0.62rem; ${badgeStyle}">
+            ${itemBadge || '✨ BY REQUEST'}
+          </span>
+          <img 
+            src="${fallbackPoster}" 
+            loading="lazy" 
+            alt="${itemTitle}" 
+            class="img-loaded" 
+            style="filter:brightness(0.4) contrast(1.1);" 
+            onerror="this.onerror=null; this.src='images/velvet/cover.jpg';"
+          />
+          <div style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:15px; text-align:center; background:rgba(0,0,0,0.65);">
+            <i class="fa-solid fa-wand-magic-sparkles" style="color:var(--gold-primary); font-size:1.4rem; margin-bottom:6px;"></i>
+            <span style="font-size:0.75rem; font-weight:800; color:#fff; font-family:'Cinzel', serif;">ON-DEMAND FORMULA</span>
+            <span style="font-size:0.65rem; color:var(--gold-light); margin-top:2px;">Dibuatkan Sesuai Request</span>
+          </div>
+        </div>
+        <div class="item-content">
+          <div>
+            <div class="item-number" style="color:var(--gold-light);">ITEM #${i} • ${itemTitle}</div>
+            <div class="prompt-text-box" style="border-style:dashed; border-color:rgba(212,175,55,0.3); background:rgba(15,15,22,0.6); padding:10px;">
+              <p style="font-size:0.75rem; color:#e2e8f0; margin-bottom:6px; line-height:1.4;">
+                ${itemDesc || 'Konsep tren tervalidasi siap diracik dengan parameter pencahayaan studio 8K dan rasio 9:16.'}
+              </p>
+              <div style="font-size:0.68rem; color:var(--text-muted);">
+                ⚡ Estimasi pengerjaan formula: 15–30 menit setelah konfirmasi.
+              </div>
+            </div>
+          </div>
+          <div class="action-buttons">
+            <button 
+              class="btn-copy" 
+              style="background:var(--gold-gradient); color:#000; font-weight:800; width:100%; justify-content:center;" 
+              onclick="requestFormulaOnDemand('${activePack.title}', '${itemTitle}', ${i})"
+            >
+              <i class="fa-brands fa-whatsapp"></i> Request / Pesan Formula Ini
+            </button>
+          </div>
+        </div>
+      `;
+      grid.appendChild(card);
+      continue;
+    }
 
-   
-    let promptText = "";
-let motionText = ""; // <--- TAMBAHKAN INI
+    // JIKA STATUS LIVE / REGULER
+    let mediaHTML = "";
+    if (isVideo) {
+      const basePath = `videos/${activePack.folder}/${i}`;
+      mediaHTML = `
+        <!-- Coba memuat MP4 -->
+        <video 
+          src="${basePath}.mp4" 
+          autoplay loop muted playsinline 
+          style="width:100%; height:100%; object-fit:cover; display:block;"
+          onloadeddata="this.classList.add('img-loaded')"
+          onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
+        ></video>
+        
+        <!-- Otomatis beralih ke JPG jika MP4 tidak ada -->
+        <img 
+          src="${basePath}.jpg" 
+          alt="Item ${i}" 
+          loading="lazy" 
+          class="img-loaded"
+          style="display:none; width:100%; height:100%; object-fit:cover;" 
+          onerror="this.onerror=null; this.src='images/velvet/cover.jpg';"
+        />
+      `;
+    } else {
+      let imgSrc = `images/${activePack.folder}/${i}.jpg`;
+      mediaHTML = `
+        <img 
+          src="${imgSrc}" 
+          loading="lazy" 
+          alt="Item ${i}" 
+          class="img-loaded" 
+          onerror="this.onerror=null; this.src='images/velvet/cover.jpg';"
+        />
+      `;
+    }
 
-if (promptArray && promptArray[i - 1]) {
-  const raw = promptArray[i - 1];
-  promptText = (typeof raw === "object") ? (raw.rawPrompt || raw.prompt || "") : String(raw);
-  if (typeof raw === "object" && raw.motion) {
-    motionText = raw.motion; // <--- BACA MOTION DARI FILE JS
-  }
-}
-
-    if (!promptText) {
+    if (!promptText && !isFrameToFrame) {
       if (isVideo) {
         promptText = `Cinematic video sequence of ${activePack.title}, item #${i}. Camera slow continuous push-in dolly shot, ARRI Alexa LF, 50mm anamorphic lens, vertical 9:16 layout.`;
       } else {
@@ -1169,7 +1244,64 @@ if (promptArray && promptArray[i - 1]) {
       }
     }
 
-    const motionBoxHTML = (isVideo && motionText) ? `
+    let promptBoxHTML = "";
+    let actionButtons = "";
+
+    if (isFrameToFrame) {
+      if (!isLocked) {
+        promptBoxHTML = `
+          <div>
+            <div style="font-size: 0.7rem; font-weight: 700; color: #38bdf8; margin-bottom: 4px;">
+              🟢 1. START FRAME (Pose Awal / Sketsa Stik):
+            </div>
+            <div class="prompt-text-box" id="startFrameText_${i}" style="border-color: rgba(56, 189, 248, 0.3); margin-bottom: 8px;">${startFrameText || "-"}</div>
+
+            <div style="font-size: 0.7rem; font-weight: 700; color: var(--gold-light); margin-bottom: 4px;">
+              👑 2. END FRAME (Wujud Utuh / Masterpiece):
+            </div>
+            <div class="prompt-text-box" id="endFrameText_${i}" style="border-color: rgba(212, 175, 55, 0.3); margin-bottom: 8px;">${endFrameText || "-"}</div>
+
+            ${motionText ? `
+            <div style="font-size: 0.7rem; font-weight: 700; color: #4ade80; margin-bottom: 4px;">
+              🎬 3. MOTION VIDEO (Generasi Transformasi AI):
+            </div>
+            <div class="prompt-text-box" id="motionText_${i}" style="border-color: rgba(74, 222, 128, 0.3);">${motionText}</div>
+            ` : ""}
+          </div>
+        `;
+
+        actionButtons = `
+  <div class="action-buttons" style="display: flex; flex-wrap: wrap; gap: 6px;">
+    <!-- Tombol Unduh Bahan Gambar -->
+    <a href="videos/${activePack.folder}/${i}_start.jpg" download class="btn-copy" style="border-color:#38bdf8; color:#38bdf8; text-decoration:none; display:inline-flex; align-items:center; gap:4px;">
+      📥 Bahan Stik
+    </a>
+    <a href="videos/${activePack.folder}/${i}.jpg" download class="btn-copy" style="border-color:var(--gold-primary); color:var(--gold-light); text-decoration:none; display:inline-flex; align-items:center; gap:4px;">
+      📥 Bahan Jadi
+    </a>
+
+    <!-- Tombol Salin Prompt -->
+    <button class="btn-copy" onclick="copasPromptFromElement('startFrameText_${i}', '${activePack.title}', ${i})">🟢 Start</button>
+    <button class="btn-copy" onclick="copasPromptFromElement('endFrameText_${i}', '${activePack.title}', ${i})">👑 End</button>
+    ${motionText ? `<button class="btn-copy" style="border-color:#22c55e; color:#4ade80;" onclick="copasPromptFromElement('motionText_${i}', '${activePack.title}',${i})">🎬 Motion</button>` : ""}
+    <a href="https://runwayml.com/" target="_blank" class="btn-direct-ai">🚀 Video AI</a>
+  </div>
+`;
+      } else {
+        promptBoxHTML = `<div class="prompt-text-box prompt-locked-text">🔒 Formula prompt dikunci. Masukkan PIN ${tier.toUpperCase()} (${tier === 'starter' ? '10K' : '25K'}) untuk membuka teks formula ini.</div>`;
+        actionButtons = `
+          <div class="action-buttons">
+            <button class="btn-copy" style="background:var(--gold-gradient); color:#000; font-weight:800; flex:1;" onclick="bukaModalPIN('${tier}')">
+              🔑 Masukkan PIN ${tier === 'starter' ? '10K' : '25K'}
+            </button>
+            <button onclick="bukaModalCheckout('${activePack.title}', 'Paket ${tier.toUpperCase()}', 'Rp${tier === 'starter' ? '10.000' : '25.000'}')" class="btn-unlock-wa" style="flex:1;">
+              Beli via WA
+            </button>
+          </div>
+        `;
+      }
+    } else {
+      const motionBoxHTML = (isVideo && motionText) ? `
   <div style="margin-top: 10px; border-top: 1px dashed rgba(212,175,55,0.25); padding-top: 8px;">
     <div style="font-size: 0.7rem; font-weight: 700; color: #4ade80; margin-bottom: 4px;">
       🎬 PROMPT MOTION VIDEO (Runway / Kling / Luma):
@@ -1178,44 +1310,45 @@ if (promptArray && promptArray[i - 1]) {
   </div>
 ` : '';
 
-const promptBoxHTML = !isLocked 
-  ? `<div>
-       <div style="font-size: 0.7rem; font-weight: 700; color: var(--gold-light); margin-bottom: 4px;">
-         🎨 PROMPT VISUAL / BASE IMAGE:
-       </div>
-       <div class="prompt-text-box" id="promptText_${i}">${promptText}</div>
-       ${motionBoxHTML}
-     </div>`
-  : `<div class="prompt-text-box prompt-locked-text">🔒 Formula prompt dikunci. Masukkan PIN ${tier.toUpperCase()} (${tier === 'starter' ? '10K' : '25K'}) untuk membuka teks formula ini.</div>`;
+      promptBoxHTML = !isLocked 
+        ? `<div>
+             <div style="font-size: 0.7rem; font-weight: 700; color: var(--gold-light); margin-bottom: 4px;">
+               🎨 PROMPT VISUAL / BASE IMAGE:
+             </div>
+             <div class="prompt-text-box" id="promptText_${i}">${promptText}</div>
+             ${motionBoxHTML}
+           </div>`
+        : `<div class="prompt-text-box prompt-locked-text">🔒 Formula prompt dikunci. Masukkan PIN ${tier.toUpperCase()} (${tier === 'starter' ? '10K' : '25K'}) untuk membuka teks formula ini.</div>`;
 
-    let directBtnText = isVideo ? "🚀 Video AI" : "🚀 Bing";
-    let directUrl = isVideo ? "https://runwayml.com/" : "https://www.bing.com/images/create";
+      let directBtnText = isVideo ? "🚀 Video AI" : "🚀 Bing";
+      let directUrl = isVideo ? "https://runwayml.com/" : "https://www.bing.com/images/create";
 
-    const actionButtons = !isLocked 
-      ? `
-        <div class="action-buttons" style="display: flex; flex-wrap: wrap; gap: 6px;">
-          <button class="btn-copy" onclick="copasPromptFromElement('promptText_${i}', '${activePack.title}', ${i})">
-            📋 Salin Visual
-          </button>
+      actionButtons = !isLocked 
+        ? `
+          <div class="action-buttons" style="display: flex; flex-wrap: wrap; gap: 6px;">
+            <button class="btn-copy" onclick="copasPromptFromElement('promptText_${i}', '${activePack.title}', ${i})">
+              📋 Salin Visual
+            </button>
 
-          ${(isVideo && motionText) ? `
-          <button class="btn-copy" style="border-color: #22c55e; color: #4ade80;" onclick="copasPromptFromElement('motionText_${i}', '${activePack.title}',${i})">
-            🎬 Salin Motion
-          </button>
-          ` : ''}
+            ${(isVideo && motionText) ? `
+            <button class="btn-copy" style="border-color: #22c55e; color: #4ade80;" onclick="copasPromptFromElement('motionText_${i}', '${activePack.title}',${i})">
+              🎬 Salin Motion
+            </button>
+            ` : ''}
 
-          <button class="btn-share-promo" onclick="bagikanKoleksiKeWA('${activePack.title}')"><i class="fa-brands fa-whatsapp"></i> Bagikan</button>
-          <a href="${directUrl}" target="_blank" class="btn-direct-ai">${directBtnText}</a>
-        </div>`
-      : `
-        <div class="action-buttons">
-          <button class="btn-copy" style="background:var(--gold-gradient); color:#000; font-weight:800; flex:1;" onclick="bukaModalPIN('${tier}')">
-            🔑 Masukkan PIN ${tier === 'starter' ? '10K' : '25K'}
-          </button>
-          <button onclick="bukaModalCheckout('${activePack.title}', 'Paket ${tier.toUpperCase()}', 'Rp${tier === 'starter' ? '10.000' : '25.000'}')" class="btn-unlock-wa" style="flex:1;">
-            Beli via WA
-          </button>
-        </div>`;
+            <button class="btn-share-promo" onclick="bagikanKoleksiKeWA('${activePack.title}')"><i class="fa-brands fa-whatsapp"></i> Bagikan</button>
+            <a href="${directUrl}" target="_blank" class="btn-direct-ai">${directBtnText}</a>
+          </div>`
+        : `
+          <div class="action-buttons">
+            <button class="btn-copy" style="background:var(--gold-gradient); color:#000; font-weight:800; flex:1;" onclick="bukaModalPIN('${tier}')">
+              🔑 Masukkan PIN ${tier === 'starter' ? '10K' : '25K'}
+            </button>
+            <button onclick="bukaModalCheckout('${activePack.title}', 'Paket ${tier.toUpperCase()}', 'Rp${tier === 'starter' ? '10.000' : '25.000'}')" class="btn-unlock-wa" style="flex:1;">
+              Beli via WA
+            </button>
+          </div>`;
+    }
 
     card.innerHTML = `
       <div class="item-image-wrapper">
@@ -1224,7 +1357,7 @@ const promptBoxHTML = !isLocked
       </div>
       <div class="item-content">
         <div>
-          <div class="item-number">ITEM #${i} • ${activePack.title}</div>
+          <div class="item-number">ITEM #${i} • ${itemTitle}</div>
           ${promptBoxHTML}
         </div>
         ${actionButtons}
