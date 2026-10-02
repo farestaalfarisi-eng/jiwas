@@ -161,6 +161,68 @@ window.KATALOG_REGISTRY = [
     rating: "4.9/5",
     sales: "90+ Terjual"
   },
+{
+  id: "family-cloud36",
+  folder: "family36",
+  title: "The Dreamy Cloud Royal Family Collection",
+  category: "Foto AI",
+  type: "foto",
+  status: "live",
+  totalItems: 36,
+  promptVarName: "PROMPTS_FAMILY36",
+  scriptUrl: "prompts/family36.js",
+  coverUrl: "images/family36/cover.jpg",
+  rating: "5.0/5",
+  sales: "Baru Rilis",
+  description: "36 formula potret atelier keluarga bangsawan berlatar instalasi lampion awan bercahaya, kemilau lampu peri, serta busana sutra satin berornamen bulu mewah dalam rasio 9:16."
+},
+{
+  id: "family-heritage36",
+  folder: "family-heritage36",
+  title: "The Noble Heritage & Modern Hijab Family",
+  category: "Foto AI",
+  type: "foto",
+  status: "live",
+  totalItems: 36,
+  promptVarName: "PROMPTS_FAMILY_HERITAGE36",
+  scriptUrl: "prompts/family-heritage36.js",
+  coverUrl: "images/family-heritage36/cover.jpg",
+  rating: "5.0/5",
+  sales: "Baru Rilis",
+  description: "36 formula potret atelier keluarga muslim modern dengan 3 variasi gaun mewah: Renda Chantilly Dusty Rose, Sulam Perak Biru Malam, dan Wastra Tenun Nusantara."
+},
+{
+  id: "family-casual36",
+  folder: "family-casual36",
+  title: "The Modern Casual & Mustard Harmony Family",
+  category: "Foto AI",
+  type: "foto",
+  status: "live",
+  totalItems: 36,
+  promptVarName: "PROMPTS_FAMILY_CASUAL36",
+  scriptUrl: "prompts/family-casual36.js",
+  coverUrl: "images/family-casual36/cover.jpg",
+  rating: "5.0/5",
+  sales: "Baru Rilis",
+  description: "36 formula potret studio keluarga kasual modern dengan 2 gaya outfit segar: Jaket Denim Biru Muda di studio peach pastel dan Kemeja Mustard Ochre di studio berpanel kayu modern."
+},
+
+{
+  id: "family-celestial36",
+  folder: "family-celestial36",
+  title: "The Celestial Glamour Family Collection",
+  category: "Foto AI",
+  type: "foto",
+  status: "live",
+  totalItems: 36,
+  promptVarName: "PROMPTS_FAMILY_CELESTIAL36",
+  scriptUrl: "prompts/family-celestial36.js",
+  coverUrl: "images/family-celestial36/cover.jpg",
+  rating: "5.0/5",
+  sales: "Baru Rilis",
+  description: "36 formula potret atelier Korea royal glamour keluarga bertiga dalam 3 busana satin sutra mewah berhias aksen bulu, cloud lighting, dan dekorasi pampas emas 8K 9:16."
+},
+
 
   // --- PRE-LAUNCH TEASER PACKS (TEASER) ---
   {
@@ -701,6 +763,67 @@ window.KATALOG_REGISTRY = [
   rating: "5.0/5",
   sales: "Baru Rilis",
   description: "Transformasi visual lahan tanah kosong gersang menjadi perkebunan organik mandiri, kolam ikan, kandang ayam, dan cottage kayu modern."
+},
+// Tambahkan objek ini ke dalam array KATALOG_REGISTRY di data.js:
+{
+  id: "puspa-rimba",
+  title: "Puspa Rimba 9:16",
+  folder: "puspa-rimba",
+  category: "Video AI",
+  type: "video",
+  status: "live",
+  totalItems: 36,
+  promptVarName: "PROMPTS_PUSPA_RIMBA",
+  scriptUrl: "prompts/videos/puspa-rimba.js",
+  coverUrl: "videos/puspa-rimba/cover.jpg",
+  rating: "5.0/5",
+  sales: "Baru Rilis",
+  description: "Koleksi 36 video sinematik vertikal mikrokosmos peri hutan tropis nusantara berambut panjang melandai betis, menembus kabut lumut purba, kanopi bercahaya emas, dan ketenangan batin mendalam."
+},
+{
+  id: "family-trio-capsule36",
+  folder: "family-trio-capsule36",
+  title: "The Trinity Capsule: 3-Wardrobe Family Collection",
+  category: "Foto AI",
+  type: "foto",
+  status: "live",
+  totalItems: 36,
+  promptVarName: "PROMPTS_FAMILY_TRIO_CAPSULE36",
+  scriptUrl: "prompts/family-trio-capsule36.js",
+  coverUrl: "images/family-trio-capsule36/cover.jpg",
+  rating: "5.0/5",
+  sales: "Baru Rilis",
+  description: "36 formula potret atelier keluarga bertiga (ayah, ibu, balita) dalam 3 variasi outfit: Pastel Chic, Monokrom Bersih, dan Kasual Denim. Rasio 9:16 fotorealistik 8K."
+},
+{
+  id: "cloud-treehouse-haven",
+  title: "Cloud Treehouse Haven 9:16",
+  folder: "cloud-treehouse-haven",
+  category: "Video AI",
+  type: "video",
+  status: "live",
+  totalItems: 36,
+  promptVarName: "PROMPTS_CLOUD_TREEHOUSE_HAVEN",
+  scriptUrl: "prompts/videos/cloud-treehouse-haven.js",
+  coverUrl: "videos/cloud-treehouse-haven/cover.jpg",
+  rating: "5.0/5",
+  sales: "Baru Rilis",
+  description: "Eksplorasi sinematik desa rumah pohon purba di atas lautan awan. Visual puitis berpadu realisme IMAX 8K, jembatan kayu, lentera hangat, dan kedamaian batin tanpa batas."
+},
+{
+  id: "celestial-arbor",
+  title: "Celestial Arbor 9:16",
+  folder: "celestial-arbor",
+  category: "Video AI",
+  type: "video",
+  status: "live",
+  totalItems: 36,
+  promptVarName: "PROMPTS_CELESTIAL_ARBOR",
+  scriptUrl: "prompts/videos/celestial-arbor.js",
+  coverUrl: "videos/celestial-arbor/cover.jpg",
+  rating: "5.0/5",
+  sales: "Baru Rilis",
+  description: "Eksplorasi sinematik perkampungan pohon surgawi di atas lautan awan, menampilkan kehidupan damai para peri berwajah Asia, jembatan gantung berlumut, dan air terjun kanopi dengan pencahayaan hangat keemasan."
 }
 ];
 

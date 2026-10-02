@@ -667,7 +667,18 @@ function renderAtelierFeed() {
           >
         `;
       } else {
-        let imgSrc = `images/${pack.folder}/${idx}.jpg`;
+       // KODE BARU (Mendukung mapping foto kustom):
+let targetImgName = `${i}.jpg`; // Fallback default jika tidak ditentukan
+
+if (raw && typeof raw === "object") {
+  if (raw.image) {
+    targetImgName = raw.image;
+  } else if (raw.photoIndex) {
+    targetImgName = `${raw.photoIndex}.jpg`;
+  }
+}
+
+let imgSrc = `images/${activePack.folder}/${targetImgName}`;
         mediaHTML = `
           <img 
             src="${imgSrc}" 
@@ -928,7 +939,7 @@ function renderKatalogFoto() {
 
     card.innerHTML = `
       <div style="position:relative;">
-        <span class="badge-pill badge-foto">📸 100 ITEMS</span>
+        <span class="badge-pill badge-foto">📸 ${pack.totalItems || 100} ITEMS</span>
         <div class="card-menu-container" style="position:absolute; top:8px; right:8px; z-index:10;">
           <button class="btn-card-menu" onclick="event.stopPropagation(); toggleCardDropdownMenu('${pack.id}', this)" aria-label="Menu Pilihan" style="background:rgba(0,0,0,0.6); border:1px solid rgba(212,175,55,0.3); color:#fff; width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer;">
             <i class="fa-solid fa-ellipsis-vertical"></i>
@@ -1252,6 +1263,12 @@ function bukaDetailPack(pack) {
     if (isFamilyCatalog(pack)) updatePromptFormasi();
   }
 
+// Munculkan dropdown pengunci wajah jika tipe katalog adalah foto
+  const faceLockBox = document.getElementById("facialLockDetailBox");
+  if (faceLockBox) {
+    faceLockBox.style.display = (pack.type === 'foto') ? "block" : "none";
+  }
+
   const grid = document.getElementById("itemsGrid");
   if (grid) {
     grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:30px; color:var(--gold-light);"><i class="fa-solid fa-spinner fa-spin"></i> Menyiapkan galeri formula...</div>';
@@ -1458,9 +1475,12 @@ function renderDetailItemCards() {
         isLocked = !cekAksesKatalog(activePack.id, "vip");
       }
     } else {
+      // Batas Starter: jika katalog 36 item maka batasnya item 18, jika tidak maka 23
+      const starterMax = (activePack.totalItems === 36) ? 18 : 23;
+
       if (i <= 3) {
         tier = "free";
-      } else if (i <= 23) {
+      } else if (i <= starterMax) {
         tier = "starter";
         isLocked = !cekAksesKatalog(activePack.id, "starter");
       } else {
