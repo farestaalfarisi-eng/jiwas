@@ -784,30 +784,13 @@ function renderHomeCategories() {
       const image1Jpg = `videos/${item.folder}/1.jpg`;
 
       mediaDisplayHTML = `
-        <div style="position:relative; width:100%; height:100%; overflow:hidden;">
-          <video 
-            src="${videoCoverMp4}" 
-            class="aspect-9-16" 
-            autoplay loop muted playsinline 
-            style="width:100%; object-fit:cover; display:block;"
-            onloadeddata="this.classList.add('img-loaded')"
-            onerror="
-              if (!this.dataset.tried1) {
-                this.dataset.tried1 = 'true';
-                this.src = '${video1Mp4}';
-              } else {
-                this.style.display = 'none';
-                this.nextElementSibling.style.display = 'block';
-              }
-            "
-          ></video>
-
+        <div style="position:relative; width:100%; aspect-ratio:9/16; overflow:hidden;">
           <img 
             src="${imageCoverJpg}" 
             alt="${item.title}" 
             class="aspect-9-16 img-loaded" 
             loading="lazy" 
-            style="display:none; width:100%; object-fit:cover;"
+            style="width:100%; height:100%; object-fit:cover; display:block;"
             onerror="
               if (!this.dataset.triedImg1) {
                 this.dataset.triedImg1 = 'true';
@@ -818,6 +801,9 @@ function renderHomeCategories() {
               }
             "
           >
+          <div style="position:absolute; bottom:10px; right:10px; background:rgba(0,0,0,0.65); border:1px solid rgba(212,175,55,0.4); border-radius:50%; width:28px; height:28px; display:flex; align-items:center; justify-content:center; pointer-events:none;">
+            <i class="fa-solid fa-play" style="color:var(--gold-primary); font-size:0.7rem; margin-left:2px;"></i>
+          </div>
         </div>
       `;
     } else {
@@ -1002,38 +988,27 @@ function renderKatalogVideo() {
           </div>
         </div>
         
-        <video 
-          src="${videoCoverMp4}" 
-          class="aspect-9-16" 
-          autoplay loop muted playsinline 
-          style="width:100%; object-fit:cover; display:block;"
-          onloadeddata="this.classList.add('img-loaded')"
-          onerror="
-            if (!this.dataset.tried1) {
-              this.dataset.tried1 = 'true';
-              this.src = '${video1Mp4}';
-            } else {
-              this.style.display = 'none';
-              this.nextElementSibling.style.display = 'block';
-            }
-          "
-        ></video>
-
-        <img 
-          src="${imageCoverJpg}" 
-          alt="${pack.title}" 
-          class="aspect-9-16 img-loaded" 
-          style="display:none; width:100%; object-fit:cover;"
-          onerror="
-            if (!this.dataset.triedImg1) {
-              this.dataset.triedImg1 = 'true';
-              this.src = '${image1Jpg}';
-            } else {
-              this.onerror = null;
-              this.src = 'images/velvet/cover.jpg';
-            }
-          "
-        >
+        <div style="position:relative; width:100%; aspect-ratio:9/16; overflow:hidden;">
+          <img 
+            src="${imageCoverJpg}" 
+            alt="${pack.title}" 
+            class="aspect-9-16 img-loaded" 
+            loading="lazy" 
+            style="width:100%; height:100%; object-fit:cover; display:block;"
+            onerror="
+              if (!this.dataset.triedImg1) {
+                this.dataset.triedImg1 = 'true';
+                this.src = '${image1Jpg}';
+              } else {
+                this.onerror = null;
+                this.src = 'images/velvet/cover.jpg';
+              }
+            "
+          >
+          <div style="position:absolute; bottom:10px; right:10px; background:rgba(0,0,0,0.65); border:1px solid rgba(212,175,55,0.4); border-radius:50%; width:28px; height:28px; display:flex; align-items:center; justify-content:center; pointer-events:none;">
+            <i class="fa-solid fa-play" style="color:var(--gold-primary); font-size:0.7rem; margin-left:2px;"></i>
+          </div>
+        </div>
       </div>
       <div class="card-info">
         <h3 class="card-title">${pack.title}</h3>
@@ -1415,22 +1390,21 @@ function renderDetailItemCards() {
     if (isVideo) {
       const basePath = `videos/${activePack.folder}/${i}`;
       mediaHTML = `
-        <video 
-          src="${basePath}.mp4" 
-          autoplay loop muted playsinline 
-          style="width:100%; height:100%; object-fit:cover; display:block;"
-          onloadeddata="this.classList.add('img-loaded')"
-          onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
-        ></video>
-        
-        <img 
-          src="${basePath}.jpg" 
-          alt="Item ${i}" 
-          loading="lazy" 
-          class="img-loaded"
-          style="display:none; width:100%; height:100%; object-fit:cover;" 
-          onerror="this.onerror=null; this.src='images/velvet/cover.jpg';"
-        />
+        <div style="position:relative; width:100%; height:100%; cursor:pointer;" onclick="putarVideoCard(this, '${basePath}.mp4')">
+          <img 
+            src="${basePath}.jpg" 
+            alt="Item ${i}" 
+            loading="lazy" 
+            class="img-loaded"
+            style="width:100%; height:100%; object-fit:cover; display:block;" 
+            onerror="this.onerror=null; this.src='images/velvet/cover.jpg';"
+          />
+          <div class="video-play-badge" style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,0.25);">
+            <div style="background:rgba(0,0,0,0.65); border:1px solid rgba(212,175,55,0.4); border-radius:50%; width:38px; height:38px; display:flex; align-items:center; justify-content:center;">
+              <i class="fa-solid fa-play" style="color:var(--gold-primary); font-size:0.9rem; margin-left:3px;"></i>
+            </div>
+          </div>
+        </div>
       `;
     } else {
       let imgSrc = `images/${activePack.folder}/${i}.jpg`;
@@ -2315,4 +2289,15 @@ function filterChipKomersial(chipKey, btnEl) {
 
 function filterKomersialLive(keyword) {
   renderAllCommercialItems(keyword);
+}
+
+function putarVideoCard(containerEl, videoSrc) {
+  if (containerEl.querySelector("video")) return;
+  containerEl.innerHTML = `
+    <video 
+      src="${videoSrc}" 
+      autoplay loop muted playsinline 
+      style="width:100%; height:100%; object-fit:cover; display:block;"
+    ></video>
+  `;
 }
