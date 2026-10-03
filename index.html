@@ -754,61 +754,123 @@ EXACT 1:1 facial likeness of the reference subject in the provided reference pho
     <div class="modal-content" style="max-width:380px; text-align:left;">
       <button class="btn-modal-close" onclick="tutupModalCheckout()" aria-label="Tutup"><i class="fa-solid fa-xmark"></i></button>
 
-      <!-- Step 1: Input Nama & No WA -->
-      <div id="stepCheckoutForm">
-        <h3 style="font-family:'Cinzel', serif; color:var(--gold-light); font-size:1.1rem; margin-bottom:4px;">Checkout Instan</h3>
-        <p style="font-size:0.75rem; color:var(--text-muted); margin-bottom:12px;">Tanpa ribet, langsung proses pesanan via QRIS DANA.</p>
+     <div style="padding: 16px 18px 20px; overflow-y: auto;">
+    <!-- RINGKASAN PRODUK & VARIAN -->
+    <div style="background: #161622; border-left: 3px solid var(--gold-primary); padding: 10px 14px; border-radius: 8px; margin-bottom: 14px;">
+      <div style="font-size:0.68rem; color:var(--text-muted); text-transform:uppercase; font-weight:700;">Pesanan Anda:</div>
+      <div style="font-size:1rem; font-weight:800; color:#fff;" id="qrisModalProdName">-</div>
+      <div style="display:flex; gap:6px; margin-top:4px;" id="qrisModalBadges"></div>
+    </div>
 
-        <div style="background:#0b0b10; border:1px solid var(--card-border); padding:10px; border-radius:8px; margin-bottom:14px;">
-          <div id="checkoutItemTitle" style="font-weight:700; font-size:0.82rem; color:#fff;">-</div>
-          <div id="checkoutItemPrice" style="color:var(--gold-primary); font-weight:800; font-size:0.95rem; margin-top:2px;">-</div>
+    <div style="margin-bottom:12px;">
+      <label style="font-size:0.75rem; font-weight:700; color:var(--gold-light); display:block; margin-bottom:4px;">Pilih Durasi &amp; Varian:</label>
+      <select id="qrisVariantSelect" class="input-growth" style="width:100%;" onchange="updateQrisVariantDetails()"></select>
+    </div>
+
+   <!-- 3 TAB METODE PEMBAYARAN -->
+    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin-bottom: 14px; background: #09090e; padding: 4px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.06);">
+      <button type="button" class="quick-tag-chip pay-tab active" id="tabBtnQris" style="border-radius: 7px; padding: 8px 4px; display: flex; flex-direction: column; align-items: center; gap: 4px;" onclick="switchPayMethod('qris')">
+        <i class="fa-solid fa-qrcode"></i>
+        <span>1. Scan QRIS</span>
+      </button>
+      <button type="button" class="quick-tag-chip pay-tab" id="tabBtnBank" style="border-radius: 7px; padding: 8px 4px; display: flex; flex-direction: column; align-items: center; gap: 4px;" onclick="switchPayMethod('bank')">
+        <i class="fa-solid fa-building-columns"></i>
+        <span>2. Transfer Bank</span>
+      </button>
+      <button type="button" class="quick-tag-chip pay-tab" id="tabBtnWa" style="border-radius: 7px; padding: 8px 4px; display: flex; flex-direction: column; align-items: center; gap: 4px;" onclick="switchPayMethod('wa')">
+        <i class="fa-brands fa-whatsapp"></i>
+        <span>3. Chat / Tanya WA</span>
+      </button>
+    </div>
+
+    <!-- PANE 1: QRIS INSTAN -->
+    <div id="payPaneQris" class="checkout-pay-pane" style="display: block;">
+      <div style="background: #fff; border-radius: 12px; padding: 12px; text-align: center; margin-bottom: 12px; color: #000;">
+        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; padding-bottom: 6px; margin-bottom: 8px;">
+          <span style="font-weight:900; letter-spacing:1px; color:#000;">QRIS</span>
+          <span style="font-size:0.65rem; color:#475569; font-weight:700;">GOPAY • OVO • DANA • BCA • MANDIRI</span>
         </div>
-
-        <form onsubmit="prosesKeQRIS(event)">
-          <div style="margin-bottom:10px;">
-            <label style="font-size:0.75rem; font-weight:700; color:var(--gold-light); display:block; margin-bottom:4px;">Nama Lengkap / Panggilan:</label>
-            <input type="text" id="coBuyerName" class="input-growth" style="width:100%;" placeholder="Contoh: Budi" required autocomplete="off">
-          </div>
-
-          <div style="margin-bottom:14px;">
-            <label style="font-size:0.75rem; font-weight:700; color:var(--gold-light); display:block; margin-bottom:4px;">Nomor WhatsApp Aktif:</label>
-            <input type="tel" id="coBuyerWA" class="input-growth" style="width:100%;" placeholder="Contoh: 08123456789" required autocomplete="off">
-          </div>
-
-          <button type="submit" class="btn-copy" style="background:var(--gold-gradient); color:#000; font-weight:800; width:100%; justify-content:center; padding:10px;">
-            Lanjut ke Pembayaran QRIS <i class="fa-solid fa-arrow-right"></i>
-          </button>
-        </form>
-      </div>
-
-      <!-- Step 2: Scan QRIS DANA -->
-      <div id="stepCheckoutQRIS" class="hidden" style="text-align:center;">
-        <span class="hero-badge" style="margin-bottom:4px;">PEMBAYARAN DANA QRIS</span>
-        <h3 style="font-family:'Cinzel', serif; color:#fff; font-size:1.05rem; margin-bottom:2px;">Scan & Konfirmasi</h3>
-        <p style="font-size:0.75rem; color:var(--text-muted); margin-bottom:10px;">Order ID: <strong id="coOrderID" style="color:var(--accent-cyan); font-family:monospace;">-</strong></p>
-
-        <div style="background:#fff; padding:10px; border-radius:10px; display:inline-block; margin-bottom:10px; box-shadow:0 4px 15px rgba(0,0,0,0.5);">
-          
-<img 
-  id="coQrisImage" 
-  src="images/qris-10k.jpg" 
-  alt="QRIS DANA JIWAS" 
-  style="width:100%; max-width:210px; display:block; border-radius:4px;" 
-  onerror="this.onerror=null; this.src='images/qris-dana.jpg';"
->
+        <div style="display: flex; justify-content: center; align-items: center; background: #fff;">
+          <img id="qrisBarcodeImg" src="images/qris-10k.jpg" alt="QRIS JIWAS" style="width: 170px; height: 170px; object-fit: contain; border: 1px solid #e2e8f0; border-radius: 6px;" onerror="this.onerror=null; this.src='https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=JIWAS-ATELIER-OFFICIAL-QRIS';">
         </div>
-
-        <div style="background:#161622; border:1px solid var(--card-border); padding:8px 12px; border-radius:6px; margin-bottom:12px; display:flex; justify-content:space-between; align-items:center;">
-          <span style="font-size:0.75rem; color:var(--text-muted);">Total Bayar:</span>
-          <strong id="coTotalBayar" style="color:var(--accent-green); font-size:1rem;">-</strong>
+        
+        <div style="background: #f8fafc; border-radius: 8px; padding: 8px 10px; margin-top: 8px; font-size: 0.68rem; color: #334155; text-align: left; line-height: 1.45; border: 1px solid #e2e8f0;">
+          <strong>💡 Buka web lewat 1 HP yang sama?</strong><br>
+          1. <em>Screenshot</em> layar barcode QRIS ini.<br>
+          2. Buka BCA/Mandiri/GoPay/Dana lalu pilih menu <strong>Scan QRIS &rarr; Buka dari Galeri Foto</strong>.<br>
+          3. Selesai transfer, tekan tombol konfirmasi di bawah.
         </div>
-
-        <a id="btnKonfirmasiWA" href="#" target="_blank" class="btn-buy-wa" style="width:100%; justify-content:center; padding:10px; font-size:0.8rem;">
-          <i class="fa-brands fa-whatsapp"></i> Sudah Bayar & Kirim Bukti Transfer
-        </a>
       </div>
     </div>
+
+    <!-- PANE 2: REKENING BANK MANUAL -->
+    <div id="payPaneBank" class="checkout-pay-pane" style="display: none;">
+      <div style="background: #161622; border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
+        <div>
+          <div style="font-weight: 800; font-size: 0.85rem; color: var(--gold-light);"><i class="fa-solid fa-building-columns" style="color:var(--gold-primary);"></i> Bank BRI</div>
+          <div style="font-family: monospace; font-size: 0.9rem; letter-spacing: 1px; color: #fff; margin-top: 2px;">5042 0101 1128 533</div>
+          <div style="font-size:0.68rem; color:var(--text-muted); margin-top:2px;">A.N. Rifai</div>
+        </div>
+        <button type="button" class="btn-copy" onclick="salinNomorRekening('5042 0101 1128 533', 'BRI')">
+          <i class="fa-solid fa-copy"></i> Salin Rek
+        </button>
+      </div>
+
+      <div style="background: #161622; border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
+        <div>
+          <div style="font-weight: 800; font-size: 0.85rem; color: var(--accent-cyan);"><i class="fa-solid fa-wallet" style="color:var(--accent-cyan);"></i> DANA / OVO / GoPay</div>
+          <div style="font-family: monospace; font-size: 0.9rem; letter-spacing: 1px; color: #fff; margin-top: 2px;">0851 8178 0429</div>
+          <div style="font-size:0.68rem; color:var(--text-muted); margin-top:2px;">A.N. Rifai </div>
+        </div>
+        <button type="button" class="btn-copy" onclick="salinNomorRekening('0851 8178 0429', 'E-Wallet')">
+          <i class="fa-solid fa-copy"></i> Salin No
+        </button>
+      </div>
+      <div style="font-size:0.7rem; color:var(--text-muted); line-height:1.4; margin-bottom:12px; padding:0 4px;">
+        *Transfer sesuai total harga di bawah, lalu kirimkan bukti resi via WhatsApp.
+      </div>
+    </div>
+
+    <!-- PANE 3: CHAT KONSULTASI / MANUAL VIA WA -->
+    <div id="payPaneWa" class="checkout-pay-pane" style="display: none;">
+      <div style="background: rgba(34, 197, 94, 0.08); border: 1px dashed rgba(34, 197, 94, 0.4); border-radius: 10px; padding: 14px; text-align: center; margin-bottom: 12px;">
+        <i class="fa-solid fa-comments" style="font-size:1.8rem; color:#4ade80; margin-bottom:6px;"></i>
+        <div style="font-size:0.85rem; font-weight:800; color:#fff;">Mau Tanya Dulu atau Pesan Langsung via Chat?</div>
+        <p style="font-size:0.72rem; color:var(--text-muted); margin-top:4px;">
+          Admin siap membantu rekomendasi akun, verifikasi device laptop/HP, hingga pengiriman nomor rekening langsung di WhatsApp.
+        </p>
+      </div>
+    </div>
+
+    <!-- TOTAL BILLING -->
+    <div style="background: #14141e; border: 1px solid rgba(212, 175, 55, 0.3); padding: 10px 14px; border-radius: 8px; margin-bottom: 12px;">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <span style="font-size:0.78rem; color:var(--text-muted);">Total Pembayaran:</span>
+        <span style="font-size:1.35rem; font-weight:800; color:#22c55e;" id="qrisTotalAmount">Rp 0</span>
+      </div>
+      <div style="font-size:0.68rem; color:var(--gold-light); margin-top:4px;" id="qrisGaransiNote">
+        <i class="fa-solid fa-shield-halved"></i> Garansi: Full Garansi
+      </div>
+    </div>
+
+    <!-- FORM IDENTITAS PEMBELI -->
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-bottom:14px;">
+      <div>
+        <label style="font-size:0.72rem; font-weight:700; color:var(--gold-light); display:block; margin-bottom:4px;">Nama Pemesan:</label>
+        <input type="text" id="qrisCustomerName" class="input-growth" style="width:100%; font-size:0.78rem;" placeholder="Nama Anda">
+      </div>
+      <div>
+        <label style="font-size:0.72rem; font-weight:700; color:var(--gold-light); display:block; margin-bottom:4px;">No. WhatsApp Pemesan:</label>
+        <input type="text" id="qrisCustomerPhone" class="input-growth" style="width:100%; font-size:0.78rem;" placeholder="08xxxxxxxx">
+      </div>
+    </div>
+
+    <!-- TOMBOL AKSI UTAMA KE WA -->
+    <button type="button" id="btnMainCheckoutAction" class="btn-buy-wa" style="width: 100%; padding:12px; font-size:0.85rem;" onclick="selesaikanTransaksiHibrida()">
+      <i class="fa-brands fa-whatsapp"></i> Konfirmasi Pembayaran QRIS ke WhatsApp Admin
+    </button>
   </div>
+</div>
 
   <!-- MODAL EXIT-INTENT SURVEY -->
   <div id="surveyModal" class="modal-overlay hidden">
@@ -860,5 +922,230 @@ EXACT 1:1 facial likeness of the reference subject in the provided reference pho
   <script src="prompts/umkm/commercial.js"></script>
   <script src="prompts/family36.js"></script>
   <script src="app.js?v=4"></script>
+
+<script>
+    // =========================================================================
+    // JEMBATAN CHECKOUT OTOMATIS: FOTO, VIDEO & AKUN AI OFFICIAL STORE
+    // =========================================================================
+    let activeQrisProduct = null;
+        currentSelectedPayMethod = 'qris';
+
+    // Fungsi Utama: Mengisi Semua Informasi Modal dari Data Produk
+    function bukaModalCheckout(item) {
+      const modal = document.getElementById("checkoutModal");
+      if (!modal) return;
+
+      // 1. Deteksi data produk yang masuk
+      if (typeof item === "string") {
+        // Jika dipanggil dengan ID atau Nama Paket
+        let found = null;
+        if (typeof DATABASE_AI_ACCOUNT !== "undefined" && Array.isArray(DATABASE_AI_ACCOUNT)) {
+          found = DATABASE_AI_ACCOUNT.find(p => p.id === item || p.nama.toLowerCase() === item.toLowerCase());
+        }
+        
+        if (found) {
+          activeQrisProduct = JSON.parse(JSON.stringify(found));
+        } else {
+          const isVip = item.toUpperCase().includes("VIP") || item.includes("25");
+          activeQrisProduct = {
+            nama: isVip ? "Paket VIP 100 Formula Atelier" : "Paket Starter Formula Atelier",
+            kategori: "Formula Studio",
+            jenisAkun: "PIN Instan",
+            variants: [
+              { name: "Paket Starter (10K) - 20 Prompt", price: 10000, garansi: "Full Garansi" },
+              { name: "Paket VIP (25K) - Full 100 Prompt", price: 25000, garansi: "Full Garansi VIP" }
+            ],
+            defaultIdx: isVip ? 1 : 0
+          };
+        }
+      } else if (item && typeof item === "object") {
+        activeQrisProduct = item;
+      } else {
+        // Fallback default
+        activeQrisProduct = {
+          nama: "Formula Studio AI JIWAS",
+          kategori: "Atelier",
+          jenisAkun: "Akses PIN",
+          variants: [
+            { name: "Paket Starter (10K)", price: 10000, garansi: "Full Garansi" },
+            { name: "Paket VIP (25K)", price: 25000, garansi: "Full Garansi VIP" }
+          ]
+        };
+      }
+
+      // 2. Isi Nama Produk ke Header Modal
+      const nameEl = document.getElementById("qrisModalProdName");
+      if (nameEl) {
+        nameEl.innerText = activeQrisProduct.nama || activeQrisProduct.title || "Layanan JIWAS";
+      }
+
+      // 3. Tampilkan Badges (Kategori & Jenis Akun)
+      const badgesContainer = document.getElementById("qrisModalBadges");
+      if (badgesContainer) {
+        const cat = activeQrisProduct.kategori || "AI Store";
+        const delivery = activeQrisProduct.jenisAkun || activeQrisProduct.subKategori || "Direct Login";
+        badgesContainer.innerHTML = `
+          <span style="background:rgba(56,189,248,0.15); color:#38bdf8; padding:2px 8px; border-radius:4px; font-size:0.68rem; font-weight:700;">${cat}</span>
+          <span style="background:rgba(34,197,94,0.15); color:#4ade80; padding:2px 8px; border-radius:4px; font-size:0.68rem; font-weight:700;">${delivery}</span>
+        `;
+      }
+
+      // 4. Isi Dropdown Varian / Durasi
+      const varSelect = document.getElementById("qrisVariantSelect");
+      if (varSelect) {
+        varSelect.innerHTML = "";
+        
+        let variants = activeQrisProduct.variants;
+        if (!variants || variants.length === 0) {
+          const promo = activeQrisProduct.hargaPromo || activeQrisProduct.price || 15000;
+          variants = [
+            { name: "1 Bulan Reguler", price: promo, garansi: activeQrisProduct.garansi || "Full Garansi" }
+          ];
+          activeQrisProduct.variants = variants;
+        }
+
+        variants.forEach((v, idx) => {
+          const opt = document.createElement("option");
+          opt.value = idx;
+          const p = Number(String(v.price).replace(/[^0-9]/g, '')) || 0;
+          opt.innerText = `${v.name || 'Varian'} — Rp ${p.toLocaleString('id-ID')}`;
+          
+          if (activeQrisProduct.defaultIdx === idx) {
+            opt.selected = true;
+          }
+          varSelect.appendChild(opt);
+        });
+      }
+
+      // 5. Hitung & Cetak Total Pembayaran
+      updateQrisVariantDetails();
+
+      // 6. Reset Jalur Pembayaran & Buka Jendela Modal
+      switchPayMethod('qris');
+      modal.classList.remove("hidden");
+    }
+
+    // Fungsi: Update Nominal Sesuai Pilihan Dropdown
+    function updateQrisVariantDetails() {
+      if (!activeQrisProduct) return;
+
+      const varSelect = document.getElementById("qrisVariantSelect");
+      const vIdx = parseInt(varSelect?.value, 10) || 0;
+      const variants = activeQrisProduct.variants || [];
+      const selected = variants[vIdx] || variants[0] || {};
+
+      let p = selected.price ?? activeQrisProduct.hargaPromo ?? activeQrisProduct.harga ?? 25000;
+      if (typeof p === 'string') p = p.replace(/[^0-9]/g, '');
+      const price = Number(p) || 0;
+      const garansi = selected.garansi || activeQrisProduct.garansi || "Full Garansi Sesuai Durasi";
+
+      // Tampilkan Total Tagihan
+      const totalEl = document.getElementById("qrisTotalAmount");
+      if (totalEl) {
+        totalEl.innerText = "Rp " + price.toLocaleString('id-ID');
+      }
+
+      // Tampilkan Info Garansi
+      const garansiEl = document.getElementById("qrisGaransiNote");
+      if (garansiEl) {
+        garansiEl.innerHTML = `<i class="fa-solid fa-shield-halved"></i> Garansi: ${garansi}`;
+      }
+    }
+
+    // Fungsi: Perpindahan 3 Tab (QRIS, Bank, WhatsApp)
+    function switchPayMethod(method) {
+      currentSelectedPayMethod = method;
+
+      const tabs = [document.getElementById("tabBtnQris"), document.getElementById("tabBtnBank"), document.getElementById("tabBtnWa")];
+      tabs.forEach(t => { if (t) t.classList.remove("active"); });
+
+      const pQris = document.getElementById("payPaneQris");
+      const pBank = document.getElementById("payPaneBank");
+      const pWa = document.getElementById("payPaneWa");
+      if (pQris) pQris.style.display = "none";
+      if (pBank) pBank.style.display = "none";
+      if (pWa) pWa.style.display = "none";
+
+      const btn = document.getElementById(method === 'qris' ? 'tabBtnQris' : (method === 'bank' ? 'tabBtnBank' : 'tabBtnWa'));
+      const pane = document.getElementById(method === 'qris' ? 'payPaneQris' : (method === 'bank' ? 'payPaneBank' : 'payPaneWa'));
+      if (btn) btn.classList.add("active");
+      if (pane) pane.style.display = "block";
+
+      const actionBtn = document.getElementById("btnMainCheckoutAction");
+      if (actionBtn) {
+        if (method === 'qris') {
+          actionBtn.innerHTML = '<i class="fa-brands fa-whatsapp"></i> Konfirmasi Pembayaran QRIS ke WhatsApp Admin';
+          actionBtn.style.background = '#22c55e';
+          actionBtn.style.color = '#fff';
+        } else if (method === 'bank') {
+          actionBtn.innerHTML = '<i class="fa-brands fa-whatsapp"></i> Konfirmasi Transfer Bank ke WhatsApp Admin';
+          actionBtn.style.background = 'linear-gradient(135deg, #d4af37, #aa7c11)';
+          actionBtn.style.color = '#000';
+        } else {
+          actionBtn.innerHTML = '<i class="fa-brands fa-whatsapp"></i> Tanya & Pesan Langsung via WhatsApp';
+          actionBtn.style.background = '#25d366';
+          actionBtn.style.color = '#fff';
+        }
+      }
+    }
+
+    // Sambungkan Tombol Beli / Bagikan Promo Akun AI ke Modal Ini
+    window.bukaCheckoutAi = function(prodIdOrObj) {
+      bukaModalCheckout(prodIdOrObj);
+    };
+    if (typeof AiAccountEngine !== "undefined") {
+      AiAccountEngine.openCheckout = function(prodId) {
+        bukaModalCheckout(prodId);
+      };
+    }
+
+    function tutupModalCheckout() {
+      const modal = document.getElementById("checkoutModal");
+      if (modal) modal.classList.add("hidden");
+    }
+
+    function salinNomorRekening(nomor, jenis) {
+      navigator.clipboard.writeText(nomor).then(() => {
+        alert(`Nomor ${jenis} (${nomor}) berhasil disalin!`);
+      });
+    }
+
+    function selesaikanTransaksiHibrida() {
+      if (!activeQrisProduct) return;
+      const varSelect = document.getElementById("qrisVariantSelect");
+      const vIdx = parseInt(varSelect?.value, 10) || 0;
+      const selected = (activeQrisProduct.variants && activeQrisProduct.variants[vIdx]) ? activeQrisProduct.variants[vIdx] : {};
+      
+      const prodName = activeQrisProduct.nama || "Layanan JIWAS";
+      const total = document.getElementById("qrisTotalAmount")?.innerText || "Rp 0";
+      const varianText = selected.name || "Standar";
+      const buyerName = document.getElementById("qrisCustomerName")?.value.trim() || "Pelanggan";
+      const buyerPhone = document.getElementById("qrisCustomerPhone")?.value.trim() || "-";
+
+      let statusBayar = "Sudah Scan QRIS";
+      if (currentSelectedPayMethod === 'bank') statusBayar = "Transfer Rekening Bank";
+      if (currentSelectedPayMethod === 'wa') statusBayar = "Konsultasi / Tanya Rekening";
+
+      const adminWa = "6282255267793";
+      const pesan = 
+`Halo Admin JIWAS Atelier! ✨
+
+Saya ingin pesan:
+• Produk: *${prodName}*
+• Varian: *${varianText}*
+• Total Pembayaran: *${total}*
+• Metode: *${statusBayar}*
+
+Nama Pemesan: *${buyerName}*
+No. WhatsApp: *${buyerPhone}*
+
+Mohon detail akun resminya ya Min. Terima kasih! 🙏`;
+
+      tutupModalCheckout();
+      window.open(`https://wa.me/${adminWa}?text=${encodeURIComponent(pesan)}`, '_blank');
+    }
+  </script>
+</body>
+</html>
 </body>
 </html>

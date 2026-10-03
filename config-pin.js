@@ -142,7 +142,7 @@ const LIST_PIN_KATALOG = {
   vip: "25LHN"
 },
 // Tambahkan ke dalam objek LIST_PIN_KATALOG di config-pin.js:
-"puspa-rimba": { pin10k: "RIMBA10K", pin25k: "PUSPAVIP25" }
+"puspa-rimba": { pin10k: "RIMBA10K", pin25k: "PUSPAVIP25" },
 "family-trio-capsule36": {
   pin10k: "TRIO10KPASS",
   pin25k: "TRIOVIP25PASS"

@@ -324,7 +324,352 @@
       align-items: center;
       gap: 4px;
     }
+  
+    /* SMART MULTI-VENDOR DROPZONE & DYNAMIC VARIANT BUILDER */
+    .smart-vendor-dropzone {
+      border: 2px dashed rgba(56, 189, 248, 0.45);
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.75), rgba(10, 15, 26, 0.95));
+      border-radius: 12px;
+      padding: 22px 16px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      margin-bottom: 16px;
+    }
+    .smart-vendor-dropzone:hover, .smart-vendor-dropzone.dragover {
+      border-color: #38bdf8;
+      background: rgba(56, 189, 248, 0.12);
+      box-shadow: 0 0 25px rgba(56, 189, 248, 0.25);
+      transform: translateY(-1px);
+    }
+    .dropzone-inner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      pointer-events: none;
+    }
+    .dropzone-icon {
+      font-size: 2.2rem;
+      color: #38bdf8;
+      animation: floatSubtle 3s ease-in-out infinite;
+    }
+    @keyframes floatSubtle {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-4px); }
+    }
+    .dropzone-title {
+      font-weight: 800;
+      font-size: 0.95rem;
+      color: #f8fafc;
+    }
+    .dropzone-sub {
+      font-size: 0.75rem;
+      color: #94a3b8;
+    }
+    .dropzone-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(56, 189, 248, 0.15);
+      color: #38bdf8;
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      margin-top: 4px;
+    }
+
+    /* OCR PROGRESS BAR */
+    .ocr-progress-box {
+      margin-top: 10px;
+      background: #09090e;
+      border-radius: 8px;
+      padding: 8px 12px;
+      border: 1px solid rgba(56, 189, 248, 0.3);
+    }
+    .ocr-bar-bg {
+      background: #1e1e2d;
+      height: 6px;
+      border-radius: 3px;
+      overflow: hidden;
+      margin-top: 5px;
+    }
+    .ocr-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #38bdf8, #22c55e);
+      width: 0%;
+      transition: width 0.2s ease;
+    }
+
+    /* DYNAMIC VARIANT TABLE */
+    .variant-builder-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      font-size: 0.78rem;
+    }
+    .variant-builder-table th {
+      background: #161622;
+      color: var(--text-muted);
+      font-weight: 700;
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      padding: 8px 10px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      text-align: left;
+    }
+    .variant-builder-table td {
+      padding: 6px 8px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      vertical-align: middle;
+      background: #0d0d13;
+    }
+    .variant-builder-table tr:hover td {
+      background: #12121b;
+    }
+    .input-cell-var {
+      background: #181824;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #fff;
+      padding: 6px 8px;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      width: 100%;
+      outline: none;
+      transition: all 0.2s;
+    }
+    .input-cell-var:focus {
+      border-color: #38bdf8;
+      background: #1c1c2c;
+    }
+    .btn-del-var {
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.35);
+      color: #ef4444;
+      border-radius: 6px;
+      padding: 6px 10px;
+      cursor: pointer;
+      font-size: 0.75rem;
+      transition: all 0.2s;
+    }
+    .btn-del-var:hover {
+      background: #ef4444;
+      color: #fff;
+    }
+    .btn-add-var {
+      background: #181824;
+      border: 1px dashed rgba(56, 189, 248, 0.5);
+      color: #38bdf8;
+      border-radius: 6px;
+      padding: 8px 14px;
+      cursor: pointer;
+      font-size: 0.75rem;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+      margin-top: 8px;
+    }
+    .btn-add-var:hover {
+      background: rgba(56, 189, 248, 0.15);
+      border-color: #38bdf8;
+    }
+
+  
+    /* MODAL SMART HYBRID CHECKOUT (QRIS, TRANSFER BANK & WA DIRECT) */
+    .modal-qris-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.88);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10000;
+      padding: 16px;
+    }
+    .modal-qris-card {
+      background: #111118;
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      width: 100%;
+      max-width: 480px;
+      box-shadow: 0 16px 50px rgba(0, 0, 0, 0.95);
+      overflow: hidden;
+      animation: modalSlideUp 0.25s ease-out;
+      max-height: 92vh;
+      display: flex;
+      flex-direction: column;
+    }
+    @keyframes modalSlideUp {
+      from { opacity: 0; transform: translateY(24px) scale(0.97); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .modal-qris-header {
+      background: #171724;
+      padding: 14px 18px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .btn-close-modal {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+    .btn-close-modal:hover { color: #fff; }
+    .modal-qris-body {
+      padding: 16px 18px 20px;
+      overflow-y: auto;
+    }
+    .qris-product-summary {
+      background: #161622;
+      border-left: 3px solid var(--gold-primary);
+      padding: 10px 14px;
+      border-radius: 8px;
+      margin-bottom: 14px;
+    }
+    
+    /* PILIHAN METODE BAYAR (TABS) */
+    .pay-method-nav {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 6px;
+      margin-bottom: 14px;
+      background: #09090e;
+      padding: 4px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+    .btn-pay-tab {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      padding: 8px 4px;
+      border-radius: 7px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.2s ease;
+    }
+    .btn-pay-tab i { font-size: 0.95rem; }
+    .btn-pay-tab.active {
+      background: #1e1e2c;
+      color: var(--gold-light);
+      border: 1px solid var(--gold-primary);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+    }
+    .btn-pay-tab.qris-tab.active {
+      border-color: #38bdf8;
+      color: #38bdf8;
+    }
+    .btn-pay-tab.wa-tab.active {
+      border-color: #22c55e;
+      color: #4ade80;
+    }
+
+    .pay-content-pane { display: none; }
+    .pay-content-pane.active { display: block; }
+
+    /* PANDUAN LANGKAH QRIS */
+    .qris-display-frame {
+      background: #fff;
+      border-radius: 12px;
+      padding: 12px;
+      text-align: center;
+      margin-bottom: 12px;
+      color: #000;
+    }
+    .qris-badge-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #e2e8f0;
+      padding-bottom: 6px;
+      margin-bottom: 8px;
+    }
+    .qris-qr-wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #fff;
+    }
+    .qris-img {
+      width: 170px;
+      height: 170px;
+      object-fit: contain;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+    }
+    .qris-steps-guide {
+      background: #f8fafc;
+      border-radius: 8px;
+      padding: 8px 10px;
+      margin-top: 8px;
+      font-size: 0.68rem;
+      color: #334155;
+      text-align: left;
+      line-height: 1.45;
+      border: 1px solid #e2e8f0;
+    }
+
+    /* PANE TRANSFER BANK */
+    .bank-card-box {
+      background: #161622;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      padding: 12px;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .bank-logo-label {
+      font-weight: 800;
+      font-size: 0.85rem;
+      color: var(--gold-light);
+    }
+    .bank-rek-number {
+      font-family: monospace;
+      font-size: 0.9rem;
+      letter-spacing: 1px;
+      color: #fff;
+      margin-top: 2px;
+    }
+
+    /* PANE CHAT WA KONSULTASI */
+    .wa-direct-banner {
+      background: rgba(34, 197, 94, 0.08);
+      border: 1px dashed rgba(34, 197, 94, 0.4);
+      border-radius: 10px;
+      padding: 14px;
+      text-align: center;
+      margin-bottom: 12px;
+    }
+
+    .qris-bill-box {
+      background: #14141e;
+      border: 1px solid rgba(212, 175, 55, 0.3);
+      padding: 10px 14px;
+      border-radius: 8px;
+      margin-bottom: 12px;
+    }
   </style>
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 </head>
 <body>
 
@@ -732,136 +1077,163 @@
         </div>
       </div>
 
-      <div class="panel-box" style="border: 1px solid #38bdf8; background: linear-gradient(135deg, rgba(56,189,248,0.06), rgba(18,18,24,0.95));">
-        <div class="panel-title" style="color: #38bdf8;">
-          <span><i class="fa-solid fa-layer-group"></i> INPUT & KELOLA VARIAN AKUN (INCA STORE & FINSHOP)</span>
-          <span style="font-size:0.7rem; color:var(--text-muted);">Dukungan Detail Lengkap, Varian Durasi 7/30 Hari, Garansi & FAQ</span>
+            <div class="panel-box" style="border: 1px solid #38bdf8; background: linear-gradient(135deg, rgba(56,189,248,0.06), rgba(18,18,24,0.95));">
+        <div class="panel-title" style="color: #38bdf8; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+          <span><i class="fa-solid fa-wand-magic-sparkles"></i> SMART MULTI-VENDOR AI DROPZONE & DYNAMIC VARIANT BUILDER</span>
+          <span style="font-size:0.7rem; color:var(--text-muted);">Mendukung Semua Vendor (FNSHOP, Inca Store, dll.) • Auto-Detect Durasi & Garansi</span>
         </div>
 
+        <!-- 1. UNIVERSAL SMART DROPZONE / PASTE ZONE -->
+        <div id="vendorDropzone" class="smart-vendor-dropzone" onclick="triggerDropzoneUpload()">
+          <input type="file" id="dropzoneFileInput" accept="image/*" style="display:none;" onchange="handleDropzoneFile(this.files[0])">
+          <div class="dropzone-inner">
+            <i class="fa-solid fa-cloud-arrow-up dropzone-icon"></i>
+            <div class="dropzone-title">Seret & Lepas Screenshot Bot Vendor ke Sini, atau Tekan <kbd style="background:#1e1e2d; padding:2px 6px; border-radius:4px; border:1px solid #38bdf8; font-size:0.75rem; color:#38bdf8;">Ctrl + V</kbd></div>
+            <div class="dropzone-sub">Membaca otomatis: Nama Produk, Durasi Bebas (7H / 14H / 1B / 3B / 18B / Lifetime), Garansi, Modal & Sisa Stok</div>
+            <div class="dropzone-badge">
+              <i class="fa-solid fa-bolt"></i> Siap Terima Screenshot Gambar atau Salinan Teks Chat Bot
+            </div>
+          </div>
+
+          <!-- OCR Progress Bar (Muncul saat proses gambar) -->
+          <div id="ocrProgressWrapper" class="ocr-progress-box hidden" style="margin-top:12px;">
+            <div style="display:flex; justify-content:space-between; font-size:0.72rem; color:#38bdf8; font-weight:700;">
+              <span id="ocrStatusText"><i class="fa-solid fa-spinner fa-spin"></i> Memindai teks screenshot...</span>
+              <span id="ocrPercentText">0%</span>
+            </div>
+            <div class="ocr-bar-bg">
+              <div id="ocrBarFill" class="ocr-bar-fill"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- OPTIONAL: TOGGLE KOTAK RAW TEXT JIKA INGIN PASTE MANUAL CEPAT -->
+        <div style="margin-bottom: 14px;">
+          <button type="button" class="btn-quick-copy" onclick="toggleRawTextPaste()" style="border-color:#38bdf8; color:#38bdf8; font-size:0.72rem;">
+            <i class="fa-solid fa-paste"></i> Buka Kotak Tempel Teks Bot Telegram Langsung (0 Detik)
+          </button>
+          <div id="rawTextContainer" class="hidden" style="margin-top:8px;">
+            <textarea id="rawVendorText" class="input-growth" style="width:100%; height:80px; font-family:monospace; font-size:0.75rem;" placeholder="Tempel teks chat bot di sini, contoh:
+• Produk : AI LINK GEMINI PRO
+Variasi, Harga - (Stok):
+• LINK GEMINI 3 BULAN: Rp. 9,000 - (251)
+• LINK GEMINI 18 BULAN: Rp. 15,000 - (135)"></textarea>
+            <button type="button" class="btn-action" style="margin-top:6px; font-size:0.72rem; padding:6px 12px;" onclick="parseRawVendorText()">
+              <i class="fa-solid fa-microchip"></i> Ekstrak Sekarang
+            </button>
+          </div>
+        </div>
+
+        <!-- 2. FORM UTAMA PRODUK -->
         <form id="formAiProduct" onsubmit="simpanProdukAI(event)">
           <input type="hidden" id="prodEditId" value="">
 
-          <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap:12px; margin-bottom:14px;">
+          <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap:12px; margin-bottom:14px;">
             <div>
               <label style="font-size:0.75rem; font-weight:700; color:var(--gold-light); display:block; margin-bottom:4px;">Sumber Vendor:</label>
               <select id="prodVendor" class="input-growth" style="width:100%;" required>
-                <option value="INCA_STORE">Inca Store Bot (Utama / H2H)</option>
-                <option value="FINSHOP">Finshop Auto Order (Cadangan / Mitra)</option>
+                <option value="FNSHOP">FNSHOP Auto Order</option>
+                <option value="INCA_STORE">Inca Store Bot (H2H)</option>
+                <option value="MITRA_LAIN">Vendor Mitra Lainnya</option>
               </select>
             </div>
 
             <div>
               <label style="font-size:0.75rem; font-weight:700; color:var(--gold-light); display:block; margin-bottom:4px;">Nama Produk Akun:</label>
-              <input type="text" id="prodNama" class="input-growth" style="width:100%;" placeholder="Contoh: CapCut Pro Full Feature" required>
+              <input type="text" id="prodNama" class="input-growth" style="width:100%;" placeholder="Contoh: AI LINK GEMINI PRO" required>
             </div>
 
             <div>
               <label style="font-size:0.75rem; font-weight:700; color:var(--gold-light); display:block; margin-bottom:4px;">Kategori Katalog:</label>
               <select id="prodKategori" class="input-growth" style="width:100%;" required>
-                <option value="Video">Video Motion</option>
-                <option value="Design">Desain & Gambar</option>
                 <option value="AI">AI & Coding</option>
-                <option value="Produktivitas">Produktivitas & Streaming</option>
+                <option value="Video">Video Motion & Streaming</option>
+                <option value="Design">Desain & Grafis</option>
+                <option value="Produktivitas">Produktivitas & Tools</option>
               </select>
             </div>
 
             <div>
-              <label style="font-size:0.75rem; font-weight:700; color:var(--gold-light); display:block; margin-bottom:4px;">Metode Penyerahan Akun:</label>
+              <label style="font-size:0.75rem; font-weight:700; color:var(--gold-light); display:block; margin-bottom:4px;">Metode Penyerahan:</label>
               <select id="prodJenisAkun" class="input-growth" style="width:100%;">
                 <option value="Direct Login (PC & HP)">Direct Login (Email & Sandi)</option>
                 <option value="Invite Email / Tim">Invite Email Tim Pembeli</option>
-                <option value="Lisensi / License Key">Lisensi / Key Aktivasi</option>
+                <option value="Lisensi / Link Redeem">Lisensi / Link Redeem</option>
               </select>
             </div>
           </div>
 
-          <!-- PENGATURAN VARIAN 7 HARI & 30 HARI -->
+          <!-- 3. TABEL BARIS VARIAN DINAMIS (BEBAS DURASI & GARANSI) -->
           <div style="background:#09090e; padding:14px; border-radius:10px; border:1px solid rgba(56,189,248,0.25); margin-bottom:14px;">
-            <div style="font-size:0.8rem; font-weight:800; color:var(--gold-light); margin-bottom:10px; display:flex; align-items:center; gap:6px;">
-              <i class="fa-solid fa-clock"></i> Pengaturan Varian Durasi, Modal Grosir & Harga Ecer JIWAS:
-            </div>
-
-            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:16px;">
-              <div style="background:#13131c; padding:12px; border-radius:8px; border:1px solid rgba(255,255,255,0.08);">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-                  <span style="font-weight:800; color:#38bdf8; font-size:0.78rem;">⚡ VARIAN 7 HARI (HEMAT)</span>
-                  <label style="font-size:0.7rem; color:var(--text-muted); cursor:pointer;">
-                    <input type="checkbox" id="v7Aktif" checked onchange="toggleVarianForm('v7')"> Aktifkan
-                  </label>
-                </div>
-                <div id="v7Container" style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
-                  <div>
-                    <label style="font-size:0.68rem; color:#ef4444; display:block;">Modal Grosir (Vendor):</label>
-                    <input type="number" id="v7Modal" class="input-growth" style="width:100%;" placeholder="Rp" value="3000" oninput="hitungMarginVarian()">
-                  </div>
-                  <div>
-                    <label style="font-size:0.68rem; color:var(--gold-light); display:block;">Harga Ecer JIWAS:</label>
-                    <input type="number" id="v7Jual" class="input-growth" style="width:100%;" placeholder="Rp" value="7000" oninput="hitungMarginVarian()">
-                  </div>
-                  <div style="grid-column:1/-1; display:flex; justify-content:space-between; align-items:center; padding-top:4px;">
-                    <span style="font-size:0.7rem; color:var(--text-muted);">Margin Keuntungan:</span>
-                    <span id="v7MarginText" style="font-weight:800; color:#22c55e; font-size:0.8rem;">+Rp 4.000</span>
-                  </div>
-                </div>
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:10px;">
+              <div style="font-size:0.8rem; font-weight:800; color:var(--gold-light); display:flex; align-items:center; gap:6px;">
+                <i class="fa-solid fa-table-list" style="color:#38bdf8;"></i> Varian Durasi, Kriteria & Margin Profit (Multi-Baris Dinamis):
               </div>
-
-              <div style="background:#13131c; padding:12px; border-radius:8px; border:1px solid rgba(255,255,255,0.08);">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-                  <span style="font-weight:800; color:var(--gold-light); font-size:0.78rem;">👑 VARIAN 30 HARI (REGULER)</span>
-                  <label style="font-size:0.7rem; color:var(--text-muted); cursor:pointer;">
-                    <input type="checkbox" id="v30Aktif" checked onchange="toggleVarianForm('v30')"> Aktifkan
-                  </label>
-                </div>
-                <div id="v30Container" style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
-                  <div>
-                    <label style="font-size:0.68rem; color:#ef4444; display:block;">Modal Grosir (Vendor):</label>
-                    <input type="number" id="v30Modal" class="input-growth" style="width:100%;" placeholder="Rp" value="7000" oninput="hitungMarginVarian()">
-                  </div>
-                  <div>
-                    <label style="font-size:0.68rem; color:var(--gold-light); display:block;">Harga Ecer JIWAS:</label>
-                    <input type="number" id="v30Jual" class="input-growth" style="width:100%;" placeholder="Rp" value="15000" oninput="hitungMarginVarian()">
-                  </div>
-                  <div style="grid-column:1/-1; display:flex; justify-content:space-between; align-items:center; padding-top:4px;">
-                    <span style="font-size:0.7rem; color:var(--text-muted);">Margin Keuntungan:</span>
-                    <span id="v30MarginText" style="font-weight:800; color:#22c55e; font-size:0.8rem;">+Rp 8.000</span>
-                  </div>
-                </div>
+              <div style="display:flex; align-items:center; gap:8px;">
+                <span style="font-size:0.7rem; color:var(--text-muted);">Aturan Markup Otomatis:</span>
+                <select id="autoMarkupRule" class="input-growth" style="font-size:0.72rem; padding:4px 8px;" onchange="recalculateAllMarkups()">
+                  <option value="smart">Smart Tier (+4K s/d +12K / +30%)</option>
+                  <option value="flat5k">Flat +Rp 5.000</option>
+                  <option value="flat10k">Flat +Rp 10.000</option>
+                  <option value="pct50">Margin +50%</option>
+                  <option value="pct100">Margin 2x Lipat (+100%)</option>
+                </select>
               </div>
             </div>
+
+            <div style="overflow-x:auto;">
+              <table class="variant-builder-table">
+                <thead>
+                  <tr>
+                    <th style="min-width:130px;">Nama / Durasi Varian</th>
+                    <th style="min-width:110px;">Kriteria / Tipe</th>
+                    <th style="min-width:110px;">Garansi</th>
+                    <th style="min-width:90px;">Modal (Rp)</th>
+                    <th style="min-width:95px;">Jual JIWAS (Rp)</th>
+                    <th style="min-width:65px;">Stok</th>
+                    <th style="min-width:75px;">Margin</th>
+                    <th style="width:40px; text-align:center;">Aksi</th>
+                  </tr>
+                </thead>
+                <tbody id="dynamicVariantTableBody">
+                  <!-- Baris varian dinamis diisi secara otomatis atau via tombol tambah -->
+                </tbody>
+              </table>
+            </div>
+
+            <button type="button" class="btn-add-var" onclick="tambahBarisVarianManual()">
+              <i class="fa-solid fa-plus"></i> Tambah Baris Varian Manual
+            </button>
           </div>
 
-          <!-- INPUT INFORMASI FITUR, GARANSI & FAQ DETAIL -->
-          <div style="display:grid; grid-template-columns: 2fr 1fr 100px; gap:12px; margin-bottom:12px;">
+          <!-- 4. INFORMASI FITUR, COVER, GARANSI GLOBAL & FAQ -->
+          <div style="display:grid; grid-template-columns: 2fr 1fr; gap:12px; margin-bottom:12px;">
             <div>
               <label style="font-size:0.75rem; font-weight:700; color:var(--gold-light); display:block; margin-bottom:4px;">Deskripsi Singkat Fitur:</label>
-              <input type="text" id="prodDeskripsi" class="input-growth" style="width:100%;" placeholder="Unlock semua filter, AI auto-caption & ekspor tanpa watermark.">
+              <input type="text" id="prodDeskripsi" class="input-growth" style="width:100%;" placeholder="Contoh: Akses layanan resmi full fitur tanpa batas limit.">
             </div>
             <div>
               <label style="font-size:0.75rem; font-weight:700; color:var(--gold-light); display:block; margin-bottom:4px;">Gambar Cover / Logo URL:</label>
-              <input type="text" id="prodLogo" class="input-growth" style="width:100%;" placeholder="images/canvas/capcut.jpg">
-            </div>
-            <div>
-              <label style="font-size:0.75rem; font-weight:700; color:var(--gold-light); display:block; margin-bottom:4px;">Stok Ready:</label>
-              <input type="number" id="prodStok" class="input-growth" style="width:100%;" value="5">
+              <input type="text" id="prodLogo" class="input-growth" style="width:100%;" placeholder="images/canvas/canva.jpg">
             </div>
           </div>
 
           <div style="display:grid; grid-template-columns: 1fr 1.5fr; gap:12px; margin-bottom:14px;">
             <div>
-              <label style="font-size:0.75rem; font-weight:700; color:var(--gold-light); display:block; margin-bottom:4px;">Ketentuan Garansi:</label>
+              <label style="font-size:0.75rem; font-weight:700; color:var(--gold-light); display:block; margin-bottom:4px;">Ketentuan Garansi Global:</label>
               <input type="text" id="prodGaransi" class="input-growth" style="width:100%;" placeholder="Full Garansi Sesuai Durasi">
             </div>
             <div>
               <label style="font-size:0.75rem; font-weight:700; color:var(--gold-light); display:block; margin-bottom:4px;">
                 FAQ Tambahan (Format: Tanya? | Jawab. || Tanya? | Jawab.):
               </label>
-              <input type="text" id="prodFaqRaw" class="input-growth" style="width:100%;" placeholder="Bisa di laptop? | Mendukung PC & HP. || Apakah instan? | Langsung aktif seketika.">
+              <input type="text" id="prodFaqRaw" class="input-growth" style="width:100%;" placeholder="Bisa di laptop? | Mendukung PC & HP. || Berapa lama aktif? | Instan via WhatsApp.">
             </div>
           </div>
 
-          <div style="display:flex; gap:10px; justify-content:flex-end;">
+          <div style="display:flex; gap:10px; justify-content:flex-end; align-items:center;">
             <button type="button" id="btnBatalEdit" class="btn-clear hidden" onclick="batalEditProduk()">Batal Edit</button>
-            <button type="submit" class="btn-action" style="background:linear-gradient(135deg, #38bdf8, #0284c7); color:#000; font-weight:800;">
+            <button type="submit" class="btn-action" style="background:linear-gradient(135deg, #38bdf8, #0284c7); color:#000; font-weight:800; padding:10px 20px;">
               <i class="fa-solid fa-floppy-disk"></i> Simpan Varian ke Katalog JIWAS
             </button>
           </div>
@@ -907,6 +1279,139 @@
       </div>
     </div>
 
+  </div>
+
+  
+  <!-- MODAL CHECKOUT HIBRIDA JIWAS (QRIS, TRANSFER BANK & WA ORDER) -->
+  <div id="modalQrisCheckout" class="modal-qris-overlay hidden">
+    <div class="modal-qris-card">
+      <div class="modal-qris-header">
+        <div>
+          <h3 style="font-family:'Cinzel', serif; font-size:1.15rem; color:var(--gold-light); display:flex; align-items:center; gap:8px;">
+            <i class="fa-solid fa-shield-halved" style="color:var(--gold-primary);"></i> CHECKOUT RESMI JIWAS
+          </h3>
+          <p style="font-size:0.72rem; color:var(--text-muted); margin-top:2px;">Pilih Jalur Pembayaran Paling Nyaman untuk Anda</p>
+        </div>
+        <button class="btn-close-modal" onclick="tutupModalQris()"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <div class="modal-qris-body">
+        <!-- RINGKASAN PRODUK & VARIAN -->
+        <div class="qris-product-summary">
+          <div style="font-size:0.68rem; color:var(--text-muted); text-transform:uppercase; font-weight:700;">Pesanan Anda:</div>
+          <div style="font-size:1rem; font-weight:800; color:#fff;" id="qrisModalProdName">-</div>
+          <div style="display:flex; gap:6px; margin-top:4px;" id="qrisModalBadges"></div>
+        </div>
+
+        <div style="margin-bottom:12px;">
+          <label style="font-size:0.75rem; font-weight:700; color:var(--gold-light); display:block; margin-bottom:4px;">Pilih Durasi & Varian:</label>
+          <select id="qrisVariantSelect" class="input-growth" style="width:100%;" onchange="updateQrisVariantDetails()"></select>
+        </div>
+
+        <!-- 3 TAB METODE PEMBAYARAN -->
+        <div class="pay-method-nav">
+          <button type="button" class="btn-pay-tab qris-tab active" id="tabBtnQris" onclick="switchPayMethod('qris')">
+            <i class="fa-solid fa-qrcode"></i>
+            <span>1. Scan QRIS</span>
+          </button>
+          <button type="button" class="btn-pay-tab" id="tabBtnBank" onclick="switchPayMethod('bank')">
+            <i class="fa-solid fa-building-columns"></i>
+            <span>2. Transfer Bank</span>
+          </button>
+          <button type="button" class="btn-pay-tab wa-tab" id="tabBtnWa" onclick="switchPayMethod('wa')">
+            <i class="fa-brands fa-whatsapp"></i>
+            <span>3. Chat / Tanya WA</span>
+          </button>
+        </div>
+
+        <!-- PANE 1: QRIS INSTAN -->
+        <div id="payPaneQris" class="pay-content-pane active">
+          <div class="qris-display-frame">
+            <div class="qris-badge-top">
+              <span style="font-weight:900; letter-spacing:1px; color:#000;">QRIS</span>
+              <span style="font-size:0.65rem; color:#475569; font-weight:700;">GOPAY • OVO • DANA • BCA • MANDIRI</span>
+            </div>
+            <div class="qris-qr-wrapper">
+              <img id="qrisBarcodeImg" src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=JIWAS-ATELIER-OFFICIAL-QRIS" alt="QRIS Barcode" class="qris-img">
+            </div>
+            
+            <div class="qris-steps-guide">
+              <strong>💡 Buka web lewat 1 HP yang sama?</strong><br>
+              1. <em>Screenshot</em> layar barcode QRIS ini.<br>
+              2. Buka BCA/Mandiri/GoPay/Dana lalu pilih menu <strong>Scan QRIS &rarr; Buka dari Galeri Foto</strong>.<br>
+              3. Selesai transfer, tekan tombol konfirmasi di bawah.
+            </div>
+          </div>
+        </div>
+
+        <!-- PANE 2: REKENING BANK MANUAL -->
+        <div id="payPaneBank" class="pay-content-pane">
+          <div class="bank-card-box">
+            <div>
+              <div class="bank-logo-label"><i class="fa-solid fa-building-columns" style="color:var(--gold-primary);"></i> Bank BCA</div>
+              <div class="bank-rek-number" id="bankBcaNum">82255267793</div>
+              <div style="font-size:0.68rem; color:var(--text-muted); margin-top:2px;">A.N. Rifai Alfarisi Butuni</div>
+            </div>
+            <button type="button" class="btn-quick-copy" onclick="salinNomorRekening('82255267793', 'BCA')">
+              <i class="fa-solid fa-copy"></i> Salin Rek
+            </button>
+          </div>
+
+          <div class="bank-card-box">
+            <div>
+              <div class="bank-logo-label"><i class="fa-solid fa-building-columns" style="color:var(--accent-cyan);"></i> Bank Mandiri / E-Wallet</div>
+              <div class="bank-rek-number" id="bankMandiriNum">082255267793</div>
+              <div style="font-size:0.68rem; color:var(--text-muted); margin-top:2px;">DANA / OVO / GoPay (0822-5526-7793)</div>
+            </div>
+            <button type="button" class="btn-quick-copy" onclick="salinNomorRekening('082255267793', 'E-Wallet')">
+              <i class="fa-solid fa-copy"></i> Salin No
+            </button>
+          </div>
+          <div style="font-size:0.7rem; color:var(--text-muted); line-height:1.4; margin-bottom:12px; padding:0 4px;">
+            *Transfer sesuai total harga di bawah, lalu kirimkan bukti resi via WhatsApp.
+          </div>
+        </div>
+
+        <!-- PANE 3: CHAT KONSULTASI / MANUAL VIA WA -->
+        <div id="payPaneWa" class="pay-content-pane">
+          <div class="wa-direct-banner">
+            <i class="fa-solid fa-comments" style="font-size:1.8rem; color:#4ade80; margin-bottom:6px;"></i>
+            <div style="font-size:0.85rem; font-weight:800; color:#fff;">Mau Tanya Dulu atau Pesan Langsung via Chat?</div>
+            <p style="font-size:0.72rem; color:var(--text-muted); margin-top:4px;">
+              Admin siap membantu rekomendasi akun, verifikasi device laptop/HP, hingga pengiriman nomor rekening langsung di WhatsApp.
+            </p>
+          </div>
+        </div>
+
+        <!-- TOTAL BILLING -->
+        <div class="qris-bill-box">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <span style="font-size:0.78rem; color:var(--text-muted);">Total Pembayaran:</span>
+            <span style="font-size:1.35rem; font-weight:800; color:#22c55e;" id="qrisTotalAmount">Rp 0</span>
+          </div>
+          <div style="font-size:0.68rem; color:var(--gold-light); margin-top:4px;" id="qrisGaransiNote">
+            <i class="fa-solid fa-shield-halved"></i> Garansi: Full Garansi
+          </div>
+        </div>
+
+        <!-- FORM IDENTITAS PEMBELI -->
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-bottom:14px;">
+          <div>
+            <label style="font-size:0.72rem; font-weight:700; color:var(--gold-light); display:block; margin-bottom:4px;">Nama Pemesan:</label>
+            <input type="text" id="qrisCustomerName" class="input-growth" style="width:100%; font-size:0.78rem;" placeholder="Nama Anda">
+          </div>
+          <div>
+            <label style="font-size:0.72rem; font-weight:700; color:var(--gold-light); display:block; margin-bottom:4px;">No. WhatsApp Pemesan:</label>
+            <input type="text" id="qrisCustomerPhone" class="input-growth" style="width:100%; font-size:0.78rem;" placeholder="08xxxxxxxx">
+          </div>
+        </div>
+
+        <!-- TOMBOL AKSI UTAMA KE WA -->
+        <button type="button" id="btnMainCheckoutAction" class="btn-send-wa" style="padding:12px; font-size:0.85rem;" onclick="selesaikanTransaksiHibrida()">
+          <i class="fa-brands fa-whatsapp"></i> Konfirmasi Pembayaran QRIS ke WhatsApp Admin
+        </button>
+      </div>
+    </div>
   </div>
 
   <div id="toastRadar" class="toast-radar hidden">
@@ -962,8 +1467,19 @@
       try { renderPinManager(); } catch(e) { console.warn("PIN Manager error:", e); }
       try { populateQuickPackDropdown(); } catch(e) { console.warn("Dropdown error:", e); }
       try { renderGrowthOS(); } catch(e) { console.warn("Growth OS error:", e); }
-      try { initFetchMasterAiProductsOnline(); } catch(e) { console.warn("AI Product error:", e); }
-      try { hitungMarginVarian(); } catch(e) {}
+     try { initFetchMasterAiProductsOnline(); } catch(e) { console.warn("AI Product error:", e); }
+try { hitungMarginVarian(); } catch(e) {}
+
+  // Real-Time Radar Auto-Update saat ada transaksi di etalase index.html
+  window.addEventListener("storage", (e) => {
+    if (e.key === "JIWAS_USER_LOGS") {
+      try { renderDashboardAnalytics(); } catch(err) {}
+      try { renderGrowthOS(); } catch(err) {}
+    }
+    if (e.key === "JIWAS_AI_PRODUCTS_OVERRIDE") {
+      try { renderTabelAiProducts(); } catch(err) {}
+    }
+  });
 
       const isLocalHost = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
       if (isLocalHost) {
@@ -1245,10 +1761,10 @@
       let copyCount = 0;
       let leadCount = 0;
 
-      logs.forEach(l => {
-        if (l.type === 'COPY_PROMPT' || l.type === 'USE_ENGINE') copyCount++;
-        if (l.type === 'CLICK_WA' || l.type === 'PIN_SUCCESS') leadCount++;
-      });
+     logs.forEach(l => {
+if (l.type === 'COPY_PROMPT' || l.type === 'USE_ENGINE') copyCount++;
+if (l.type === 'CLICK_WA' || l.type === 'PIN_SUCCESS' || l.type === 'QRIS_TRANSAKSI' || l.type === 'ORDER_WA') leadCount++;
+});
 
       let topCat = "-";
       let highestScore = 0;
@@ -1269,11 +1785,10 @@
 
       tbody.innerHTML = "";
       logs.slice(-40).reverse().forEach(item => {
-        let badgeClass = "ev-view";
-        if (item.type.includes("COPY")) badgeClass = "ev-copy";
-        if (item.type.includes("WA") || item.type.includes("PIN")) badgeClass = "ev-transaksi";
-        if (item.type.includes("ENGINE")) badgeClass = "ev-engine";
-
+       let badgeClass = "ev-view";
+if (item.type.includes("COPY")) badgeClass = "ev-copy";
+if (item.type.includes("WA") || item.type.includes("PIN") || item.type.includes("QRIS")) badgeClass = "ev-transaksi";
+if (item.type.includes("ENGINE")) badgeClass = "ev-engine";
         const row = document.createElement("tr");
         row.innerHTML = `
           <td>${item.time}</td>
@@ -1591,8 +2106,644 @@
     }
 
     // =========================================================================
+    // =========================================================================
+    // DYNAMIC MULTI-VENDOR PARSER & DROPZONE ENGINE (LEMBAR 5)
+    // =========================================================================
+    let currentDynamicVariants = [];
+
+    // Trigger input file saat klik kotak dropzone
+    function triggerDropzoneUpload() {
+      const input = document.getElementById("dropzoneFileInput");
+      if (input) input.click();
+    }
+
+    function toggleRawTextPaste() {
+      const box = document.getElementById("rawTextContainer");
+      if (box) box.classList.toggle("hidden");
+    }
+
+    function parseRawVendorText() {
+      const txt = document.getElementById("rawVendorText")?.value || "";
+      if (!txt.trim()) {
+        tampilkanToastRadar("⚠️ Teks kosong. Tempelkan salinan chat bot vendor.");
+        return;
+      }
+      processVendorExtractedText(txt);
+      tampilkanToastRadar("⚡ Berhasil mengekstrak teks chat vendor!");
+    }
+
+    // Listener Global Paste (Ctrl+V) saat berada di Lembar 5
+    document.addEventListener("paste", (e) => {
+      const vendorTab = document.getElementById("vendorTab");
+      if (!vendorTab || !vendorTab.classList.contains("active")) return;
+
+      // Jika fokus berada pada input text / textarea biasa selain dropzone, biarkan default kecuali dropzone
+      const activeTag = document.activeElement ? document.activeElement.tagName.toLowerCase() : "";
+      if (activeTag === "input" && document.activeElement.type === "text" && document.activeElement.id !== "rawVendorText") {
+        return;
+      }
+
+      const items = (e.clipboardData || e.originalEvent.clipboardData).items;
+      for (let i = 0; i < items.length; i++) {
+        if (items[i].type.indexOf("image") !== -1) {
+          const blob = items[i].getAsFile();
+          handleDropzoneFile(blob);
+          e.preventDefault();
+          return;
+        } else if (items[i].type === "text/plain") {
+          items[i].getAsString((text) => {
+            if (text && (text.includes("Produk") || text.includes("Variasi") || text.includes("Rp"))) {
+              processVendorExtractedText(text);
+              tampilkanToastRadar("📋 Teks chat bot langsung terurai otomatis!");
+              e.preventDefault();
+            }
+          });
+        }
+      }
+    });
+
+    // Inisialisasi Drag & Drop listener pada kotak dropzone
+    document.addEventListener("DOMContentLoaded", () => {
+      initDropzoneEvents();
+    });
+
+    function initDropzoneEvents() {
+      const dropzone = document.getElementById("vendorDropzone");
+      if (!dropzone) return;
+
+      ['dragenter', 'dragover'].forEach(eventName => {
+        dropzone.addEventListener(eventName, (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          dropzone.classList.add("dragover");
+        }, false);
+      });
+
+      ['dragleave', 'drop'].forEach(eventName => {
+        dropzone.addEventListener(eventName, (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          dropzone.classList.remove("dragover");
+        }, false);
+      });
+
+      dropzone.addEventListener('drop', (e) => {
+        const dt = e.dataTransfer;
+        const files = dt.files;
+        if (files && files.length > 0) {
+          handleDropzoneFile(files[0]);
+        }
+      }, false);
+    }
+
+    // Memproses file gambar dari drag & drop atau file selector
+    async function handleDropzoneFile(file) {
+      if (!file || !file.type.startsWith("image/")) {
+        tampilkanToastRadar("⚠️ Harap masukkan file gambar tangkapan layar (screenshot).");
+        return;
+      }
+
+      const progBox = document.getElementById("ocrProgressWrapper");
+      const progBar = document.getElementById("ocrBarFill");
+      const statusTxt = document.getElementById("ocrStatusText");
+      const pctTxt = document.getElementById("ocrPercentText");
+
+      if (progBox) progBox.classList.remove("hidden");
+      if (progBar) progBar.style.width = "10%";
+      if (statusTxt) statusTxt.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Menyiapkan OCR Reader...';
+
+      try {
+        if (typeof Tesseract === "undefined") {
+          throw new Error("Pustaka OCR sedang dimuat, gunakan tempel teks jika koneksi lambat.");
+        }
+
+        const worker = await Tesseract.createWorker('ind+eng', 1, {
+          logger: m => {
+            if (m.status === 'recognizing text') {
+              const p = Math.round(m.progress * 100);
+              if (progBar) progBar.style.width = `${p}%`;
+              if (pctTxt) pctTxt.innerText = `${p}%`;
+              if (statusTxt) statusTxt.innerHTML = `<i class="fa-solid fa-eye"></i> Membaca teks bot: ${p}%`;
+            }
+          }
+        });
+
+        const ret = await worker.recognize(file);
+        await worker.terminate();
+
+        const extractedText = ret.data.text;
+        if (progBar) progBar.style.width = "100%";
+        if (statusTxt) statusTxt.innerHTML = '<i class="fa-solid fa-circle-check" style="color:#22c55e;"></i> Berhasil terbaca!';
+
+        setTimeout(() => {
+          if (progBox) progBox.classList.add("hidden");
+        }, 1500);
+
+        processVendorExtractedText(extractedText);
+        tampilkanToastRadar("🎉 Screenshot berhasil dibaca dan dipetakan!");
+      } catch (err) {
+        console.warn("OCR Error:", err);
+        if (progBox) progBox.classList.add("hidden");
+        tampilkanToastRadar("💡 Gagal memproses gambar otomatis. Silakan salin & tempel teks Telegram ke kotak teks cepat.");
+        toggleRawTextPaste();
+      }
+    }
+
+    // Logika Pembersih & Parser Universal untuk Semua Pola Bot Vendor
+    function processVendorExtractedText(raw) {
+      if (!raw) return;
+
+      // 1. Deteksi Nama Produk
+      let prodName = "";
+      const nameMatch = raw.match(/Produk\s*[:\-=]\s*([^\r\n]+)/i);
+      if (nameMatch) {
+        prodName = nameMatch[1].replace(/[•✓]/g, '').trim();
+      } else {
+        const lines = raw.split(/\r?\n/);
+        for (let l of lines) {
+          if (/gemini|canva|capcut|chatgpt|openai|spotify|netflix|zoom|iqiyi|loklok|bstation|viu/i.test(l)) {
+            prodName = l.replace(/[•\-\*]/g, '').trim();
+            break;
+          }
+        }
+      }
+
+      if (prodName) {
+        const el = document.getElementById("prodNama");
+        if (el) el.value = prodName;
+      }
+
+      // 2. Deteksi Deskripsi & Garansi Global
+      let deskripsi = "";
+      let garansiGlobal = "Full Garansi Sesuai Durasi";
+      const deskMatch = raw.match(/Desk\s*[:\-=]\s*([^\r\n]+)/i);
+      if (deskMatch) {
+        deskripsi = deskMatch[1].replace(/[•✓]/g, '').trim();
+        const elDesk = document.getElementById("prodDeskripsi");
+        if (elDesk) elDesk.value = deskripsi;
+      }
+
+      const combinedText = (prodName + " " + deskripsi + " " + raw).toLowerCase();
+      if (/nogar|no garansi|non garansi/i.test(combinedText)) {
+        garansiGlobal = "Tanpa Garansi (Nogar)";
+      } else if (/fullgar|full garansi|bergaransi/i.test(combinedText)) {
+        garansiGlobal = "Full Garansi Sesuai Durasi";
+      } else if (/s&k|syarat/i.test(combinedText)) {
+        garansiGlobal = "Garansi S&K Berlaku";
+      }
+      const elGar = document.getElementById("prodGaransi");
+      if (elGar) elGar.value = garansiGlobal;
+
+      // 3. Deteksi Kategori Otomatis
+      let kategori = "AI";
+      if (/capcut|video|iqiyi|bstation|netflix|viu|loklok/i.test(combinedText)) {
+        kategori = "Video";
+      } else if (/canva|design|desain|adobe|corel|photoshop/i.test(combinedText)) {
+        kategori = "Design";
+      } else if (/gemini|chatgpt|openai|midjourney|claude|deepseek|link redeem/i.test(combinedText)) {
+        kategori = "AI";
+      } else if (/spotify|youtube|zoom|office|drive|apple/i.test(combinedText)) {
+        kategori = "Produktivitas";
+      }
+      const elCat = document.getElementById("prodKategori");
+      if (elCat) elCat.value = kategori;
+
+      // 4. Deteksi Tipe Penyerahan Akun
+      let jenisAkun = "Direct Login (PC & HP)";
+      if (/invite|member|famhead|owner|head edu|famplan/i.test(combinedText)) {
+        jenisAkun = "Invite Email / Tim";
+      } else if (/link redeem|redeem|voucher|lisensi/i.test(combinedText)) {
+        jenisAkun = "Lisensi / Link Redeem";
+      }
+      const elJenis = document.getElementById("prodJenisAkun");
+      if (elJenis) elJenis.value = jenisAkun;
+
+      // 5. Ekstraksi Baris Variasi
+      const lines = raw.split(/\r?\n/);
+      let varSection = false;
+      const parsedVariants = [];
+
+      for (let line of lines) {
+        const lLow = line.toLowerCase();
+        if (lLow.includes("variasi") || lLow.includes("harga") || lLow.includes("stok")) {
+          varSection = true;
+          continue;
+        }
+
+        if (varSection || lLow.includes("rp.") || lLow.includes("rp ") || lLow.includes("rp")) {
+          if (lLow.includes("current date") || lLow.includes("ulasan") || lLow.includes("stok terjual")) {
+            if (parsedVariants.length > 0) break;
+            else continue;
+          }
+
+          const varMatch = line.match(/[•\-\*]?\s*(.+?)\s*[:\-=]\s*Rp\.?\s*([\d\.,]+)\s*[\-\/]?\s*\(?([\d]+)?\)?/i);
+          if (varMatch) {
+            const rawVarName = varMatch[1].replace(/[•\-\*]/g, '').trim();
+            const costStr = varMatch[2].replace(/[\.,]/g, '').trim();
+            const cost = parseFloat(costStr) || 0;
+            const stock = varMatch[3] !== undefined ? parseInt(varMatch[3], 10) : 5;
+
+            if (cost > 0 || rawVarName.length > 2) {
+              const mapped = mapVariantDetails(rawVarName, cost, stock, garansiGlobal);
+              parsedVariants.push(mapped);
+            }
+          }
+        }
+      }
+
+      if (parsedVariants.length > 0) {
+        currentDynamicVariants = parsedVariants;
+        renderDynamicVariantRows();
+      } else {
+        currentDynamicVariants = [
+          {
+            name: "1 Bulan",
+            kriteria: "Reguler",
+            garansi: garansiGlobal,
+            cost: 5000,
+            price: calculateMarkup(5000),
+            stock: 10
+          }
+        ];
+        renderDynamicVariantRows();
+      }
+    }
+
+    // Pemetaan nama varian menjadi Durasi, Kriteria, dan Garansi spesifik
+    function mapVariantDetails(rawName, cost, stock, defaultGaransi) {
+      let durasi = "1 Bulan";
+      const durMatch = rawName.match(/(\d+)\s*(day|hari|d|bulan|b|bln|tahun|thn|th)/i);
+      if (durMatch) {
+        const num = durMatch[1];
+        const unit = durMatch[2].toLowerCase();
+        if (['day', 'hari', 'd'].includes(unit)) durasi = num + " Hari";
+        else if (['bulan', 'b', 'bln'].includes(unit)) durasi = num + " Bulan";
+        else if (['tahun', 'thn', 'th'].includes(unit)) durasi = num + " Tahun";
+      } else if (/lifetime|selamanya/i.test(rawName)) {
+        durasi = "Lifetime";
+      }
+
+      const criteriaList = [];
+      if (/indplan/i.test(rawName)) criteriaList.push("Indplan");
+      if (/famplan/i.test(rawName)) criteriaList.push("Famplan");
+      if (/member/i.test(rawName)) criteriaList.push("Member");
+      if (/owner|famhead|head/i.test(rawName)) criteriaList.push("Head/Owner");
+      if (/share|sharing/i.test(rawName)) criteriaList.push("Sharing");
+      if (/private/i.test(rawName)) criteriaList.push("Private");
+      if (/basic/i.test(rawName)) criteriaList.push("Basic");
+      if (/standar|standart/i.test(rawName)) criteriaList.push("Standar");
+      if (/premium/i.test(rawName)) criteriaList.push("Premium");
+      if (/edu/i.test(rawName)) criteriaList.push("EDU");
+      if (/link redeem|redeem/i.test(rawName)) criteriaList.push("Link Redeem");
+      if (/single screen/i.test(rawName)) criteriaList.push("Single Screen");
+
+      const kriteria = criteriaList.length > 0 ? criteriaList.join(" ") : "Reguler";
+
+      let garansi = defaultGaransi;
+      if (/nogar|no garansi/i.test(rawName)) {
+        garansi = "Tanpa Garansi (Nogar)";
+      } else if (/fullgar|bergaransi/i.test(rawName)) {
+        garansi = "Full Garansi";
+      }
+
+      const price = calculateMarkup(cost);
+
+      return {
+        name: rawName,
+        durasi: durasi,
+        kriteria: kriteria,
+        garansi: garansi,
+        cost: cost,
+        price: price,
+        stock: isNaN(stock) ? 5 : stock
+      };
+    }// Formula Perhitungan Markup Harga Jual Ecer JIWAS
+    function calculateMarkup(cost) {
+      const rule = document.getElementById("autoMarkupRule")?.value || "smart";
+      let price = cost;
+
+      if (rule === "flat5k") {
+        price = cost + 5000;
+      } else if (rule === "flat10k") {
+        price = cost + 10000;
+      } else if (rule === "pct50") {
+        price = cost * 1.5;
+      } else if (rule === "pct100") {
+        price = cost * 2.0;
+      } else {
+        // Smart Tier Default
+        if (cost <= 3000) price = cost + 4000;
+        else if (cost <= 6000) price = cost + 5000;
+        else if (cost <= 15000) price = cost + 8000;
+        else if (cost <= 30000) price = cost + 12000;
+        else price = cost * 1.3;
+      }
+
+      return Math.round(price / 1000) * 1000;
+    }
+
+    function recalculateAllMarkups() {
+      const rows = document.querySelectorAll("#dynamicVariantTableBody tr");
+      rows.forEach((r, idx) => {
+        const costInput = r.querySelector(".var-cost");
+        const priceInput = r.querySelector(".var-price");
+        if (costInput && priceInput) {
+          const c = parseFloat(costInput.value) || 0;
+          const newPrice = calculateMarkup(c);
+          priceInput.value = newPrice;
+          updateBarisMargin(priceInput);
+        }
+      });
+    }
+
+    // Merender baris varian ke dalam tabel interaktif
+    function renderDynamicVariantRows() {
+      const tbody = document.getElementById("dynamicVariantTableBody");
+      if (!tbody) return;
+      tbody.innerHTML = "";
+
+      if (currentDynamicVariants.length === 0) {
+        tambahBarisVarianManual();
+        return;
+      }
+
+      currentDynamicVariants.forEach((v, idx) => {
+        const tr = document.createElement("tr");
+        const margin = (v.price || 0) - (v.cost || 0);
+
+        tr.innerHTML = `
+          <td>
+            <input type="text" class="input-cell-var var-name" value="${v.name || v.durasi || ''}" placeholder="Contoh: 18 Bulan / 14 Hari">
+          </td>
+          <td>
+            <input type="text" class="input-cell-var var-kriteria" value="${v.kriteria || 'Reguler'}" placeholder="Contoh: Link Redeem / Private">
+          </td>
+          <td>
+            <select class="input-cell-var var-garansi">
+              <option value="Full Garansi" ${v.garansi && v.garansi.includes('Full') ? 'selected' : ''}>Full Garansi</option>
+              <option value="Tanpa Garansi (Nogar)" ${v.garansi && v.garansi.includes('Nogar') ? 'selected' : ''}>Tanpa Garansi (Nogar)</option>
+              <option value="Garansi S&K Berlaku" ${v.garansi && v.garansi.includes('S&K') ? 'selected' : ''}>Garansi S&K Berlaku</option>
+            </select>
+          </td>
+          <td>
+            <input type="number" class="input-cell-var var-cost" value="${v.cost || 0}" oninput="updateBarisMargin(this)">
+          </td>
+          <td>
+            <input type="number" class="input-cell-var var-price" value="${v.price || 0}" oninput="updateBarisMargin(this)">
+          </td>
+          <td>
+            <input type="number" class="input-cell-var var-stock" value="${v.stock !== undefined ? v.stock : 5}" style="width:60px;">
+          </td>
+          <td style="font-weight:700; color:${margin >= 0 ? '#22c55e' : '#ef4444'};" class="var-margin-text">
+            +Rp ${margin.toLocaleString('id-ID')}
+          </td>
+          <td style="text-align:center;">
+            <button type="button" class="btn-del-var" onclick="hapusBarisVarian(${idx})" title="Hapus Baris Varian">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function tambahBarisVarianManual() {
+      const defaultGaransi = document.getElementById("prodGaransi")?.value || "Full Garansi";
+      currentDynamicVariants.push({
+        name: "1 Bulan Reguler",
+        kriteria: "Reguler",
+        garansi: defaultGaransi,
+        cost: 5000,
+        price: 10000,
+        stock: 10
+      });
+      renderDynamicVariantRows();
+    }
+
+    function hapusBarisVarian(idx) {
+      syncCurrentVariantsFromDOM();
+      if (currentDynamicVariants.length <= 1) {
+        tampilkanToastRadar("⚠️ Minimal harus ada 1 varian produk.");
+        return;
+      }
+      currentDynamicVariants.splice(idx, 1);
+      renderDynamicVariantRows();
+    }
+
+    function updateBarisMargin(inputEl) {
+      const tr = inputEl.closest("tr");
+      if (!tr) return;
+      const cost = parseFloat(tr.querySelector(".var-cost").value) || 0;
+      const price = parseFloat(tr.querySelector(".var-price").value) || 0;
+      const margin = price - cost;
+      const marginEl = tr.querySelector(".var-margin-text");
+      if (marginEl) {
+        marginEl.innerText = (margin >= 0 ? "+Rp " : "-Rp ") + Math.abs(margin).toLocaleString('id-ID');
+        marginEl.style.color = margin >= 0 ? '#22c55e' : '#ef4444';
+      }
+    }
+
+    function syncCurrentVariantsFromDOM() {
+      const rows = document.querySelectorAll("#dynamicVariantTableBody tr");
+      const list = [];
+      rows.forEach(r => {
+        const name = r.querySelector(".var-name")?.value.trim() || "Varian";
+        const kriteria = r.querySelector(".var-kriteria")?.value.trim() || "Reguler";
+        const garansi = r.querySelector(".var-garansi")?.value || "Full Garansi";
+        const cost = parseFloat(r.querySelector(".var-cost")?.value) || 0;
+        const price = parseFloat(r.querySelector(".var-price")?.value) || 0;
+        const stock = parseInt(r.querySelector(".var-stock")?.value, 10) || 0;
+
+        list.push({
+          name: name,
+          kriteria: kriteria,
+          garansi: garansi,
+          cost: cost,
+          price: price,
+          stock: stock,
+          ready: stock > 0
+        });
+      });
+      currentDynamicVariants = list;
+    }
+
+    // =========================================================================
     // SINKRONISASI SERVER & MASTER AI PRODUCT (LEMBAR 5)
     // =========================================================================
+    
+    // =========================================================================
+    // MODAL CHECKOUT HIBRIDA JIWAS (QRIS, TRANSFER BANK & CHAT WA)
+    // =========================================================================
+    let activeQrisProduct = null;
+    let activeQrisProductIdx = -1;
+    let currentSelectedPayMethod = 'qris';
+
+    function switchPayMethod(method) {
+      currentSelectedPayMethod = method;
+
+      // Update button active state
+      document.querySelectorAll(".btn-pay-tab").forEach(b => b.classList.remove("active"));
+      document.querySelectorAll(".pay-content-pane").forEach(p => p.classList.remove("active"));
+
+      const btn = document.getElementById(method === 'qris' ? 'tabBtnQris' : (method === 'bank' ? 'tabBtnBank' : 'tabBtnWa'));
+      const pane = document.getElementById(method === 'qris' ? 'payPaneQris' : (method === 'bank' ? 'payPaneBank' : 'payPaneWa'));
+      if (btn) btn.classList.add("active");
+      if (pane) pane.classList.add("active");
+
+      // Update CTA button text & style
+      const actionBtn = document.getElementById("btnMainCheckoutAction");
+      if (!actionBtn) return;
+
+      if (method === 'qris') {
+        actionBtn.innerHTML = '<i class="fa-brands fa-whatsapp"></i> Konfirmasi Sudah Scan QRIS ke Admin';
+        actionBtn.style.background = '#22c55e';
+      } else if (method === 'bank') {
+        actionBtn.innerHTML = '<i class="fa-brands fa-whatsapp"></i> Konfirmasi Transfer Bank ke Admin';
+        actionBtn.style.background = 'linear-gradient(135deg, #d4af37, #aa7c11)';
+      } else {
+        actionBtn.innerHTML = '<i class="fa-brands fa-whatsapp"></i> Tanya & Pesan Langsung via WhatsApp';
+        actionBtn.style.background = '#25d366';
+      }
+    }
+
+    function salinNomorRekening(num, bank) {
+      navigator.clipboard.writeText(num).then(() => {
+        tampilkanToastRadar(`📋 Nomor rekening ${bank} (${num}) berhasil disalin!`);
+      });
+    }
+
+    // Dipanggil saat tombol "Beli" diklik di Lembar 5 (atau etalase)
+    function bukaTransaksiQRIS(idx) {
+      const products = getMasterAiProducts();
+      const p = products[idx];
+      if (!p) return;
+
+      activeQrisProduct = p;
+      activeQrisProductIdx = idx;
+
+      // Cek stok keseluruhan
+      const totalStok = parseInt(p.stok, 10) || 0;
+      if (totalStok <= 0) {
+        tampilkanToastRadar(`⚠️ Stok produk ${p.nama} saat ini sedang kosong!`);
+        return;
+      }
+
+      document.getElementById("qrisModalProdName").innerText = p.nama;
+
+      // Badges
+      const badgesContainer = document.getElementById("qrisModalBadges");
+      if (badgesContainer) {
+        badgesContainer.innerHTML = `
+          <span style="background:rgba(56,189,248,0.15); color:#38bdf8; padding:2px 8px; border-radius:4px; font-size:0.68rem; font-weight:700;">${p.kategori || 'AI'}</span>
+          <span style="background:rgba(34,197,94,0.15); color:#4ade80; padding:2px 8px; border-radius:4px; font-size:0.68rem; font-weight:700;">${p.jenisAkun || 'Direct Login'}</span>
+        `;
+      }
+
+      // Populate pilihan varian
+      const varSelect = document.getElementById("qrisVariantSelect");
+      if (varSelect) {
+        varSelect.innerHTML = "";
+        const variants = p.variants && p.variants.length > 0 ? p.variants : [
+          { name: "Reguler", price: p.hargaPromo || 15000, garansi: p.garansi || "Full Garansi", stock: p.stok || 5 }
+        ];
+
+        variants.forEach((v, vIdx) => {
+          const opt = document.createElement("option");
+          const vStock = v.stock !== undefined ? v.stock : 5;
+          const isStokKosong = vStock <= 0;
+          opt.value = vIdx;
+          opt.innerText = `${v.name} (${v.kriteria || 'Reguler'}) - Rp ${Number(v.price).toLocaleString('id-ID')} ${isStokKosong ? '[HABIS]' : ''}`;
+          if (isStokKosong) opt.disabled = true;
+          varSelect.appendChild(opt);
+        });
+      }
+
+      updateQrisVariantDetails();
+      switchPayMethod('qris');
+
+      const modal = document.getElementById("modalQrisCheckout");
+      if (modal) modal.classList.remove("hidden");
+    }
+
+    function updateQrisVariantDetails() {
+      if (!activeQrisProduct) return;
+      const varSelect = document.getElementById("qrisVariantSelect");
+      const vIdx = parseInt(varSelect?.value, 10) || 0;
+      const variants = activeQrisProduct.variants && activeQrisProduct.variants.length > 0 
+        ? activeQrisProduct.variants 
+        : [{ name: "Reguler", price: activeQrisProduct.hargaPromo || 15000, garansi: activeQrisProduct.garansi || "Full Garansi" }];
+
+      const selectedVariant = variants[vIdx] || variants[0];
+      const price = selectedVariant.price || 15000;
+      const garansi = selectedVariant.garansi || activeQrisProduct.garansi || "Full Garansi Sesuai Durasi";
+
+      const totalEl = document.getElementById("qrisTotalAmount");
+      if (totalEl) totalEl.innerText = "Rp " + Number(price).toLocaleString('id-ID');
+
+      const garansiEl = document.getElementById("qrisGaransiNote");
+      if (garansiEl) garansiEl.innerHTML = `<i class="fa-solid fa-shield-halved"></i> Garansi: ${garansi}`;
+    }
+
+    function tutupModalQris() {
+      const modal = document.getElementById("modalQrisCheckout");
+      if (modal) modal.classList.add("hidden");
+    }
+
+    function selesaikanTransaksiHibrida() {
+      if (!activeQrisProduct || activeQrisProductIdx === -1) return;
+
+      const varSelect = document.getElementById("qrisVariantSelect");
+      const vIdx = parseInt(varSelect?.value, 10) || 0;
+      const variants = activeQrisProduct.variants && activeQrisProduct.variants.length > 0 
+        ? activeQrisProduct.variants 
+        : [{ name: "Reguler", price: activeQrisProduct.hargaPromo || 15000, garansi: activeQrisProduct.garansi || "Full Garansi" }];
+
+      const selectedVariant = variants[vIdx] || variants[0];
+      const buyerName = document.getElementById("qrisCustomerName")?.value.trim() || "Sahabat JIWAS";
+      const buyerPhone = document.getElementById("qrisCustomerPhone")?.value.trim() || "";
+
+      // 1. Kurangi stok otomatis
+      kurangiStokProdukAI(activeQrisProductIdx);
+
+      // 2. Format pesan WhatsApp sesuai metode yang dipilih
+      const adminWa = localStorage.getItem("JIWAS_CUSTOM_WA") || "6282255267793";
+      let statusMetode = "Sudah Scan & Transfer via QRIS";
+      if (currentSelectedPayMethod === 'bank') statusMetode = "Transfer Manual ke Rekening Bank";
+      if (currentSelectedPayMethod === 'wa') statusMetode = "Konsultasi / Tanya Rekening via WhatsApp";
+
+      const waMessage = 
+        `Halo Admin JIWAS Atelier! ✨\n\n` +
+        `Saya ingin memesan Akun AI Resmi:\n` +
+        `• Produk: *${activeQrisProduct.nama}*\n` +
+        `• Pilihan Varian: *${selectedVariant.name}* (${selectedVariant.kriteria || 'Reguler'})\n` +
+        `• Garansi: *${selectedVariant.garansi || activeQrisProduct.garansi || 'Full Garansi'}*\n` +
+        `• Metode Penyerahan: *${activeQrisProduct.jenisAkun || 'Direct Login'}*\n` +
+        `• Total Tagihan: *Rp ${Number(selectedVariant.price).toLocaleString('id-ID')}*\n\n` +
+        `Nama Pemesan: *${buyerName}*\n` +
+        `Metode Pembayaran: *${statusMetode}*\n\n` +
+        `Mohon instruksi dan detail akun resminya ya Kak. Terima kasih! 🙏`;
+
+      // 3. Catat ke log radar
+      try {
+        let logs = JSON.parse(localStorage.getItem("JIWAS_USER_LOGS") || "[]");
+        const now = new Date();
+        const timeStr = `${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')} WIB`;
+        logs.push({
+          time: timeStr,
+          type: currentSelectedPayMethod === 'qris' ? "QRIS_TRANSAKSI" : "ORDER_WA",
+          target: activeQrisProduct.nama,
+          detail: `${selectedVariant.name} (Rp ${Number(selectedVariant.price).toLocaleString('id-ID')}) via ${currentSelectedPayMethod.toUpperCase()}`
+        });
+        localStorage.setItem("JIWAS_USER_LOGS", JSON.stringify(logs));
+      } catch(e) {}
+
+      tutupModalQris();
+      tampilkanToastRadar("🎉 Pesanan berhasil diproses! Mengarahkan ke WhatsApp Admin...");
+
+      const waUrl = `https://wa.me/${adminWa.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(waMessage)}`;
+      window.open(waUrl, "_blank");
+    }
+
     async function initFetchMasterAiProductsOnline() {
       try {
         const res = await fetch('/api/products');
@@ -1619,20 +2770,20 @@
       if (typeof DATABASE_AI_ACCOUNT !== "undefined" && Array.isArray(DATABASE_AI_ACCOUNT)) {
         return DATABASE_AI_ACCOUNT.map(p => {
           const vList = p.variants || [
-            { name: "7 Hari", cost: Math.round((p.hargaPromo || 15000) * 0.4), price: Math.round((p.hargaPromo || 15000) * 0.6), ready: true },
-            { name: "30 Hari", cost: Math.round((p.hargaPromo || 15000) * 0.6), price: (p.hargaPromo || 15000), ready: true }
+            { name: "7 Hari", cost: Math.round((p.hargaPromo || 15000) * 0.4), price: Math.round((p.hargaPromo || 15000) * 0.6), stock: 10, ready: true },
+            { name: "30 Hari", cost: Math.round((p.hargaPromo || 15000) * 0.6), price: (p.hargaPromo || 15000), stock: 10, ready: true }
           ];
           return {
             ...p,
-            vendor: (p.supplier && p.supplier.supplierId) || "INCA_STORE",
+            vendor: (p.supplier && p.supplier.supplierId) || "FNSHOP",
             variants: vList,
-            hargaModal: vList[0].cost,
-            hargaPromo: vList[0].price,
-            harga: Math.round(vList[0].price * 1.35),
+            hargaModal: vList[0].cost || 5000,
+            hargaPromo: vList[0].price || 15000,
+            harga: Math.round((vList[0].price || 15000) * 1.35),
             garansi: p.garansi || "Full Garansi Sesuai Durasi",
             faq: p.faq || [],
             aktif: true,
-            stok: p.stok !== undefined ? p.stok : 5
+            stok: p.stok !== undefined ? p.stok : 10
           };
         });
       }
@@ -1660,34 +2811,7 @@
       tampilkanToastRadar("✅ Tersimpan di penyimpanan lokal!");
     }
 
-    function toggleVarianForm(prefix) {
-      const isChecked = document.getElementById(prefix + "Aktif").checked;
-      const box = document.getElementById(prefix + "Container");
-      if (box) box.style.opacity = isChecked ? "1" : "0.35";
-      hitungMarginVarian();
-    }
-
-    function hitungMarginVarian() {
-      const v7Modal = parseFloat(document.getElementById("v7Modal").value) || 0;
-      const v7Jual = parseFloat(document.getElementById("v7Jual").value) || 0;
-      const v7Margin = v7Jual - v7Modal;
-      const v7Text = document.getElementById("v7MarginText");
-      if (v7Text) {
-        v7Text.innerText = (v7Margin >= 0 ? "+Rp " : "-Rp ") + Math.abs(v7Margin).toLocaleString("id-ID");
-        v7Text.style.color = v7Margin >= 0 ? "#22c55e" : "#ef4444";
-      }
-
-      const v30Modal = parseFloat(document.getElementById("v30Modal").value) || 0;
-      const v30Jual = parseFloat(document.getElementById("v30Jual").value) || 0;
-      const v30Margin = v30Jual - v30Modal;
-      const v30Text = document.getElementById("v30MarginText");
-      if (v30Text) {
-        v30Text.innerText = (v30Margin >= 0 ? "+Rp " : "-Rp ") + Math.abs(v30Margin).toLocaleString("id-ID");
-        v30Text.style.color = v30Margin >= 0 ? "#22c55e" : "#ef4444";
-      }
-    }
-
-    // Mengurangi stok produk AI dan menjaga kartu & logo tetap tampil (tidak disembunyikan)
+    // Mengurangi stok produk AI saat transaksi dicatat
     function kurangiStokProdukAI(idx) {
       const products = getMasterAiProducts();
       if (!products[idx]) return;
@@ -1701,8 +2825,6 @@
       }
 
       products[idx].stok = stokSekarang - 1;
-
-      // Status aktif dipertahankan agar kartu dan logo produk tidak ikut menghilang
       saveMasterAiProducts(products);
 
       if (products[idx].stok === 0) {
@@ -1743,8 +2865,9 @@
           vBadges = p.variants.map(v => {
             const m = (v.price || 0) - (v.cost || 0);
             avgMarginItem += m;
+            const stockBadge = (v.stock !== undefined && v.stock <= 0) ? '<span style="color:#ef4444;">(Habis)</span>' : '';
             return `<span style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); padding:2px 6px; border-radius:4px; font-size:0.68rem; margin-right:4px; display:inline-block; margin-bottom:2px;">
-              <strong>${v.name}:</strong> Rp${Number(v.price).toLocaleString('id-ID')}
+              <strong>${v.name}:</strong> Rp${Number(v.price).toLocaleString('id-ID')} ${stockBadge}
             </span>`;
           }).join("");
           avgMarginItem = Math.round(avgMarginItem / p.variants.length);
@@ -1756,11 +2879,13 @@
         totalMargin += avgMarginItem;
         totalStok += sisaStok;
 
-        const badgeVendor = p.vendor === "FINSHOP" 
-          ? '<span style="background:rgba(245,158,11,0.2); color:#f59e0b; padding:2px 6px; border-radius:4px; font-weight:700; font-size:0.68rem;">FINSHOP</span>'
-          : '<span style="background:rgba(56,189,248,0.2); color:#38bdf8; padding:2px 6px; border-radius:4px; font-weight:700; font-size:0.68rem;">INCA STORE</span>';
+        let badgeVendor = '<span style="background:rgba(56,189,248,0.2); color:#38bdf8; padding:2px 6px; border-radius:4px; font-weight:700; font-size:0.68rem;">FNSHOP</span>';
+        if (p.vendor === "INCA_STORE") {
+          badgeVendor = '<span style="background:rgba(34,197,94,0.2); color:#22c55e; padding:2px 6px; border-radius:4px; font-weight:700; font-size:0.68rem;">INCA STORE</span>';
+        } else if (p.vendor === "MITRA_LAIN") {
+          badgeVendor = '<span style="background:rgba(245,158,11,0.2); color:#f59e0b; padding:2px 6px; border-radius:4px; font-weight:700; font-size:0.68rem;">MITRA</span>';
+        }
 
-        // Tampilan informasi sisa stok & badge
         const stokDisplay = isHabis
           ? '<span class="badge-stok-habis"><i class="fa-solid fa-circle-exclamation"></i> KOSONG</span>'
           : `<span class="badge-stok-ready"><i class="fa-solid fa-boxes-stacked"></i> ${sisaStok} Ready</span>`;
@@ -1786,8 +2911,8 @@
             <div style="display:inline-flex; gap:6px;">
               <button class="btn-quick-copy ${isHabis ? 'btn-disabled-stock' : ''}" 
                       ${isHabis ? 'disabled' : ''} 
-                      onclick="kurangiStokProdukAI(${idx})" 
-                      title="${isHabis ? 'Stok telah habis' : 'Catat Penjualan (-1 Stok)'}">
+                      onclick="bukaTransaksiQRIS(${idx})" 
+                      title="${isHabis ? 'Stok telah habis' : 'Beli & Bayar Instan via QRIS'}" style="background:rgba(34,197,94,0.15); border-color:#22c55e; color:#4ade80;">
                 <i class="fa-solid fa-cart-shopping"></i> Beli
               </button>
               <button class="btn-quick-copy" onclick="editProdukAI(${idx})" title="Edit Detail & Stok">
@@ -1812,12 +2937,13 @@
       if (statMargin) statMargin.innerText = totalProduk > 0 ? 'Rp ' + Math.round(totalMargin / totalProduk).toLocaleString('id-ID') : 'Rp 0';
       if (statStok) statStok.innerText = totalStok;
 
-      // Jalankan filter jika ada kata kunci pencarian yang sedang aktif
       filterTabelAiProduct();
     }
 
     function simpanProdukAI(e) {
       e.preventDefault();
+      syncCurrentVariantsFromDOM();
+
       const products = getMasterAiProducts();
       const editId = document.getElementById("prodEditId").value;
 
@@ -1827,7 +2953,6 @@
       const jenisAkun = document.getElementById("prodJenisAkun").value;
       const deskripsi = document.getElementById("prodDeskripsi").value.trim();
       const logo = document.getElementById("prodLogo").value.trim() || "images/canvas/canva.jpg";
-      const stok = parseInt(document.getElementById("prodStok").value, 10) || 0;
       const garansi = document.getElementById("prodGaransi").value.trim() || "Full Garansi Sesuai Durasi";
 
       // Parsing FAQ (Format: Tanya? | Jawab. || Tanya? | Jawab.)
@@ -1848,26 +2973,15 @@
         ];
       }
 
-      const variants = [];
-      if (document.getElementById("v7Aktif").checked) {
-        variants.push({
-          name: "7 Hari",
-          cost: parseFloat(document.getElementById("v7Modal").value) || 0,
-          price: parseFloat(document.getElementById("v7Jual").value) || 0,
-          ready: true
-        });
-      }
-      if (document.getElementById("v30Aktif").checked) {
-        variants.push({
-          name: "30 Hari",
-          cost: parseFloat(document.getElementById("v30Modal").value) || 0,
-          price: parseFloat(document.getElementById("v30Jual").value) || 0,
-          ready: true
-        });
+      if (currentDynamicVariants.length === 0) {
+        tampilkanToastRadar("⚠️ Tambahkan minimal 1 baris varian.");
+        return;
       }
 
-      const hargaTampil = variants.length > 0 ? Math.min(...variants.map(v => v.price)) : 15000;
-      const modalTampil = variants.length > 0 ? Math.min(...variants.map(v => v.cost)) : 7000;
+      // Hitung total stok dari akumulasi seluruh varian
+      const totalStokAkumulasi = currentDynamicVariants.reduce((sum, v) => sum + (parseInt(v.stock, 10) || 0), 0);
+      const minPrice = Math.min(...currentDynamicVariants.map(v => v.price || 15000));
+      const minCost = Math.min(...currentDynamicVariants.map(v => v.cost || 5000));
 
       const itemData = {
         id: editId ? editId : ("ai-" + nama.toLowerCase().replace(/[^a-z0-9]/g, '-')),
@@ -1876,17 +2990,17 @@
         kategori: kategori,
         subKategori: jenisAkun,
         jenisAkun: jenisAkun,
-        hargaModal: modalTampil,
-        hargaPromo: hargaTampil,
-        harga: Math.round(hargaTampil * 1.35),
-        variants: variants,
-        stok: stok,
+        hargaModal: minCost,
+        hargaPromo: minPrice,
+        harga: Math.round(minPrice * 1.35),
+        variants: currentDynamicVariants,
+        stok: totalStokAkumulasi,
         deskripsi: deskripsi || `Akses layanan ${nama} bergaransi penuh.`,
         garansi: garansi,
         faq: parsedFaq,
         logo: logo,
-        badge: "⚡ AUTO BOT",
-        aktif: true // Tetap aktif agar kartu dan logo produk tidak hilang saat stok 0
+        badge: "⚡ AUTO VENDOR",
+        aktif: true
       };
 
       if (editId) {
@@ -1900,6 +3014,7 @@
 
       saveMasterAiProducts(products);
       batalEditProduk();
+      tampilkanToastRadar(`🎉 Produk "${nama}" berhasil disimpan ke etalase!`);
     }
 
     function editProdukAI(idx) {
@@ -1909,12 +3024,11 @@
 
       document.getElementById("prodEditId").value = p.id;
       document.getElementById("prodNama").value = p.nama;
-      document.getElementById("prodVendor").value = p.vendor || "INCA_STORE";
-      document.getElementById("prodKategori").value = p.kategori || "Video";
+      document.getElementById("prodVendor").value = p.vendor || "FNSHOP";
+      document.getElementById("prodKategori").value = p.kategori || "AI";
       document.getElementById("prodJenisAkun").value = p.jenisAkun || "Direct Login (PC & HP)";
       document.getElementById("prodDeskripsi").value = p.deskripsi || "";
       document.getElementById("prodLogo").value = p.logo || "";
-      document.getElementById("prodStok").value = p.stok !== undefined ? p.stok : 5;
       document.getElementById("prodGaransi").value = p.garansi || "Full Garansi Sesuai Durasi";
 
       if (p.faq && Array.isArray(p.faq) && p.faq.length > 0) {
@@ -1923,29 +3037,16 @@
         document.getElementById("prodFaqRaw").value = "";
       }
 
-      const v7 = (p.variants || []).find(v => v.name.includes("7"));
-      const v30 = (p.variants || []).find(v => v.name.includes("30"));
-
-      if (v7) {
-        document.getElementById("v7Aktif").checked = true;
-        document.getElementById("v7Modal").value = v7.cost || 3000;
-        document.getElementById("v7Jual").value = v7.price || 7000;
+      if (p.variants && Array.isArray(p.variants) && p.variants.length > 0) {
+        currentDynamicVariants = JSON.parse(JSON.stringify(p.variants));
       } else {
-        document.getElementById("v7Aktif").checked = false;
+        currentDynamicVariants = [
+          { name: "Reguler", kriteria: "Reguler", garansi: p.garansi || "Full Garansi", cost: p.hargaModal || 5000, price: p.hargaPromo || 15000, stock: p.stok || 5 }
+        ];
       }
-      toggleVarianForm("v7");
 
-      if (v30) {
-        document.getElementById("v30Aktif").checked = true;
-        document.getElementById("v30Modal").value = v30.cost || 7000;
-        document.getElementById("v30Jual").value = v30.price || 15000;
-      } else {
-        document.getElementById("v30Aktif").checked = false;
-      }
-      toggleVarianForm("v30");
-
+      renderDynamicVariantRows();
       document.getElementById("btnBatalEdit").classList.remove("hidden");
-      hitungMarginVarian();
       window.scrollTo({ top: 160, behavior: "smooth" });
     }
 
@@ -1953,13 +3054,12 @@
       document.getElementById("formAiProduct").reset();
       document.getElementById("prodEditId").value = "";
       document.getElementById("btnBatalEdit").classList.add("hidden");
-      document.getElementById("prodGaransi").value = "";
+      document.getElementById("prodGaransi").value = "Full Garansi Sesuai Durasi";
       document.getElementById("prodFaqRaw").value = "";
-      document.getElementById("v7Aktif").checked = true;
-      document.getElementById("v30Aktif").checked = true;
-      toggleVarianForm("v7");
-      toggleVarianForm("v30");
-      hitungMarginVarian();
+      currentDynamicVariants = [
+        { name: "1 Bulan", kriteria: "Reguler", garansi: "Full Garansi", cost: 5000, price: 10000, stock: 10 }
+      ];
+      renderDynamicVariantRows();
     }
 
     function toggleStatusProduk(idx, isChecked) {
@@ -2000,7 +3100,6 @@
       const rows = document.querySelectorAll("#aiProductsTableBody tr");
 
       rows.forEach(r => {
-        // Abaikan baris placeholder bila belum ada data
         if (r.cells.length <= 1) return;
         const rowText = r.textContent.toLowerCase();
         r.style.display = (q === "" || rowText.includes(q)) ? "" : "none";

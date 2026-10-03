@@ -665,11 +665,11 @@ function renderShowcaseCards() {
     card.innerHTML = `
       <div class="ba-dual-image-box">
         <div class="ba-half-view">
-          <img src="${item.before}" alt="Before" loading="lazy" onload="this.classList.add('img-loaded')" onerror="this.onerror=null; this.src='images/velvet/cover.jpg'; this.classList.add('img-loaded');">
+          <img src="${item.before}" alt="Before" loading="eager" onload="this.classList.add('img-loaded')" onerror="this.onerror=null; this.src='images/velvet/cover.jpg'; this.classList.add('img-loaded');">
           <span class="badge-tag-side tag-before">BEFORE</span>
         </div>
         <div class="ba-half-view">
-          <img src="${item.after}" alt="After" loading="lazy" onload="this.classList.add('img-loaded')" onerror="this.onerror=null; this.src='images/velvet/cover.jpg'; this.classList.add('img-loaded');">
+          <img src="${item.after}" alt="After" loading="eager" onload="this.classList.add('img-loaded')" onerror="this.onerror=null; this.src='images/velvet/cover.jpg'; this.classList.add('img-loaded');">
           <span class="badge-tag-side tag-after">AFTER 8K</span>
         </div>
       </div>
@@ -736,7 +736,7 @@ function renderAtelierFeed() {
             src="videos/${pack.folder}/${idx}.jpg" 
             alt="Item ${idx}" 
             class="aspect-9-16 img-loaded" 
-            loading="lazy" 
+            loading="eager" 
             style="width:100%; height:100%; object-fit:cover; display:block; opacity:1 !important;"
             onerror="this.onerror=null; this.src='images/velvet/cover.jpg'; this.classList.add('img-loaded');"
           >
@@ -747,7 +747,7 @@ function renderAtelierFeed() {
         mediaHTML = `
           <img 
             src="${imgSrc}" 
-            loading="lazy" 
+            loading="eager" 
             alt="Item ${idx}" 
             class="img-loaded" 
             style="opacity:1 !important;" 
@@ -877,7 +877,7 @@ function renderHomeCategories() {
             src="${imageCoverJpg}" 
             alt="${item.title}" 
             class="aspect-9-16 img-loaded" 
-            loading="lazy" 
+            loading="eager" 
             style="display:none; width:100%; object-fit:cover;"
             onerror="
               if (!this.dataset.triedImg1) {
@@ -894,7 +894,7 @@ function renderHomeCategories() {
     } else {
       let coverSrc = item.coverUrl || `images/${item.folder}/cover.jpg`;
       mediaDisplayHTML = `
-        <img src="${coverSrc}" alt="${item.title}" class="aspect-9-16" loading="lazy" onload="this.classList.add('img-loaded')" onerror="this.onerror=null; this.src='images/velvet/cover.jpg'; this.classList.add('img-loaded');">
+        <img src="${coverSrc}" alt="${item.title}" class="aspect-9-16" loading="eager" onload="this.classList.add('img-loaded')" onerror="this.onerror=null; this.src='images/velvet/cover.jpg'; this.classList.add('img-loaded');">
       `;
     }
 
@@ -972,7 +972,7 @@ function renderHomeDigitalAi() {
     card.innerHTML = `
       <div style="position:relative;">
         <span class="badge-pill" style="background:#0284c7; color:#fff; border:none;">${acc.badge || '⚡ AUTO BOT'}</span>
-        <img src="${imgSrc}" alt="${acc.nama}" class="aspect-1-1" loading="lazy" onload="this.classList.add('img-loaded')" onerror="this.onerror=null; this.src='images/canvas/canva.jpg'; this.classList.add('img-loaded');">
+        <img src="${imgSrc}" alt="${acc.nama}" class="aspect-1-1" loading="eager" onload="this.classList.add('img-loaded')" onerror="this.onerror=null; this.src='images/canvas/canva.jpg'; this.classList.add('img-loaded');">
       </div>
       <div class="card-info">
         <div>
@@ -1024,7 +1024,7 @@ function renderKatalogFoto() {
             </button>
           </div>
         </div>
-        <img src="${coverSrc}" alt="${pack.title}" class="aspect-9-16" loading="lazy" onload="this.classList.add('img-loaded')" onerror="this.onerror=null; this.src='images/velvet/cover.jpg'; this.classList.add('img-loaded');">
+        <img src="${coverSrc}" alt="${pack.title}" class="aspect-9-16" loading="eager" onload="this.classList.add('img-loaded')" onerror="this.onerror=null; this.src='images/velvet/cover.jpg'; this.classList.add('img-loaded');">
       </div>
       <div class="card-info">
         <h3 class="card-title">${pack.title}</h3>
@@ -1157,7 +1157,7 @@ function renderKatalogVod(filterKey = "") {
           src="${item.cover}" 
           alt="${item.title}" 
           class="aspect-9-16 img-loaded" 
-          loading="lazy" 
+          loading="eager" 
           style="width:100%; height:100%; object-fit:cover; display:block;"
           onerror="this.onerror=null; this.src='images/velvet/cover.jpg';"
         >
@@ -1366,7 +1366,7 @@ function renderKatalogAkun(filteredList) {
     card.innerHTML = `
       <div style="position:relative;">
         <span class="badge-pill" style="background:#0284c7; color:#fff; border:none;">${acc.badge || '⚡ RESMI'}</span>
-        <img src="${imgSrc}" alt="${acc.nama}" class="aspect-1-1" loading="lazy" onload="this.classList.add('img-loaded')" onerror="this.onerror=null; this.src='images/canvas/canva.jpg'; this.classList.add('img-loaded');">
+        <img src="${imgSrc}" alt="${acc.nama}" class="aspect-1-1" loading="eager" onload="this.classList.add('img-loaded')" onerror="this.onerror=null; this.src='images/canvas/canva.jpg'; this.classList.add('img-loaded');">
       </div>
       <div class="card-info">
         <div>
@@ -1647,7 +1647,7 @@ function renderDetailItemCards() {
           </span>
           <img 
             src="${fallbackPoster}" 
-            loading="lazy" 
+            loading="eager" 
             alt="${itemTitle}" 
             class="img-loaded" 
             style="filter:brightness(0.4) contrast(1.1);" 
@@ -1701,7 +1701,7 @@ function renderDetailItemCards() {
         <img 
           src="${basePath}.jpg" 
           alt="Item ${i}" 
-          loading="lazy" 
+          loading="eager" 
           class="img-loaded"
           style="display:none; width:100%; height:100%; object-fit:cover;" 
           onerror="this.onerror=null; this.src='images/velvet/cover.jpg';"
@@ -1712,7 +1712,7 @@ function renderDetailItemCards() {
       mediaHTML = `
         <img 
           src="${imgSrc}" 
-          loading="lazy" 
+          loading="eager" 
           alt="Item ${i}" 
           class="img-loaded" 
           onerror="this.onerror=null; this.src='images/velvet/cover.jpg';"
@@ -2488,7 +2488,7 @@ function renderHomeCommercialPreview() {
             </button>
           </div>
         </div>
-        <img src="${coverSrc}" alt="${pack.title}" class="aspect-9-16" loading="lazy" onload="this.classList.add('img-loaded')" onerror="this.onerror=null; this.src='images/velvet/cover.jpg'; this.classList.add('img-loaded');">
+        <img src="${coverSrc}" alt="${pack.title}" class="aspect-9-16" loading="eager" onload="this.classList.add('img-loaded')" onerror="this.onerror=null; this.src='images/velvet/cover.jpg'; this.classList.add('img-loaded');">
       </div>
       <div class="card-info">
         <h3 class="card-title">${pack.title}</h3>
@@ -2579,7 +2579,7 @@ function renderAllCommercialItems(filterKey = "") {
             </button>
           </div>
         </div>
-        <img src="${coverSrc}" alt="${pack.title}" class="aspect-9-16" loading="lazy" onload="this.classList.add('img-loaded')" onerror="this.onerror=null; this.src='images/velvet/cover.jpg'; this.classList.add('img-loaded');">
+        <img src="${coverSrc}" alt="${pack.title}" class="aspect-9-16" loading="eager" onload="this.classList.add('img-loaded')" onerror="this.onerror=null; this.src='images/velvet/cover.jpg'; this.classList.add('img-loaded');">
       </div>
       <div class="card-info">
         <h3 class="card-title">${pack.title}</h3>
@@ -2601,4 +2601,67 @@ function filterChipKomersial(chipKey, btnEl) {
 
 function filterKomersialLive(keyword) {
   renderAllCommercialItems(keyword);
+}
+
+// =========================================================================
+// KONTROL 3 JALUR PEMBAYARAN CHECKOUT (QRIS, TRANSFER BANK & CHAT WA)
+// =========================================================================
+let currentSelectedPayMethod = 'qris';
+
+function switchPayMethod(method) {
+  currentSelectedPayMethod = method;
+
+  // 1. Reset class aktif pada ketiga tombol tab
+  const tabs = document.querySelectorAll("#tabBtnQris, #tabBtnBank, #tabBtnWa");
+  tabs.forEach(tab => tab.classList.remove("active"));
+
+  // 2. Sembunyikan ketiga panel pembayaran (pakai display: none)
+  const panes = ['payPaneQris', 'payPaneBank', 'payPaneWa'];
+  panes.forEach(paneId => {
+    const el = document.getElementById(paneId);
+    if (el) el.style.display = 'none';
+  });
+
+  // 3. Munculkan panel yang dipilih dan aktifkan tombol tabnya
+  if (method === 'qris') {
+    document.getElementById("tabBtnQris")?.classList.add("active");
+    const pane = document.getElementById("payPaneQris");
+    if (pane) pane.style.display = "block";
+  } else if (method === 'bank') {
+    document.getElementById("tabBtnBank")?.classList.add("active");
+    const pane = document.getElementById("payPaneBank");
+    if (pane) pane.style.display = "block";
+  } else if (method === 'wa') {
+    document.getElementById("tabBtnWa")?.classList.add("active");
+    const pane = document.getElementById("payPaneWa");
+    if (pane) pane.style.display = "block";
+  }
+
+  // 4. Ubah teks dan warna tombol konfirmasi utama sesuai jalur yang aktif
+  const actionBtn = document.getElementById("btnMainCheckoutAction");
+  if (actionBtn) {
+    if (method === 'qris') {
+      actionBtn.innerHTML = '<i class="fa-brands fa-whatsapp"></i> Konfirmasi Pembayaran QRIS ke WhatsApp Admin';
+      actionBtn.style.background = '#22c55e';
+      actionBtn.style.color = '#fff';
+    } else if (method === 'bank') {
+      actionBtn.innerHTML = '<i class="fa-brands fa-whatsapp"></i> Konfirmasi Transfer Bank ke WhatsApp Admin';
+      actionBtn.style.background = 'linear-gradient(135deg, #d4af37, #aa7c11)';
+      actionBtn.style.color = '#000';
+    } else {
+      actionBtn.innerHTML = '<i class="fa-brands fa-whatsapp"></i> Tanya & Pesan Langsung via WhatsApp';
+      actionBtn.style.background = '#25d366';
+      actionBtn.style.color = '#fff';
+    }
+  }
+}
+
+function salinNomorRekening(nomor, jenis) {
+  navigator.clipboard.writeText(nomor).then(() => {
+    if (typeof showToast === "function") {
+      showToast(`Nomor ${jenis} (${nomor}) berhasil disalin!`);
+    } else {
+      alert(`Nomor ${jenis} (${nomor}) berhasil disalin!`);
+    }
+  });
 }
