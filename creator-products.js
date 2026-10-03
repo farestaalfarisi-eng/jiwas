@@ -1,5 +1,7 @@
-// creator-products.js - Modul Data Creator Ecosystem V1.0 TIGAJIWA STUDIO
-// MODULAR: Jika file ini dihapus, sistem utama TIGAJIWA STUDIO tetap berjalan normal.
+// =========================================================================
+// JIWAS STUDIO - CREATOR ECOSYSTEM MODULE (creator-products.js V1.1)
+// Terintegrasi langsung dengan nomor WhatsApp Admin Resmi
+// =========================================================================
 
 const DATA_CREATORS = [
   {
@@ -32,7 +34,7 @@ const DATA_CREATOR_PRODUCTS = [
     price: 29000,
     badge: "⭐ CREATOR",
     status: "publish",
-    downloadUrl: "https://wa.me/6281234567890?text=Halo%20Admin,%20saya%20ingin%20beli%20Produk%20CR001-PR0001"
+    downloadUrl: "https://wa.me/6282255267793?text=Halo%20Admin%20JIWAS,%20saya%20ingin%20membeli%20Produk%20Kreator:%20*Luxury%20Royal%20Hijab%20Collection*%20(ID:%20CR001-PR0001)%20seharga%20Rp29.000.%20Mohon%20info%20pembayarannya%20ya."
   },
   {
     id: "CR002-VD0001",
@@ -45,6 +47,6 @@ const DATA_CREATOR_PRODUCTS = [
     price: 35000,
     badge: "🔥 VIRAL",
     status: "publish",
-    downloadUrl: "https://wa.me/6281234567890?text=Halo%20Admin,%20saya%20ingin%20beli%20Produk%20CR002-VD0001"
+    downloadUrl: "https://wa.me/6282255267793?text=Halo%20Admin%20JIWAS,%20saya%20ingin%20membeli%20Produk%20Kreator:%20*Cinematic%20Drone%20AI%20Video%20Suite*%20(ID:%20CR002-VD0001)%20seharga%20Rp35.000.%20Mohon%20info%20pembayarannya%20ya."
   }
 ];
