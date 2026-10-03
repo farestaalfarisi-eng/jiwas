@@ -265,14 +265,14 @@ window.KATALOG_REGISTRY = [
   // --- VIDEO AI (LIVE) ---
   {
     id: "video-cinematic",
-    title: "KUMPULAN VIDEO REQUESS",
+    title: "Cinematic Motion Suite",
     folder: "video",
     category: "Video AI",
     type: "video",
     status: "live",
     promptVarName: "PROMPTS_VIDEO",
     scriptUrl: "prompts/video.js",
-    rating: "Silakan pesan yang di butuhkan, paket : 36 prompt video",
+    rating: "5.0/5",
     sales: "180+ Terjual"
   },
 
