@@ -111,18 +111,10 @@ return `
 },
 
 pilihVarianKartu: function(prodId, varIdx, price, garansi, btnEl) {
-    // Ubah label harga seketika
-    const promoEl = document.getElementById(`price-promo-${prodId}`);
-    const normalEl = document.getElementById(`price-normal-${prodId}`);
-    const guarEl = document.getElementById(`guarantee-label-${prodId}`);
-
-    if (promoEl) promoEl.innerText = "Rp" + Number(price).toLocaleString("id-ID");
-    if (normalEl) normalEl.innerText = "Rp" + Number(Math.round(price * 1.35)).toLocaleString("id-ID");
-    if (guarEl && garansi) guarEl.innerHTML = `<i class="fa-solid fa-shield-halved"></i> ${garansi}`;
-
-    // Update style pills tombol aktif
+    // 1. Catat varian mana yang dipilih user ke dalam data kartu
     const card = document.getElementById(`card-${prodId}`);
     if (card) {
+      card.dataset.selectedVariantIdx = varIdx;
       card.querySelectorAll(".quick-tag-chip").forEach(b => {
         b.style.borderColor = "";
         b.style.background = "";
@@ -132,15 +124,42 @@ pilihVarianKartu: function(prodId, varIdx, price, garansi, btnEl) {
         btnEl.style.background = "rgba(212,175,55,0.2)";
       }
     }
+
+    // 2. Ubah label harga di kartu secara visual
+    const promoEl = document.getElementById(`price-promo-${prodId}`);
+    const normalEl = document.getElementById(`price-normal-${prodId}`);
+    const guarEl = document.getElementById(`guarantee-label-${prodId}`);
+
+    if (promoEl) promoEl.innerText = "Rp" + Number(price).toLocaleString("id-ID");
+    if (normalEl) normalEl.innerText = "Rp" + Number(Math.round(price * 1.35)).toLocaleString("id-ID");
+    if (guarEl && garansi) guarEl.innerHTML = `<i class="fa-solid fa-shield-halved"></i> ${garansi}`;
   },
 
 pemicuCheckoutHibrida: function(prodId) {
-if (typeof bukaTransaksiQRIS === "function") {
-bukaTransaksiQRIS(prodId);
-} else {
-console.warn("bukaTransaksiQRIS belum siap.");
-}
-},
+    // 1. Ambil data asli produk dari basis data
+    let products = (typeof AiAccountEngine !== "undefined" && typeof AiAccountEngine.getProducts === "function") 
+      ? AiAccountEngine.getProducts() 
+      : (typeof DATABASE_AI_ACCOUNT !== "undefined" ? DATABASE_AI_ACCOUNT : []);
+    
+    let prod = products.find(p => String(p.id) === String(prodId));
+    if (!prod) return;
+
+    let prodObj = JSON.parse(JSON.stringify(prod));
+
+    // 2. Baca varian yang tadi diklik user dari kartu (default ke 0 jika belum ada klik)
+    const card = document.getElementById(`card-${prodId}`);
+    const chosenIdx = card && card.dataset.selectedVariantIdx !== undefined 
+      ? parseInt(card.dataset.selectedVariantIdx, 10) 
+      : 0;
+    
+    // Simpan pilihan user agar modal QRIS tahu varian & harga persisnya
+    prodObj.defaultIdx = chosenIdx;
+
+    // 3. Panggil modal checkout dengan data lengkap
+    if (typeof bukaModalCheckout === "function") {
+      bukaModalCheckout(prodObj);
+    }
+  },
 
 renderCategoryChip: function (catName, activeCategory) {
     const isActive = catName.toLowerCase() === activeCategory.toLowerCase();
@@ -240,11 +259,33 @@ return `
 },
 
 eksekusiBeliDariModal: function (productId) {
-const selectEl = document.getElementById("modalSelectedVariant");
-const variantName = selectEl ? selectEl.value : "";
-if (typeof AiAccountEngine !== "undefined" && typeof AiAccountEngine.closeDetailModal === "function") {
-AiAccountEngine.closeDetailModal();
-}
-bukaTransaksiQRIS(productId, variantName);
+  const selectEl = document.getElementById("modalSelectedVariant");
+  const selectedVariantName = selectEl ? selectEl.value : "";
+
+  if (typeof AiAccountEngine !== "undefined" && typeof AiAccountEngine.closeDetailModal === "function") {
+    AiAccountEngine.closeDetailModal();
+  }
+
+  // Ambil produk dan sinkronkan variannya
+  let products = (typeof AiAccountEngine !== "undefined" && typeof AiAccountEngine.getProducts === "function")
+    ? AiAccountEngine.getProducts()
+    : (typeof DATABASE_AI_ACCOUNT !== "undefined" ? DATABASE_AI_ACCOUNT : []);
+
+  const target = products.find(p => String(p.id) === String(productId));
+  if (!target) return;
+
+  const prodObj = JSON.parse(JSON.stringify(target));
+  let selectedIdx = 0;
+
+  if (prodObj.variants && Array.isArray(prodObj.variants)) {
+    const fIdx = prodObj.variants.findIndex(v => v.name === selectedVariantName);
+    if (fIdx !== -1) selectedIdx = fIdx;
+  }
+
+  prodObj.defaultIdx = selectedIdx;
+
+  if (typeof bukaModalCheckout === "function") {
+    bukaModalCheckout(prodObj);
+  }
 }
 };

@@ -2362,27 +2362,40 @@ let currentOrderData = {
 };
 
 function bukaModalCheckout(itemTitle, tierName, priceText) {
-  currentOrderData.title = itemTitle;
-  currentOrderData.tier = tierName;
-  currentOrderData.priceText = priceText;
+  // 1. Jika dikirim sebagai objek produk utuh (dari akun AI / etalase modern)
+  if (itemTitle && typeof itemTitle === "object") {
+    if (typeof window.bukaCheckoutAi === "function") {
+      window.bukaCheckoutAi(itemTitle);
+    }
+    return;
+  }
 
-  const itemTitleEl = document.getElementById("checkoutItemTitle");
-  const itemPriceEl = document.getElementById("checkoutItemPrice");
-  if (itemTitleEl) itemTitleEl.innerText = `${itemTitle} (${tierName})`;
-  if (itemPriceEl) itemPriceEl.innerText = priceText;
+  // 2. Jika dipanggil dari tombol katalog foto/video (3 parameter: judul, paket, harga)
+  const namaProduk = itemTitle || "Layanan Studio JIWAS";
+  const namaVarian = tierName || "Varian Pilihan";
+  
+  // Ambil angka murni dari string harga (misal: "Rp25.000" jadi 25000)
+  const nominalAngka = Number(String(priceText || tierName || "25000").replace(/[^0-9]/g, '')) || 25000;
 
-  const nameInput = document.getElementById("coBuyerName");
-  const waInput = document.getElementById("coBuyerWA");
-  if (nameInput) nameInput.value = "";
-  if (waInput) waInput.value = "";
+  // Susun objek data sesuai kebutuhan kartu QRIS di index.html
+  const dataPesanan = {
+    nama: namaProduk,
+    kategori: "Formula Studio",
+    jenisAkun: namaVarian,
+    variants: [
+      {
+        name: namaVarian,
+        price: nominalAngka,
+        garansi: "Full Garansi VIP"
+      }
+    ],
+    defaultIdx: 0
+  };
 
-  const stepForm = document.getElementById("stepCheckoutForm");
-  const stepQRIS = document.getElementById("stepCheckoutQRIS");
-  if (stepForm) stepForm.classList.remove("hidden");
-  if (stepQRIS) stepQRIS.classList.add("hidden");
-
-  const modal = document.getElementById("checkoutModal");
-  if (modal) modal.classList.remove("hidden");
+  // Teruskan langsung ke engine modal QRIS
+  if (typeof window.bukaCheckoutAi === "function") {
+    window.bukaCheckoutAi(dataPesanan);
+  }
 }
 
 function tutupModalCheckout() {
@@ -2663,5 +2676,38 @@ function salinNomorRekening(nomor, jenis) {
     } else {
       alert(`Nomor ${jenis} (${nomor}) berhasil disalin!`);
     }
+  });
+}
+// =========================================================================
+// SMART VIDEO LAZY-LOAD & MEMORY SAVER (IntersectionObserver)
+// =========================================================================
+const videoObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    const video = entry.target;
+    const realSrc = video.dataset.src;
+
+    if (entry.isIntersecting) {
+      // 1. Masuk area pandang layar: Muat sumber video jika belum terpasang
+      if (realSrc && !video.src) {
+        video.src = realSrc;
+      }
+      // Putar video dengan aman
+      video.play().catch(() => {});
+    } else {
+      // 2. Keluar area pandang: Jeda video untuk menghemat RAM & CPU
+      if (!video.paused) {
+        video.pause();
+      }
+    }
+  });
+}, {
+  rootMargin: "150px 0px", // Mulai siapkan video 150px sebelum masuk layar
+  threshold: 0.25
+});
+
+// Fungsi pembantu untuk mengaktifkan pengawasan ke semua video malas
+function aktivasiLazyVideoObserver() {
+  document.querySelectorAll("video.lazy-smart-video").forEach(v => {
+    videoObserver.observe(v);
   });
 }

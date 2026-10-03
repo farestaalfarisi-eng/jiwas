@@ -809,7 +809,7 @@ EXACT 1:1 facial likeness of the reference subject in the provided reference pho
         <div>
           <div style="font-weight: 800; font-size: 0.85rem; color: var(--gold-light);"><i class="fa-solid fa-building-columns" style="color:var(--gold-primary);"></i> Bank BRI</div>
           <div style="font-family: monospace; font-size: 0.9rem; letter-spacing: 1px; color: #fff; margin-top: 2px;">5042 0101 1128 533</div>
-          <div style="font-size:0.68rem; color:var(--text-muted); margin-top:2px;">A.N.JIWAS</div>
+          <div style="font-size:0.68rem; color:var(--text-muted); margin-top:2px;">A.N. Rifai</div>
         </div>
         <button type="button" class="btn-copy" onclick="salinNomorRekening('5042 0101 1128 533', 'BRI')">
           <i class="fa-solid fa-copy"></i> Salin Rek
@@ -930,47 +930,75 @@ EXACT 1:1 facial likeness of the reference subject in the provided reference pho
     let activeQrisProduct = null;
         currentSelectedPayMethod = 'qris';
 
-    // Fungsi Utama: Mengisi Semua Informasi Modal dari Data Produk
-    function bukaModalCheckout(item) {
-      const modal = document.getElementById("checkoutModal");
-      if (!modal) return;
+   // Fungsi Utama: Mengisi Semua Informasi Modal dari Data Produk
+function bukaModalCheckout(item, subTier, subPrice) {
+  const modal = document.getElementById("checkoutModal");
+  if (!modal) return;
 
-      // 1. Deteksi data produk yang masuk
-      if (typeof item === "string") {
-        // Jika dipanggil dengan ID atau Nama Paket
-        let found = null;
-        if (typeof DATABASE_AI_ACCOUNT !== "undefined" && Array.isArray(DATABASE_AI_ACCOUNT)) {
-          found = DATABASE_AI_ACCOUNT.find(p => p.id === item || p.nama.toLowerCase() === item.toLowerCase());
-        }
-        
-        if (found) {
-          activeQrisProduct = JSON.parse(JSON.stringify(found));
-        } else {
-          const isVip = item.toUpperCase().includes("VIP") || item.includes("25");
-          activeQrisProduct = {
-            nama: isVip ? "Paket VIP 100 Formula Atelier" : "Paket Starter Formula Atelier",
-            kategori: "Formula Studio",
-            jenisAkun: "PIN Instan",
-            variants: [
-              { name: "Paket Starter (10K) - 20 Prompt", price: 10000, garansi: "Full Garansi" },
-              { name: "Paket VIP (25K) - Full 100 Prompt", price: 25000, garansi: "Full Garansi VIP" }
-            ],
-            defaultIdx: isVip ? 1 : 0
-          };
-        }
-      } else if (item && typeof item === "object") {
-        activeQrisProduct = item;
-      } else {
-        // Fallback default
-        activeQrisProduct = {
-          nama: "Formula Studio AI JIWAS",
-          kategori: "Atelier",
-          jenisAkun: "Akses PIN",
-          variants: [
-            { name: "Paket Starter (10K)", price: 10000, garansi: "Full Garansi" },
-            { name: "Paket VIP (25K)", price: 25000, garansi: "Full Garansi VIP" }
-          ]
-        };
+  // 1. Normalisasi data produk dari parameter
+  if (typeof item === "string") {
+    let allProducts = (typeof AiAccountEngine !== "undefined" && typeof AiAccountEngine.getProducts === "function")
+      ? AiAccountEngine.getProducts()
+      : (typeof DATABASE_AI_ACCOUNT !== "undefined" ? DATABASE_AI_ACCOUNT : []);
+    
+    // Cari apakah ini produk Akun AI di database
+    let found = allProducts.find(p => 
+      String(p.id).toLowerCase() === item.toLowerCase() || 
+      (p.nama && p.nama.toLowerCase() === item.toLowerCase())
+    );
+
+    if (found) {
+      activeQrisProduct = JSON.parse(JSON.stringify(found));
+      
+      // CARI VARIAN YANG COCOK dengan tombol yang diklik (subTier atau subPrice)
+      let matchedIdx = 0;
+      if (subTier && activeQrisProduct.variants && activeQrisProduct.variants.length > 0) {
+        const fIdx = activeQrisProduct.variants.findIndex(v => 
+          (v.name || "").toLowerCase().trim() === String(subTier).toLowerCase().trim() ||
+          (v.kriteria || "").toLowerCase().trim() === String(subTier).toLowerCase().trim()
+        );
+        if (fIdx !== -1) matchedIdx = fIdx;
+      }
+      activeQrisProduct.defaultIdx = matchedIdx;
+
+    } else if (subTier || subPrice) {
+      // Jika dipanggil dari tombol katalog Studio / VOD / Jasa Video (contoh: subPrice = 'Rp25.000')
+      const nominal = Number(String(subPrice || subTier).replace(/[^0-9]/g, '')) || 25000;
+      const isVip = String(subTier || item).toUpperCase().includes("VIP") || nominal >= 25000;
+
+      activeQrisProduct = {
+        nama: item,
+        kategori: "Formula Studio",
+        jenisAkun: subTier || "Akses PIN",
+        variants: [
+          { name: subTier || (isVip ? "Paket VIP (25K)" : "Paket Starter (10K)"), price: nominal, garansi: "Full Garansi VIP" }
+        ],
+        defaultIdx: 0
+      };
+    } else {
+      // Fallback umum
+      const isVip = item.toUpperCase().includes("VIP") || item.includes("25");
+      activeQrisProduct = {
+        nama: item,
+        kategori: "Formula Studio",
+        jenisAkun: "Akses PIN",
+        variants: [
+          { name: "Paket Starter (10K)", price: 10000, garansi: "Full Garansi" },
+          { name: "Paket VIP (25K)", price: 25000, garansi: "Full Garansi VIP" }
+        ],
+        defaultIdx: isVip ? 1 : 0
+      };
+    }
+  } else if (item && typeof item === "object") {
+    activeQrisProduct = JSON.parse(JSON.stringify(item));
+  }
+
+      // Pastikan array variants selalu ada
+      if (!activeQrisProduct.variants || activeQrisProduct.variants.length === 0) {
+        const fallbackPrice = activeQrisProduct.hargaPromo || activeQrisProduct.price || 15000;
+        activeQrisProduct.variants = [
+          { name: "Standar Reguler", price: fallbackPrice, garansi: activeQrisProduct.garansi || "Full Garansi" }
+        ];
       }
 
       // 2. Isi Nama Produk ke Header Modal
@@ -979,7 +1007,7 @@ EXACT 1:1 facial likeness of the reference subject in the provided reference pho
         nameEl.innerText = activeQrisProduct.nama || activeQrisProduct.title || "Layanan JIWAS";
       }
 
-      // 3. Tampilkan Badges (Kategori & Jenis Akun)
+      // 3. Tampilkan Badges Kategori & Tipe
       const badgesContainer = document.getElementById("qrisModalBadges");
       if (badgesContainer) {
         const cat = activeQrisProduct.kategori || "AI Store";
@@ -990,42 +1018,34 @@ EXACT 1:1 facial likeness of the reference subject in the provided reference pho
         `;
       }
 
-      // 4. Isi Dropdown Varian / Durasi
+      // 4. Isi Dropdown Varian & Sorot Varian yang Dipilih User
       const varSelect = document.getElementById("qrisVariantSelect");
       if (varSelect) {
         varSelect.innerHTML = "";
-        
-        let variants = activeQrisProduct.variants;
-        if (!variants || variants.length === 0) {
-          const promo = activeQrisProduct.hargaPromo || activeQrisProduct.price || 15000;
-          variants = [
-            { name: "1 Bulan Reguler", price: promo, garansi: activeQrisProduct.garansi || "Full Garansi" }
-          ];
-          activeQrisProduct.variants = variants;
-        }
+        const targetIdx = activeQrisProduct.defaultIdx !== undefined ? activeQrisProduct.defaultIdx : 0;
 
-        variants.forEach((v, idx) => {
+        activeQrisProduct.variants.forEach((v, idx) => {
           const opt = document.createElement("option");
           opt.value = idx;
           const p = Number(String(v.price).replace(/[^0-9]/g, '')) || 0;
           opt.innerText = `${v.name || 'Varian'} — Rp ${p.toLocaleString('id-ID')}`;
           
-          if (activeQrisProduct.defaultIdx === idx) {
+          if (idx === targetIdx) {
             opt.selected = true;
           }
           varSelect.appendChild(opt);
         });
       }
 
-      // 5. Hitung & Cetak Total Pembayaran
+      // 5. Hitung & Tampilkan Harga, Garansi, serta Gambar QRIS yang Pas
       updateQrisVariantDetails();
 
-      // 6. Reset Jalur Pembayaran & Buka Jendela Modal
+      // 6. Reset ke Tab QRIS & Tampilkan Modal
       switchPayMethod('qris');
       modal.classList.remove("hidden");
     }
 
-    // Fungsi: Update Nominal Sesuai Pilihan Dropdown
+    // Fungsi: Update Nominal, Garansi & Gambar Barcode Sesuai Pilihan Dropdown
     function updateQrisVariantDetails() {
       if (!activeQrisProduct) return;
 
@@ -1034,21 +1054,33 @@ EXACT 1:1 facial likeness of the reference subject in the provided reference pho
       const variants = activeQrisProduct.variants || [];
       const selected = variants[vIdx] || variants[0] || {};
 
-      let p = selected.price ?? activeQrisProduct.hargaPromo ?? activeQrisProduct.harga ?? 25000;
+      let p = selected.price !== undefined ? selected.price : (activeQrisProduct.hargaPromo || 25000);
       if (typeof p === 'string') p = p.replace(/[^0-9]/g, '');
       const price = Number(p) || 0;
       const garansi = selected.garansi || activeQrisProduct.garansi || "Full Garansi Sesuai Durasi";
 
-      // Tampilkan Total Tagihan
+      // 1. Cetak Total Tagihan
       const totalEl = document.getElementById("qrisTotalAmount");
       if (totalEl) {
         totalEl.innerText = "Rp " + price.toLocaleString('id-ID');
       }
 
-      // Tampilkan Info Garansi
+      // 2. Cetak Catatan Garansi
       const garansiEl = document.getElementById("qrisGaransiNote");
       if (garansiEl) {
         garansiEl.innerHTML = `<i class="fa-solid fa-shield-halved"></i> Garansi: ${garansi}`;
+      }
+
+      // 3. Sinkronkan Gambar Barcode QRIS Sesuai Nominal
+      const qrisImg = document.getElementById("qrisBarcodeImg");
+      if (qrisImg) {
+        if (price <= 10000) {
+          qrisImg.src = "images/qris-10k.jpg";
+        } else if (price <= 25000) {
+          qrisImg.src = "images/qris-25k.jpg";
+        } else {
+          qrisImg.src = "images/qris-dana.jpg";
+        }
       }
     }
 
