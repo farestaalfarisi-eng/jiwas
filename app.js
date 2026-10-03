@@ -124,6 +124,80 @@ function getDatabaseAkun() {
 }
 
 // -------------------------------------------------------------------------
+// BASIS DATA VIDEO ON-DEMAND (VOD)
+// -------------------------------------------------------------------------
+const DEFAULT_VOD_DATA = [
+  {
+    id: "JK-05",
+    title: "Pesona Putri Duyung Samudra Tropis",
+    category: "Pembuka Viral",
+    tag: "Latar Quotes / Visual Pembuka Estetik",
+    specs: "9:16 • 4K Slow Motion",
+    desc: "Putri duyung berenang anggun di celah terumbu karang warna-warni dengan bias cahaya matahari laut jernih.",
+    cover: "image_211bee.jpg",
+    video: "http://googleusercontent.com/generated_video_content/8368507200011305640",
+    harga: "Rp35.000"
+  },
+  {
+    id: "JK-01",
+    title: "Rintik Hujan Syahdu di Jendela Malam",
+    category: "Curhat & Quotes",
+    tag: "Latar Curhat, Doa Malam & Motivasi",
+    specs: "9:16 • Musik Hujan",
+    desc: "Butiran air hujan menenangkan di kaca kamar dengan kerlip lampu kota malam. Sangat cocok buat latar kata-kata mutiara.",
+    cover: "https://images.unsplash.com/photo-1515694346937-94d85e41e6f0?w=800&auto=format&fit=crop&q=80",
+    video: "https://assets.mixkit.co/videos/preview/mixkit-raindrops-on-a-window-in-the-city-43183-large.mp4",
+    harga: "Rp25.000"
+  },
+  {
+    id: "JK-02",
+    title: "Tetesan Emas Pembuka Penasaran",
+    category: "Pembuka Viral",
+    tag: "Video 3 Detik Pertama (Anti Di-Skip)",
+    specs: "9:16 • Slow Motion",
+    desc: "Cairan emas kental jatuh memicu cipratan lambat super jernih. Dijamin bikin orang berhenti scrolling di TikTok/Reels.",
+    cover: "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?w=800&auto=format&fit=crop&q=80",
+    video: "https://assets.mixkit.co/videos/preview/mixkit-golden-particles-in-water-slow-motion-41804-large.mp4",
+    harga: "Rp25.000"
+  },
+  {
+    id: "JK-03",
+    title: "Susu Kental Tuang ke Kopi Hitam",
+    category: "Dapur & Masakan",
+    tag: "Bikin Konten Resep & Minuman Kafe",
+    specs: "9:16 • Super Jernih",
+    desc: "Pusaran susu putih lembut bercampur kopi pekat. Bikin postingan resep masakan Anda kelihatan seperti bikinan kafe mahal.",
+    cover: "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=800&auto=format&fit=crop&q=80",
+    video: "https://assets.mixkit.co/videos/preview/mixkit-pouring-milk-into-black-coffee-41800-large.mp4",
+    harga: "Rp25.000"
+  },
+  {
+    id: "JK-04",
+    title: "Botol Elegan di Atas Marmer Basah",
+    category: "Mewah & Produk",
+    tag: "Iklan Skincare, Parfum & Gamis",
+    specs: "9:16 • Estetika Mewah",
+    desc: "Kemasan produk berputar anggun dengan sorot lampu lembut. Bikin produk jualan online Anda langsung naik kelas.",
+    cover: "https://images.unsplash.com/photo-1523293182086-7651a899d37f?w=800&auto=format&fit=crop&q=80",
+    video: "https://assets.mixkit.co/videos/preview/mixkit-top-shot-of-perfume-bottle-and-flowers-43301-large.mp4",
+    harga: "Rp25.000"
+  }
+];
+
+function getDatabaseVod() {
+  try {
+    const customVod = localStorage.getItem("jiwas_katalog_data");
+    if (customVod) {
+      const parsed = JSON.parse(customVod);
+      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+    }
+  } catch (e) {}
+  return DEFAULT_VOD_DATA;
+}
+
+let activeVodFilter = 'all';
+
+// -------------------------------------------------------------------------
 // 2. SHOWCASE POOL SELECTION (12 Pasang / 24 Aset Foto)
 // -------------------------------------------------------------------------
 function getShowcasePool() {
@@ -189,6 +263,7 @@ function initApp() {
   renderAtelierFeed();
   renderKatalogFoto();
   renderKatalogVideo();
+  renderKatalogVod();
   renderKatalogAkun();
   renderAiAccountCategories();
   initGlobalClickListener();
@@ -667,18 +742,8 @@ function renderAtelierFeed() {
           >
         `;
       } else {
-       // KODE BARU (Mendukung mapping foto kustom):
-let targetImgName = `${i}.jpg`; // Fallback default jika tidak ditentukan
-
-if (raw && typeof raw === "object") {
-  if (raw.image) {
-    targetImgName = raw.image;
-  } else if (raw.photoIndex) {
-    targetImgName = `${raw.photoIndex}.jpg`;
-  }
-}
-
-let imgSrc = `images/${activePack.folder}/${targetImgName}`;
+        let targetImgName = `${idx}.jpg`;
+        let imgSrc = `images/${pack.folder}/${targetImgName}`;
         mediaHTML = `
           <img 
             src="${imgSrc}" 
@@ -710,7 +775,7 @@ function switchMainTab(tabType, btnEl) {
   if (btnEl) {
     btnEl.classList.add("active");
   } else {
-    const map = { atelier: 'tabBtnAtelier', foto: 'tabBtnFoto', video: 'tabBtnVideo', akun: 'tabBtnAkun' };
+    const map = { atelier: 'tabBtnAtelier', foto: 'tabBtnFoto', video: 'tabBtnVideo', vod: 'tabBtnVod', akun: 'tabBtnAkun' };
     const targetBtn = document.getElementById(map[tabType]);
     if (targetBtn) targetBtn.classList.add("active");
   }
@@ -718,6 +783,7 @@ function switchMainTab(tabType, btnEl) {
   const secAtelier = document.getElementById("sectionAtelier");
   const secFoto = document.getElementById("sectionFotoAI");
   const secVideo = document.getElementById("sectionVideoAI");
+  const secVod = document.getElementById("sectionVodAI");
   const secAkun = document.getElementById("sectionAkunAI");
   const secDetail = document.getElementById("sectionDetailPack");
   const secComm = document.getElementById("sectionCommercialStudio");
@@ -726,6 +792,7 @@ function switchMainTab(tabType, btnEl) {
   if (secAtelier) secAtelier.classList.add("hidden");
   if (secFoto) secFoto.classList.add("hidden");
   if (secVideo) secVideo.classList.add("hidden");
+  if (secVod) secVod.classList.add("hidden");
   if (secAkun) secAkun.classList.add("hidden");
   if (secDetail) secDetail.classList.add("hidden");
   if (secComm) secComm.classList.add("hidden");
@@ -744,6 +811,10 @@ function switchMainTab(tabType, btnEl) {
   if (tabType === 'video' && secVideo) {
     secVideo.classList.remove("hidden");
     renderKatalogVideo();
+  }
+  if (tabType === 'vod' && secVod) {
+    secVod.classList.remove("hidden");
+    renderKatalogVod();
   }
   if (tabType === 'akun' && secAkun) {
     secAkun.classList.remove("hidden");
@@ -784,13 +855,30 @@ function renderHomeCategories() {
       const image1Jpg = `videos/${item.folder}/1.jpg`;
 
       mediaDisplayHTML = `
-        <div style="position:relative; width:100%; aspect-ratio:9/16; overflow:hidden;">
+        <div style="position:relative; width:100%; height:100%; overflow:hidden;">
+          <video 
+            src="${videoCoverMp4}" 
+            class="aspect-9-16" 
+            autoplay loop muted playsinline 
+            style="width:100%; object-fit:cover; display:block;"
+            onloadeddata="this.classList.add('img-loaded')"
+            onerror="
+              if (!this.dataset.tried1) {
+                this.dataset.tried1 = 'true';
+                this.src = '${video1Mp4}';
+              } else {
+                this.style.display = 'none';
+                this.nextElementSibling.style.display = 'block';
+              }
+            "
+          ></video>
+
           <img 
             src="${imageCoverJpg}" 
             alt="${item.title}" 
             class="aspect-9-16 img-loaded" 
             loading="lazy" 
-            style="width:100%; height:100%; object-fit:cover; display:block;"
+            style="display:none; width:100%; object-fit:cover;"
             onerror="
               if (!this.dataset.triedImg1) {
                 this.dataset.triedImg1 = 'true';
@@ -801,9 +889,6 @@ function renderHomeCategories() {
               }
             "
           >
-          <div style="position:absolute; bottom:10px; right:10px; background:rgba(0,0,0,0.65); border:1px solid rgba(212,175,55,0.4); border-radius:50%; width:28px; height:28px; display:flex; align-items:center; justify-content:center; pointer-events:none;">
-            <i class="fa-solid fa-play" style="color:var(--gold-primary); font-size:0.7rem; margin-left:2px;"></i>
-          </div>
         </div>
       `;
     } else {
@@ -988,27 +1073,38 @@ function renderKatalogVideo() {
           </div>
         </div>
         
-        <div style="position:relative; width:100%; aspect-ratio:9/16; overflow:hidden;">
-          <img 
-            src="${imageCoverJpg}" 
-            alt="${pack.title}" 
-            class="aspect-9-16 img-loaded" 
-            loading="lazy" 
-            style="width:100%; height:100%; object-fit:cover; display:block;"
-            onerror="
-              if (!this.dataset.triedImg1) {
-                this.dataset.triedImg1 = 'true';
-                this.src = '${image1Jpg}';
-              } else {
-                this.onerror = null;
-                this.src = 'images/velvet/cover.jpg';
-              }
-            "
-          >
-          <div style="position:absolute; bottom:10px; right:10px; background:rgba(0,0,0,0.65); border:1px solid rgba(212,175,55,0.4); border-radius:50%; width:28px; height:28px; display:flex; align-items:center; justify-content:center; pointer-events:none;">
-            <i class="fa-solid fa-play" style="color:var(--gold-primary); font-size:0.7rem; margin-left:2px;"></i>
-          </div>
-        </div>
+        <video 
+          src="${videoCoverMp4}" 
+          class="aspect-9-16" 
+          autoplay loop muted playsinline 
+          style="width:100%; object-fit:cover; display:block;"
+          onloadeddata="this.classList.add('img-loaded')"
+          onerror="
+            if (!this.dataset.tried1) {
+              this.dataset.tried1 = 'true';
+              this.src = '${video1Mp4}';
+            } else {
+              this.style.display = 'none';
+              this.nextElementSibling.style.display = 'block';
+            }
+          "
+        ></video>
+
+        <img 
+          src="${imageCoverJpg}" 
+          alt="${pack.title}" 
+          class="aspect-9-16 img-loaded" 
+          style="display:none; width:100%; object-fit:cover;"
+          onerror="
+            if (!this.dataset.triedImg1) {
+              this.dataset.triedImg1 = 'true';
+              this.src = '${image1Jpg}';
+            } else {
+              this.onerror = null;
+              this.src = 'images/velvet/cover.jpg';
+            }
+          "
+        >
       </div>
       <div class="card-info">
         <h3 class="card-title">${pack.title}</h3>
@@ -1019,6 +1115,209 @@ function renderKatalogVideo() {
     `;
     container.appendChild(card);
   });
+}
+
+// -------------------------------------------------------------------------
+// RENDER KATALOG VOD (VIDEO ON-DEMAND)
+// -------------------------------------------------------------------------
+function renderKatalogVod(filterKey = "") {
+  const container = document.getElementById("gridVodKatalog");
+  if (!container) return;
+  container.innerHTML = "";
+
+  let list = getDatabaseVod();
+
+  const countLabel = document.getElementById("vodItemCountLabel") || document.getElementById("itemCountLabel");
+  if (countLabel) {
+    countLabel.textContent = `Tersedia ${list.length} pilihan video siap pakai`;
+  }
+
+  if (activeVodFilter !== "all") {
+    list = list.filter(item => item.category === activeVodFilter);
+  }
+  if (filterKey.trim() !== "") {
+    const q = filterKey.toLowerCase();
+    list = list.filter(item => 
+      (item.title + " " + item.desc + " " + item.tag + " " + item.id).toLowerCase().includes(q)
+    );
+  }
+
+  if (list.length === 0) {
+    container.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:30px; color:#888;">Belum ada video pada kategori ini.</div>';
+    return;
+  }
+
+  list.forEach(item => {
+    const card = document.createElement("div");
+    card.className = "catalog-card";
+    card.innerHTML = `
+      <div style="position:relative; width:100%; aspect-ratio:9/16; overflow:hidden; cursor:pointer;" onclick="bukaModalPlayerVod('${item.video}')">
+        <span class="badge-pill" style="background:#0284c7; color:#fff; border:none;">${item.specs || '9:16 HD'}</span>
+        <img 
+          src="${item.cover}" 
+          alt="${item.title}" 
+          class="aspect-9-16 img-loaded" 
+          loading="lazy" 
+          style="width:100%; height:100%; object-fit:cover; display:block;"
+          onerror="this.onerror=null; this.src='images/velvet/cover.jpg';"
+        >
+        <div style="position:absolute; bottom:10px; right:10px; background:rgba(0,0,0,0.65); border:1px solid rgba(212,175,55,0.4); border-radius:50%; width:32px; height:32px; display:flex; align-items:center; justify-content:center;">
+          <i class="fa-solid fa-play" style="color:var(--gold-primary); font-size:0.75rem; margin-left:2px;"></i>
+        </div>
+      </div>
+      <div class="card-info">
+        <div>
+          <span style="font-size:0.65rem; color:var(--gold-light); font-weight:700;">${item.tag || 'VIDEO READY'}</span>
+          <h3 class="card-title" style="margin-top:2px;">${item.title}</h3>
+          <p style="font-size:0.68rem; color:#9ca3af; margin-top:3px; line-height:1.3; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">${item.desc}</p>
+        </div>
+        <div style="margin-top:8px;">
+          <div style="font-weight:800; color:var(--gold-light); font-size:0.85rem; margin-bottom:6px;">${item.harga || 'Rp25.000'} <span style="font-size:0.65rem; color:#9ca3af; font-weight:normal;">/ file MP4</span></div>
+          <div style="display:flex; gap:6px;">
+            <button class="btn-copy" style="flex:1; justify-content:center; padding:6px 4px; font-size:0.7rem;" onclick="bukaModalPlayerVod('${item.video}')">
+              <i class="fa-solid fa-play"></i> Putar
+            </button>
+            <button class="btn-copy" style="flex:1.2; justify-content:center; background:var(--gold-gradient); color:#000; font-weight:800; padding:6px 4px; font-size:0.7rem;" onclick="bukaModalCheckout('${item.title}', 'File Video HD Tanpa Watermark', '${item.harga || 'Rp25.000'}')">
+              <i class="fa-solid fa-download"></i> Ambil File
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+function filterVodByChip(catName, btnEl) {
+  document.querySelectorAll("#vodCategoryChips .ai-chip").forEach(b => b.classList.remove("active"));
+  if (btnEl) btnEl.classList.add("active");
+  activeVodFilter = catName;
+  renderKatalogVod();
+}
+
+function filterVodLive(keyword) {
+  renderKatalogVod(keyword);
+}
+
+function bukaModalUploadVod() {
+  const m = document.getElementById("vodAddModal");
+  if (m) m.classList.remove("hidden");
+}
+
+function tutupModalUploadVod() {
+  const m = document.getElementById("vodAddModal");
+  if (m) m.classList.add("hidden");
+}
+
+function autofillContohVod() {
+  const titleEl = document.getElementById("addVodTitle");
+  const catEl = document.getElementById("addVodCategory");
+  const priceEl = document.getElementById("addVodHarga");
+  const tagEl = document.getElementById("addVodTag");
+  const descEl = document.getElementById("addVodDesc");
+  const coverEl = document.getElementById("addVodCoverUrl");
+  const videoEl = document.getElementById("addVodVideoUrl");
+
+  if (titleEl) titleEl.value = "Pesona Putri Duyung Samudra Tropis";
+  if (catEl) catEl.value = "Pembuka Viral";
+  if (priceEl) priceEl.value = "Rp35.000";
+  if (tagEl) tagEl.value = "Latar Quotes / Visual Pembuka Estetik";
+  if (descEl) descEl.value = "Putri duyung berenang anggun di celah terumbu karang warna-warni dengan bias cahaya laut jernih.";
+  if (coverEl) coverEl.value = "image_211bee.jpg";
+  if (videoEl) videoEl.value = "http://googleusercontent.com/generated_video_content/8368507200011305640";
+}
+
+function handleUploadVod(e) {
+  e.preventDefault();
+  const catalog = getDatabaseVod();
+  const newId = "JK-" + String(catalog.length + 1).padStart(2, "0");
+
+  const coverFileInput = document.getElementById("addVodCoverFile");
+  const videoFileInput = document.getElementById("addVodVideoFile");
+
+  let finalCover = document.getElementById("addVodCoverUrl")?.value.trim() || "";
+  let finalVideo = document.getElementById("addVodVideoUrl")?.value.trim() || "";
+
+  if (coverFileInput && coverFileInput.files && coverFileInput.files[0]) {
+    finalCover = URL.createObjectURL(coverFileInput.files[0]);
+  }
+  if (videoFileInput && videoFileInput.files && videoFileInput.files[0]) {
+    finalVideo = URL.createObjectURL(videoFileInput.files[0]);
+  }
+
+  if (!finalVideo) {
+    alert("Silakan pilih file video MP4 atau masukkan link URL video terlebih dahulu!");
+    return;
+  }
+
+  const newItem = {
+    id: newId,
+    title: document.getElementById("addVodTitle")?.value.trim() || "Video Siap Pakai",
+    category: document.getElementById("addVodCategory")?.value || "Curhat & Quotes",
+    tag: document.getElementById("addVodTag")?.value.trim() || "VIDEO READY",
+    specs: "9:16 • 4K Slow Motion",
+    desc: document.getElementById("addVodDesc")?.value.trim() || "",
+    cover: finalCover || "images/velvet/cover.jpg",
+    video: finalVideo,
+    harga: document.getElementById("addVodHarga")?.value.trim() || "Rp25.000"
+  };
+
+  catalog.unshift(newItem);
+  localStorage.setItem("jiwas_katalog_data", JSON.stringify(catalog));
+
+  catatLogAktivitas("UPLOAD_VOD", newItem.title, newItem.category);
+  tampilkanToast("🎉 Video berhasil ditambahkan ke etalase!");
+
+  document.getElementById("vodUploadForm")?.reset();
+  tutupModalUploadVod();
+  renderKatalogVod();
+}
+
+function bukaModalPlayerVod(videoUrl) {
+  const modal = document.getElementById("vodPlayerModal");
+  const player = document.getElementById("vodPlayerModalMedia");
+  if (modal && player) {
+    player.src = videoUrl;
+    modal.classList.remove("hidden");
+    player.play();
+  }
+}
+
+function tutupModalPlayerVod() {
+  const modal = document.getElementById("vodPlayerModal");
+  const player = document.getElementById("vodPlayerModalMedia");
+  if (modal && player) {
+    player.pause();
+    player.src = "";
+    modal.classList.add("hidden");
+  }
+}
+
+function bukaModalRequestVod() {
+  const m = document.getElementById("vodRequestModal");
+  if (m) m.classList.remove("hidden");
+}
+
+function tutupModalRequestVod() {
+  const m = document.getElementById("vodRequestModal");
+  if (m) m.classList.add("hidden");
+}
+
+function kirimRequestVodWA(e) {
+  e.preventDefault();
+  const name = document.getElementById("vodReqName")?.value || "";
+  const cat = document.getElementById("vodReqCat")?.value || "";
+  const desc = document.getElementById("vodReqDesc")?.value || "";
+
+  catatLogAktivitas("REQUEST_VOD_CUSTOM", cat, name);
+  const wa = getAdminWhatsAppNumber();
+  const text = `Halo Admin JIWAS, saya mau pesan video on-demand custom:%0A%0A` +
+               `• *Nama/Medsos:* ${encodeURIComponent(name)}%0A` +
+               `• *Kebutuhan:* ${encodeURIComponent(cat)}%0A` +
+               `• *Ide Konsep Video:*%0A${encodeURIComponent(desc)}%0A%0A` +
+               `Mohon info estimasi biaya dan waktu pengerjaannya ya. Terima kasih!`;
+  window.open(`https://wa.me/${wa}?text=${text}`, "_blank");
+  tutupModalRequestVod();
 }
 
 function renderKatalogAkun(filteredList) {
@@ -1194,6 +1493,7 @@ function bukaDetailPack(pack) {
   const secAtelier = document.getElementById("sectionAtelier");
   const secFoto = document.getElementById("sectionFotoAI");
   const secVideo = document.getElementById("sectionVideoAI");
+  const secVod = document.getElementById("sectionVodAI");
   const secAkun = document.getElementById("sectionAkunAI");
   const secDetail = document.getElementById("sectionDetailPack");
   const secComm = document.getElementById("sectionCommercialStudio");
@@ -1203,6 +1503,7 @@ function bukaDetailPack(pack) {
   if (secAtelier) secAtelier.classList.add("hidden");
   if (secFoto) secFoto.classList.add("hidden");
   if (secVideo) secVideo.classList.add("hidden");
+  if (secVod) secVod.classList.add("hidden");
   if (secAkun) secAkun.classList.add("hidden");
   if (secComm) secComm.classList.add("hidden");
   if (secDetail) secDetail.classList.remove("hidden");
@@ -1238,7 +1539,6 @@ function bukaDetailPack(pack) {
     if (isFamilyCatalog(pack)) updatePromptFormasi();
   }
 
-// Munculkan dropdown pengunci wajah jika tipe katalog adalah foto
   const faceLockBox = document.getElementById("facialLockDetailBox");
   if (faceLockBox) {
     faceLockBox.style.display = (pack.type === 'foto') ? "block" : "none";
@@ -1390,21 +1690,22 @@ function renderDetailItemCards() {
     if (isVideo) {
       const basePath = `videos/${activePack.folder}/${i}`;
       mediaHTML = `
-        <div style="position:relative; width:100%; height:100%; cursor:pointer;" onclick="putarVideoCard(this, '${basePath}.mp4')">
-          <img 
-            src="${basePath}.jpg" 
-            alt="Item ${i}" 
-            loading="lazy" 
-            class="img-loaded"
-            style="width:100%; height:100%; object-fit:cover; display:block;" 
-            onerror="this.onerror=null; this.src='images/velvet/cover.jpg';"
-          />
-          <div class="video-play-badge" style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,0.25);">
-            <div style="background:rgba(0,0,0,0.65); border:1px solid rgba(212,175,55,0.4); border-radius:50%; width:38px; height:38px; display:flex; align-items:center; justify-content:center;">
-              <i class="fa-solid fa-play" style="color:var(--gold-primary); font-size:0.9rem; margin-left:3px;"></i>
-            </div>
-          </div>
-        </div>
+        <video 
+          src="${basePath}.mp4" 
+          autoplay loop muted playsinline 
+          style="width:100%; height:100%; object-fit:cover; display:block;"
+          onloadeddata="this.classList.add('img-loaded')"
+          onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
+        ></video>
+        
+        <img 
+          src="${basePath}.jpg" 
+          alt="Item ${i}" 
+          loading="lazy" 
+          class="img-loaded"
+          style="display:none; width:100%; height:100%; object-fit:cover;" 
+          onerror="this.onerror=null; this.src='images/velvet/cover.jpg';"
+        />
       `;
     } else {
       let imgSrc = `images/${activePack.folder}/${i}.jpg`;
@@ -1449,7 +1750,6 @@ function renderDetailItemCards() {
         isLocked = !cekAksesKatalog(activePack.id, "vip");
       }
     } else {
-      // Batas Starter: jika katalog 36 item maka batasnya item 18, jika tidak maka 23
       const starterMax = (activePack.totalItems === 36) ? 18 : 23;
 
       if (i <= 3) {
@@ -1548,8 +1848,14 @@ function renderDetailItemCards() {
             </button>
 
             ${(isVideo && motionText) ? `
-            <button class="btn-copy" style="border-color: #22c55e; color: #4ade80;" onclick="copasPromptFromElement('motionText_${i}', '${activePack.title}',${i})">
+            <button class="btn-copy" style="border-color: #22c55e; color: #4ade80;" onclick="copasPromptFromElement('motionText_${i}', '${activePack.title}', ${i})">
               🎬 Salin Motion
+            </button>
+            ` : ''}
+
+            ${isVideo ? `
+            <button class="btn-copy" style="background:rgba(212,175,55,0.18); border-color:var(--gold-primary); color:var(--gold-light);" onclick="bukaModalCheckout('${activePack.title} - Item #${i}', 'Jasa Pembuatan Video Jadi', 'Rp35.000')">
+              🎬 Buatkan Video Jadi (35K)
             </button>
             ` : ''}
 
@@ -1989,7 +2295,6 @@ function handleAiAccountSearch(keyword) {
   });
 }
 
-// Engine handler kompatibilitas pemanggilan pada index.html (AiAccountEngine.handleSearch)
 const AiAccountEngine = {
   handleSearch: function(keyword) {
     handleAiAccountSearch(keyword);
@@ -2020,6 +2325,11 @@ function filterByQuickChip(categoryTag, btnEl) {
 
   if (categoryTag === 'akun') {
     switchMainTab('akun');
+    return;
+  }
+
+  if (categoryTag === 'vod') {
+    switchMainTab('vod');
     return;
   }
 
@@ -2195,6 +2505,7 @@ function bukaHalamanKomersial() {
   const secAtelier = document.getElementById("sectionAtelier");
   const secFoto = document.getElementById("sectionFotoAI");
   const secVideo = document.getElementById("sectionVideoAI");
+  const secVod = document.getElementById("sectionVodAI");
   const secAkun = document.getElementById("sectionAkunAI");
   const secDetail = document.getElementById("sectionDetailPack");
   const secComm = document.getElementById("sectionCommercialStudio");
@@ -2204,6 +2515,7 @@ function bukaHalamanKomersial() {
   if (secAtelier) secAtelier.classList.add("hidden");
   if (secFoto) secFoto.classList.add("hidden");
   if (secVideo) secVideo.classList.add("hidden");
+  if (secVod) secVod.classList.add("hidden");
   if (secAkun) secAkun.classList.add("hidden");
   if (secDetail) secDetail.classList.add("hidden");
   if (secComm) secComm.classList.remove("hidden");
@@ -2289,15 +2601,4 @@ function filterChipKomersial(chipKey, btnEl) {
 
 function filterKomersialLive(keyword) {
   renderAllCommercialItems(keyword);
-}
-
-function putarVideoCard(containerEl, videoSrc) {
-  if (containerEl.querySelector("video")) return;
-  containerEl.innerHTML = `
-    <video 
-      src="${videoSrc}" 
-      autoplay loop muted playsinline 
-      style="width:100%; height:100%; object-fit:cover; display:block;"
-    ></video>
-  `;
 }

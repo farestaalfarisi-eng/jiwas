@@ -135,6 +135,7 @@
           <button class="quick-tag-chip" onclick="filterByQuickChip('ceo', this)">#CEO</button>
           <button class="quick-tag-chip" onclick="filterByQuickChip('velvet', this)">#Velvet</button>
           <button class="quick-tag-chip" onclick="filterByQuickChip('video', this)">#VideoAI</button>
+          <button class="quick-tag-chip" onclick="filterByQuickChip('vod', this)">#VideoJadi</button>
           <button class="quick-tag-chip" onclick="filterByQuickChip('akun', this)">#AkunAI</button>
         </div>
       </section>
@@ -148,8 +149,7 @@
         <div class="grid-catalog" id="gridHomeCategories"></div>
       </section>
 
-
-<!-- HUB STUDIO KOMERSIAL & UMKM DI HOME -->
+      <!-- HUB STUDIO KOMERSIAL & UMKM DI HOME -->
       <hr class="section-divider">
 
       <section id="commercialHubSection" style="margin-bottom:28px;">
@@ -252,7 +252,7 @@
         </details>
       </div>
 
-<!-- ACCORDION PANDUAN KONSISTENSI WAJAH 1:1 UNTUK SEMUA KATALOG FOTO -->
+      <!-- ACCORDION PANDUAN KONSISTENSI WAJAH 1:1 UNTUK SEMUA KATALOG FOTO -->
       <div class="guide-accordion-wrapper" style="margin-bottom: 20px;">
         <details class="guide-details-box" style="background: rgba(18, 18, 26, 0.75); border: 1px solid rgba(212, 175, 55, 0.3); border-radius: 10px; padding: 12px 16px;">
           <summary class="guide-summary-header" style="cursor: pointer; display: flex; justify-content: space-between; align-items: center; color: var(--gold-light); font-weight: 700; font-size: 0.85rem;">
@@ -310,7 +310,7 @@ EXACT 1:1 facial likeness of the reference subject in the provided reference pho
       <div class="grid-catalog" id="gridFotoKatalog"></div>
     </section>
 
-    <!-- 5. TAB 3: VIDEO AI -->
+    <!-- 5. TAB 3: FORMULA VIDEO AI -->
     <section id="sectionVideoAI" class="hidden">
       <div class="hero-box" style="margin-bottom:14px;">
         <span class="hero-badge">KATALOG FORMULA VIDEO</span>
@@ -318,6 +318,64 @@ EXACT 1:1 facial likeness of the reference subject in the provided reference pho
         <p class="brand-tagline">Formula prompt pergerakan kamera sinematik untuk Runway Gen-3, Luma Dream Machine, Kling, dan Sora.</p>
       </div>
       <div class="grid-catalog" id="gridVideoKatalog"></div>
+    </section>
+
+    <!-- 5.1 TAB KHUSUS: VOD (VIDEO ON-DEMAND & JASA TERIMA JADI) -->
+    <section id="sectionVodAI" class="hidden">
+      <div class="hero-box" style="margin-bottom:14px;">
+        <span class="hero-badge" style="background:rgba(212,175,55,0.15); color:var(--gold-light); border:1px solid rgba(212,175,55,0.3); padding:2px 8px; border-radius:4px;">
+          <i class="fa-solid fa-bolt"></i> READY-TO-USE 9:16
+        </span>
+        <h2 class="hero-title" style="margin-top:4px;">Video Siap Pakai & Request Jadi</h2>
+        <p class="brand-tagline">Tanpa perlu pusing prompt atau langganan tool mahal. Ambil video estetik siap edit di CapCut, atau pesan konsep khusus Anda.</p>
+      </div>
+
+      <!-- Action Box Request Video Custom -->
+      <div class="pack-action-box" style="border-color: rgba(212,175,55,0.4); background: linear-gradient(135deg, #13131c 0%, #171626 100%); margin-bottom:16px;">
+        <div class="pab-info">
+          <h4 style="color:var(--gold-light); display:flex; align-items:center; gap:6px;">
+            <i class="fa-solid fa-sparkles"></i> Punya Ide Konten Khusus?
+          </h4>
+          <p>Ceritakan konsep Anda (kuliner, curhat/doa, produk estetik). Tim Studio JIWAS racikkan videonya sampai jadi.</p>
+           <p> Jangan Biarkan Ide Keren Anda Menguap Begitu Saja Hanya Karena Sibuk.</p>
+           <p>Fokus urus bisnis dan aktivitas Anda. Biarkan kami yang wujudkan ide tersebut menjadi video estetik 9:16 yang memikat mata penonton </p>
+        </div>
+        <div class="pab-buttons">
+          <button onclick="bukaModalRequestVod()" class="btn-buy-wa" style="background:var(--gold-gradient); color:#000; font-weight:800;">
+            <i class="fa-brands fa-whatsapp"></i> Pesan Custom Video
+          </button>
+        </div>
+      </div>
+
+      <!-- Search & Kategori Filter VOD -->
+     <!-- Header Bar & Tombol Trigger Upload Langsung -->
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+        <div>
+          <h3 style="font-size:0.95rem; font-weight:700; color:#fff;">Koleksi Video Siap Pakai</h3>
+          <p style="font-size:0.7rem; color:var(--text-muted);" id="vodItemCountLabel">Memuat koleksi...</p>
+        </div>
+        <button onclick="bukaModalUploadVod()" class="btn-copy" style="background:rgba(212,175,55,0.15); border-color:var(--gold-primary); color:var(--gold-light); font-size:0.72rem; padding:6px 12px;">
+          <i class="fa-solid fa-cloud-arrow-up"></i> + Upload Video
+        </button>
+      </div>
+
+      <!-- Search & Kategori Filter VOD -->
+      <div class="ai-account-wrapper" style="margin-bottom:14px;">
+        <div class="ai-search-box">
+          <i class="fa-solid fa-magnifying-glass ai-search-icon"></i>
+          <input type="text" class="ai-search-input" id="vodSearchInput" placeholder="Cari video: Curhat, Emas, Dapur, Marmer, Produk..." oninput="filterVodLive(this.value)">
+        </div>
+        <div class="ai-categories-scroll" id="vodCategoryChips">
+          <button class="ai-chip active" onclick="filterVodByChip('all', this)">Semua Video</button>
+          <button class="ai-chip" onclick="filterVodByChip('Curhat & Quotes', this)">Curhat & Doa</button>
+          <button class="ai-chip" onclick="filterVodByChip('Pembuka Viral', this)">Pembuka Viral</button>
+          <button class="ai-chip" onclick="filterVodByChip('Dapur & Masakan', this)">Dapur & Resep</button>
+          <button class="ai-chip" onclick="filterVodByChip('Mewah & Produk', this)">Jualan & Skincare</button>
+        </div>
+      </div>
+
+      <!-- Grid Daftar Video Jadi -->
+      <div class="grid-catalog" id="gridVodKatalog"></div>
     </section>
 
     <!-- 6. TAB 4: AKUN AI & ASSET (OFFICIAL STORE) -->
@@ -339,8 +397,7 @@ EXACT 1:1 facial likeness of the reference subject in the provided reference pho
       </div>
     </section>
 
-
-<!-- SECTION KHUSUS: KATALOG KOMERSIAL & UMKM (SCALABLE) -->
+    <!-- SECTION KHUSUS: KATALOG KOMERSIAL & UMKM (SCALABLE) -->
     <section id="sectionCommercialStudio" class="hidden">
       <div class="detail-header" style="margin-bottom:14px;">
         <button class="btn-back" onclick="tutupHalamanKomersial()"><i class="fa-solid fa-arrow-left"></i> Kembali</button>
@@ -377,7 +434,6 @@ EXACT 1:1 facial likeness of the reference subject in the provided reference pho
       <div class="grid-catalog" id="gridAllCommercialItems"></div>
     </section>
 
-
     <!-- 7. SECTION DETAIL PACK (100 PROMPT) -->
     <section id="sectionDetailPack" class="hidden">
       <div class="detail-header">
@@ -397,7 +453,7 @@ EXACT 1:1 facial likeness of the reference subject in the provided reference pho
         <div class="pab-buttons"></div>
       </div>
 
-<!-- BOX KONSISTENSI WAJAH DINAMIS UNTUK KATALOG FOTO -->
+      <!-- BOX KONSISTENSI WAJAH DINAMIS UNTUK KATALOG FOTO -->
       <div id="facialLockDetailBox" class="guide-accordion-wrapper" style="margin-bottom: 16px; display: none;">
         <details class="guide-details-box" style="background: rgba(18, 18, 26, 0.7); border: 1px solid rgba(212, 175, 55, 0.25); border-radius: 8px; padding: 10px 14px;">
           <summary class="guide-summary-header" style="cursor: pointer; display: flex; justify-content: space-between; align-items: center; color: var(--gold-light); font-weight: 700; font-size: 0.8rem;">
@@ -511,9 +567,76 @@ EXACT 1:1 facial likeness of the reference subject in the provided reference pho
         </div>
       </div>
 
-      <!-- Grid 100 Item Cards -->
+    <!-- Grid 100 Item Cards -->
       <div class="items-grid" id="itemsGrid"></div>
     </section>
+
+    <!-- MODAL UPLOAD VIDEO LANGSUNG KE TAB VOD -->
+    <div id="vodAddModal" class="modal-overlay hidden">
+      <div class="modal-content" style="max-width:390px; text-align:left; max-height:90vh; overflow-y:auto;">
+        <button class="btn-modal-close" onclick="tutupModalUploadVod()" aria-label="Tutup"><i class="fa-solid fa-xmark"></i></button>
+        <span class="hero-badge" style="margin-bottom:4px;">UNGGAH VIDEO VOD</span>
+        <h3 style="font-family:'Cinzel', serif; color:var(--gold-light); font-size:1.05rem; margin-bottom:4px;">Upload Video Siap Pakai</h3>
+        <p style="font-size:0.72rem; color:var(--text-muted); margin-bottom:12px;">Tambahkan video langsung dari galeri atau link online ke etalase.</p>
+
+        <form id="vodUploadForm" onsubmit="handleUploadVod(event)">
+          <!-- Form Preset Otomatis Cepat -->
+          <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(212,175,55,0.25); border-radius:8px; padding:8px; margin-bottom:12px; display:flex; justify-content:space-between; align-items:center;">
+            <span style="font-size:0.68rem; color:var(--gold-light); font-weight:700;">Preset Cepat:</span>
+            <button type="button" class="btn-copy" style="font-size:0.65rem; padding:3px 8px;" onclick="autofillContohVod()">
+              ⚡ Isi Contoh Duyung
+            </button>
+          </div>
+
+          <div style="margin-bottom:10px;">
+            <label style="font-size:0.75rem; font-weight:700; color:var(--gold-light); display:block; margin-bottom:4px;">Judul Video:</label>
+            <input type="text" id="addVodTitle" class="input-growth" style="width:100%;" placeholder="Contoh: Ombak Syahdu Sunset Pantai" required autocomplete="off">
+          </div>
+
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px; margin-bottom:10px;">
+            <div>
+              <label style="font-size:0.75rem; font-weight:700; color:var(--gold-light); display:block; margin-bottom:4px;">Kategori:</label>
+              <select id="addVodCategory" class="input-growth" style="width:100%;">
+                <option value="Curhat & Quotes">Curhat & Doa</option>
+                <option value="Pembuka Viral">Pembuka Viral</option>
+                <option value="Dapur & Masakan">Dapur & Resep</option>
+                <option value="Mewah & Produk">Jualan & Skincare</option>
+              </select>
+            </div>
+            <div>
+              <label style="font-size:0.75rem; font-weight:700; color:var(--gold-light); display:block; margin-bottom:4px;">Harga (Rp):</label>
+              <input type="text" id="addVodHarga" class="input-growth" style="width:100%;" placeholder="Rp25.000" value="Rp25.000">
+            </div>
+          </div>
+
+          <div style="margin-bottom:10px;">
+            <label style="font-size:0.75rem; font-weight:700; color:var(--gold-light); display:block; margin-bottom:4px;">Tag / Cocok Untuk:</label>
+            <input type="text" id="addVodTag" class="input-growth" style="width:100%;" placeholder="Contoh: Latar Quotes / Pembuka Estetik" required>
+          </div>
+
+          <div style="margin-bottom:10px;">
+            <label style="font-size:0.75rem; font-weight:700; color:var(--gold-light); display:block; margin-bottom:4px;">Deskripsi Singkat:</label>
+            <textarea id="addVodDesc" class="input-growth" style="width:100%; height:55px; resize:none;" placeholder="Penjelasan singkat suasana video..." required></textarea>
+          </div>
+
+          <div style="margin-bottom:10px;">
+            <label style="font-size:0.75rem; font-weight:700; color:var(--gold-light); display:block; margin-bottom:4px;">Cover Foto (9:16):</label>
+            <input type="file" id="addVodCoverFile" accept="image/*" style="font-size:0.72rem; color:var(--text-muted); margin-bottom:4px; width:100%;">
+            <input type="text" id="addVodCoverUrl" class="input-growth" style="width:100%; font-size:0.72rem;" placeholder="Atau paste link URL foto cover...">
+          </div>
+
+          <div style="margin-bottom:14px;">
+            <label style="font-size:0.75rem; font-weight:700; color:var(--gold-light); display:block; margin-bottom:4px;">File Video MP4:</label>
+            <input type="file" id="addVodVideoFile" accept="video/mp4,video/*" style="font-size:0.72rem; color:var(--text-muted); margin-bottom:4px; width:100%;">
+            <input type="text" id="addVodVideoUrl" class="input-growth" style="width:100%; font-size:0.72rem;" placeholder="Atau paste link URL file MP4...">
+          </div>
+
+          <button type="submit" class="btn-copy" style="background:var(--gold-gradient); color:#000; font-weight:800; width:100%; justify-content:center; padding:10px;">
+            <i class="fa-solid fa-check"></i> Simpan ke Daftar Video
+          </button>
+        </form>
+      </div>
+    </div>
 
     <footer>
       <div class="footer-brand">JIWAS ATELIER</div>
@@ -535,11 +658,15 @@ EXACT 1:1 facial likeness of the reference subject in the provided reference pho
       </button>
       <button class="b-nav-item" id="tabBtnVideo" onclick="switchMainTab('video', this)">
         <i class="fa-solid fa-clapperboard"></i>
-        <span>Video AI</span>
+        <span>Formula Video</span>
+      </button>
+      <button class="b-nav-item" id="tabBtnVod" onclick="switchMainTab('vod', this)">
+        <i class="fa-solid fa-film"></i>
+        <span>Request Video</span>
       </button>
       <button class="b-nav-item" id="tabBtnAkun" onclick="switchMainTab('akun', this)">
         <i class="fa-solid fa-user-astronaut"></i>
-        <span>Digital AI</span>
+        <span>Akun AI</span>
       </button>
     </div>
   </nav>
@@ -560,6 +687,52 @@ EXACT 1:1 facial likeness of the reference subject in the provided reference pho
   <div id="toast" class="toast hidden">
     <i class="fa-solid fa-circle-check" style="color:var(--accent-green);"></i>
     <span id="toastMsg">Notifikasi</span>
+  </div>
+
+  <!-- MODAL FULLSCREEN PLAYER (9:16) -->
+  <div id="vodPlayerModal" class="modal-overlay hidden" style="background: rgba(0,0,0,0.95); z-index: 10001;">
+    <div style="position: relative; width: 100%; max-width: 380px; aspect-ratio: 9/16; background: #000; border-radius: 12px; overflow: hidden; border: 1px solid rgba(212,175,55,0.4); display: flex; flex-direction: column;">
+      <button onclick="tutupModalPlayerVod()" aria-label="Tutup Player" style="position: absolute; top: 12px; right: 12px; z-index: 20; background: rgba(0,0,0,0.65); border: 1px solid rgba(255,255,255,0.2); color: #fff; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer;">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+      <video id="vodPlayerModalMedia" style="width: 100%; height: 100%; object-fit: cover;" controls autoplay loop playsinline>
+        <source src="" type="video/mp4">
+      </video>
+    </div>
+  </div>
+
+  <!-- MODAL REQUEST VOD VIA WA -->
+  <div id="vodRequestModal" class="modal-overlay hidden">
+    <div class="modal-content" style="max-width:390px; text-align:left;">
+      <button class="btn-modal-close" onclick="tutupModalRequestVod()" aria-label="Tutup"><i class="fa-solid fa-xmark"></i></button>
+      <span class="hero-badge" style="margin-bottom:4px;">DONE-FOR-YOU SERVICE</span>
+      <h3 style="font-family:'Cinzel', serif; color:var(--gold-light); font-size:1.05rem; margin-bottom:4px;">Pesan Video Sesuai Ide</h3>
+      <p style="font-size:0.72rem; color:var(--text-muted); margin-bottom:12px;">Kirim detail ke WhatsApp Studio JIWAS untuk konsultasi dan pemesanan.</p>
+
+      <form onsubmit="kirimRequestVodWA(event)">
+        <div style="margin-bottom:10px;">
+          <label style="font-size:0.75rem; font-weight:700; color:var(--gold-light); display:block; margin-bottom:4px;">Nama Anda / Akun Medsos:</label>
+          <input type="text" id="vodReqName" class="input-growth" style="width:100%;" placeholder="Contoh: Bunda Rina / @ceritaharianku" required autocomplete="off">
+        </div>
+        <div style="margin-bottom:10px;">
+          <label style="font-size:0.75rem; font-weight:700; color:var(--gold-light); display:block; margin-bottom:4px;">Kategori Video:</label>
+          <select id="vodReqCat" class="input-growth" style="width:100%;">
+            <option value="Latar Curhat, Doa & Kata Bijak">Latar Curhat, Doa & Kata Bijak</option>
+            <option value="Pembuka Video Viral (Hook 3 Detik)">Pembuka Video Viral (Hook 3 Detik)</option>
+            <option value="Dapur & Resep Masakan Estetik">Dapur & Resep Masakan Estetik</option>
+            <option value="Produk, Skincare & Gamis Mewah">Produk, Skincare & Gamis Mewah</option>
+            <option value="Tema Custom Khusus">Tema Custom Khusus</option>
+          </select>
+        </div>
+        <div style="margin-bottom:14px;">
+          <label style="font-size:0.75rem; font-weight:700; color:var(--gold-light); display:block; margin-bottom:4px;">Deskripsi Suasana Video yang Diinginkan:</label>
+          <textarea id="vodReqDesc" class="input-growth" style="width:100%; height:75px; resize:none;" placeholder="Contoh: Butuh video cangkir kopi beruap di dekat jendela pagi hari dengan suara hujan pelan..." required></textarea>
+        </div>
+        <button type="submit" class="btn-copy" style="background:var(--gold-gradient); color:#000; font-weight:800; width:100%; justify-content:center; padding:10px;">
+          <i class="fa-brands fa-whatsapp"></i> Kirim Pesanan ke WhatsApp
+        </button>
+      </form>
+    </div>
   </div>
 
   <!-- MODAL INPUT PIN -->
@@ -686,6 +859,6 @@ EXACT 1:1 facial likeness of the reference subject in the provided reference pho
   <script src="prompts/videos/nature-cinematic.js"></script>
   <script src="prompts/umkm/commercial.js"></script>
   <script src="prompts/family36.js"></script>
-  <script src="app.js?v=3"></script>
+  <script src="app.js?v=4"></script>
 </body>
 </html>

@@ -1402,14 +1402,27 @@ body {
   flex-direction: column;
   align-items: center;
   gap: 3px;
-  font-size: 0.68rem;
+  font-size: 0.65rem;
   font-weight: 600;
   cursor: pointer;
-  width: 25%;
+  width: 20%;
 }
 
-.b-nav-item i {
-  font-size: 1.05rem;
+.b-nav-item {
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.2s ease;
+}
+
+.b-nav-item.active {
+  color: var(--gold-primary);
+  transform: scale(1.18) translateY(-4px);
+}
+
+.b-nav-item.active i {
+  filter: drop-shadow(0 2px 8px rgba(212, 175, 55, 0.6));
+}
+
+.b-nav-item:active {
+  transform: scale(0.92);
 }
 
 .b-nav-item.active {
@@ -1595,7 +1608,6 @@ footer {
   display: none !important;
 }
 
-
 /* -------------------------------------------------------------------------
    ATELIER CENTER SEARCH ENGINE & QUICK CHIPS (PINTEREST CAPSULE LUXURY)
    ------------------------------------------------------------------------- */
@@ -1723,12 +1735,12 @@ footer {
   color: var(--text-muted) !important;
   cursor: not-allowed !important;
   opacity: 0.45;
-  pointer-events: none; /* Mencegah trigger event klik */
+  pointer-events: none;
   transform: none !important;
 }
 
 .btn-quick-copy.btn-out-of-stock strong {
-  color: var(--accent-red) !important; /* Tulisan 'Habis' berwarna merah lembut */
+  color: var(--accent-red) !important;
   font-size: 0.7rem;
 }
 
