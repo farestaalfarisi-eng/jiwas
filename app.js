@@ -846,48 +846,22 @@ function renderHomeCategories() {
     let badgeText = '📸 100 PROMPT';
     let mediaDisplayHTML = "";
 
-    if (item.type === 'video') {
+   if (item.type === 'video') {
       badgeText = (item.workflow === "frame-to-frame") ? '🎞️ DUAL FRAME (36)' : '🎥 VIDEO AI (30)';
       
       const videoCoverMp4 = `videos/${item.folder}/cover.mp4`;
-      const video1Mp4 = `videos/${item.folder}/1.mp4`;
       const imageCoverJpg = item.coverUrl || `videos/${item.folder}/cover.jpg`;
-      const image1Jpg = `videos/${item.folder}/1.jpg`;
 
+      // HANYA RENDER GAMBAR COVER DI AWAL (Zero Video Memory)
       mediaDisplayHTML = `
-        <div style="position:relative; width:100%; height:100%; overflow:hidden;">
-          <video 
-            src="${videoCoverMp4}" 
-            class="aspect-9-16" 
-            autoplay loop muted playsinline 
-            style="width:100%; object-fit:cover; display:block;"
-            onloadeddata="this.classList.add('img-loaded')"
-            onerror="
-              if (!this.dataset.tried1) {
-                this.dataset.tried1 = 'true';
-                this.src = '${video1Mp4}';
-              } else {
-                this.style.display = 'none';
-                this.nextElementSibling.style.display = 'block';
-              }
-            "
-          ></video>
-
+        <div class="video-lazy-container aspect-9-16" data-video="${videoCoverMp4}">
           <img 
             src="${imageCoverJpg}" 
             alt="${item.title}" 
             class="aspect-9-16 img-loaded" 
-            loading="eager" 
-            style="display:none; width:100%; object-fit:cover;"
-            onerror="
-              if (!this.dataset.triedImg1) {
-                this.dataset.triedImg1 = 'true';
-                this.src = '${image1Jpg}';
-              } else {
-                this.onerror = null;
-                this.src = 'images/velvet/cover.jpg';
-              }
-            "
+            loading="lazy" 
+            decoding="async"
+            onerror="this.onerror=null; this.src='images/velvet/cover.jpg';"
           >
         </div>
       `;
@@ -928,6 +902,7 @@ function renderHomeCategories() {
     `;
     container.appendChild(card);
   });
+    aktivasiLazyVideoObserver();
 }
 
 function renderHomeDigitalAi() {
@@ -1049,9 +1024,7 @@ function renderKatalogVideo() {
     const btnText = isFrameToFrame ? 'Buka 36 Dual Frame' : 'Buka 36 Video Formula';
 
     const videoCoverMp4 = `videos/${pack.folder}/cover.mp4`;
-    const video1Mp4 = `videos/${pack.folder}/1.mp4`;
     const imageCoverJpg = pack.coverUrl || `videos/${pack.folder}/cover.jpg`;
-    const image1Jpg = `videos/${pack.folder}/1.jpg`;
 
     const card = document.createElement("div");
     card.className = "catalog-card";
@@ -1073,38 +1046,17 @@ function renderKatalogVideo() {
           </div>
         </div>
         
-        <video 
-          src="${videoCoverMp4}" 
-          class="aspect-9-16" 
-          autoplay loop muted playsinline 
-          style="width:100%; object-fit:cover; display:block;"
-          onloadeddata="this.classList.add('img-loaded')"
-          onerror="
-            if (!this.dataset.tried1) {
-              this.dataset.tried1 = 'true';
-              this.src = '${video1Mp4}';
-            } else {
-              this.style.display = 'none';
-              this.nextElementSibling.style.display = 'block';
-            }
-          "
-        ></video>
-
-        <img 
-          src="${imageCoverJpg}" 
-          alt="${pack.title}" 
-          class="aspect-9-16 img-loaded" 
-          style="display:none; width:100%; object-fit:cover;"
-          onerror="
-            if (!this.dataset.triedImg1) {
-              this.dataset.triedImg1 = 'true';
-              this.src = '${image1Jpg}';
-            } else {
-              this.onerror = null;
-              this.src = 'images/velvet/cover.jpg';
-            }
-          "
-        >
+        <!-- COVER IMAGE PERTAMA, VIDEO AKAN DIINJEKSI KETIKA DEKAT LAYAR -->
+        <div class="video-lazy-container aspect-9-16" data-video="${videoCoverMp4}">
+          <img 
+            src="${imageCoverJpg}" 
+            alt="${pack.title}" 
+            class="aspect-9-16 img-loaded" 
+            loading="lazy" 
+            decoding="async"
+            onerror="this.onerror=null; this.src='images/velvet/cover.jpg';"
+          >
+        </div>
       </div>
       <div class="card-info">
         <h3 class="card-title">${pack.title}</h3>
@@ -1115,6 +1067,7 @@ function renderKatalogVideo() {
     `;
     container.appendChild(card);
   });
+    aktivasiLazyVideoObserver();
 }
 
 // -------------------------------------------------------------------------
@@ -1690,22 +1643,17 @@ function renderDetailItemCards() {
     if (isVideo) {
       const basePath = `videos/${activePack.folder}/${i}`;
       mediaHTML = `
-        <video 
-          src="${basePath}.mp4" 
-          autoplay loop muted playsinline 
-          style="width:100%; height:100%; object-fit:cover; display:block;"
-          onloadeddata="this.classList.add('img-loaded')"
-          onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
-        ></video>
-        
-        <img 
-          src="${basePath}.jpg" 
-          alt="Item ${i}" 
-          loading="eager" 
-          class="img-loaded"
-          style="display:none; width:100%; height:100%; object-fit:cover;" 
-          onerror="this.onerror=null; this.src='images/velvet/cover.jpg';"
-        />
+        <div class="video-lazy-container aspect-9-16" data-video="${basePath}.mp4">
+          <img 
+            src="${basePath}.jpg" 
+            alt="Item ${i}" 
+            loading="lazy" 
+            decoding="async"
+            class="img-loaded"
+            style="width:100%; height:100%; object-fit:cover;" 
+            onerror="this.onerror=null; this.src='images/velvet/cover.jpg';"
+          />
+        </div>
       `;
     } else {
       let imgSrc = `images/${activePack.folder}/${i}.jpg`;
@@ -1888,6 +1836,7 @@ function renderDetailItemCards() {
     `;
     grid.appendChild(card);
   }
+    aktivasiLazyVideoObserver();
 }
 
 // -------------------------------------------------------------------------
@@ -2679,35 +2628,60 @@ function salinNomorRekening(nomor, jenis) {
   });
 }
 // =========================================================================
-// SMART VIDEO LAZY-LOAD & MEMORY SAVER (IntersectionObserver)
+// SMART VIDEO LAZY-LOAD & RAM CLEANER (Cover -> MP4 on Enter -> Unload on Exit)
 // =========================================================================
-const videoObserver = new IntersectionObserver((entries) => {
+const lazyVideoObserver = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
-    const video = entry.target;
-    const realSrc = video.dataset.src;
+    const container = entry.target;
+    const videoUrl = container.dataset.video;
+    const existingVideo = container.querySelector('video');
+    const posterImg = container.querySelector('img');
 
     if (entry.isIntersecting) {
-      // 1. Masuk area pandang layar: Muat sumber video jika belum terpasang
-      if (realSrc && !video.src) {
-        video.src = realSrc;
+      // 1. MASUK LAYAR: Pasang video jika belum ada
+      if (!existingVideo && videoUrl) {
+        const video = document.createElement('video');
+        video.src = videoUrl;
+        video.autoplay = true;
+        video.loop = true;
+        video.muted = true;
+        video.playsInline = true;
+        video.className = 'aspect-9-16';
+
+        // Begitu frame video ter-load, sembunyikan gambar cover
+        video.onloadeddata = () => {
+          if (posterImg) posterImg.style.opacity = '0';
+        };
+
+        // Jika video 404 / gagal, hapus elemen video agar cover tetap tampil
+        video.onerror = () => {
+          video.remove();
+          if (posterImg) posterImg.style.opacity = '1';
+        };
+
+        container.appendChild(video);
+      } else if (existingVideo) {
+        existingVideo.play().catch(() => {});
       }
-      // Putar video dengan aman
-      video.play().catch(() => {});
     } else {
-      // 2. Keluar area pandang: Jeda video untuk menghemat RAM & CPU
-      if (!video.paused) {
-        video.pause();
+      // 2. KELUAR LAYAR: HAPUS VIDEO DARI DOM UNTUK MEMBEBASKAN RAM 100%
+      if (existingVideo) {
+        existingVideo.pause();
+        existingVideo.removeAttribute('src'); // Buang buffer dari memori
+        existingVideo.load();
+        existingVideo.remove();               // Hapus total dari DOM
+        if (posterImg) posterImg.style.opacity = '1'; // Tampilkan kembali gambar cover
       }
     }
   });
 }, {
-  rootMargin: "150px 0px", // Mulai siapkan video 150px sebelum masuk layar
-  threshold: 0.25
+  rootMargin: '120px 0px', // Siapkan video 120px sebelum masuk viewport layar
+  threshold: 0.1
 });
 
-// Fungsi pembantu untuk mengaktifkan pengawasan ke semua video malas
+// Fungsi pemanggil observer ke semua wadah video
 function aktivasiLazyVideoObserver() {
-  document.querySelectorAll("video.lazy-smart-video").forEach(v => {
-    videoObserver.observe(v);
+  document.querySelectorAll('.video-lazy-container').forEach(el => {
+    lazyVideoObserver.observe(el);
   });
 }

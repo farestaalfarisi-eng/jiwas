@@ -1761,3 +1761,33 @@ footer {
 .input-growth:focus {
   border-color: var(--gold-primary);
 }
+
+/* =========================================================================
+   SMART LAZY VIDEO CONTAINER (COVER IMAGE FIRST -> MP4 ON-DEMAND)
+   ========================================================================= */
+.video-lazy-container {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 9 / 16;
+  overflow: hidden;
+  background: #111116;
+  contain: layout paint;
+}
+
+.video-lazy-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: opacity 0.3s ease;
+}
+
+.video-lazy-container video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 1;
+}
