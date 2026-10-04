@@ -1214,7 +1214,10 @@ Variasi, Harga - (Stok):
             </div>
             <div>
               <label style="font-size:0.75rem; font-weight:700; color:var(--gold-light); display:block; margin-bottom:4px;">Gambar Cover / Logo URL:</label>
-              <input type="text" id="prodLogo" class="input-growth" style="width:100%;" placeholder="images/canvas/canva.jpg">
+              <div style="display:flex; gap:8px; align-items:center;">
+                <input type="text" id="prodLogo" class="input-growth" style="flex:1;" placeholder="images/canvas/canva.jpg" oninput="const p = document.getElementById('coverPreview'); if(p) p.src = this.value;">
+                <img id="coverPreview" src="images/canvas/canva.jpg" alt="Preview Cover" style="width:36px; height:36px; border-radius:6px; object-fit:cover; border:1px solid rgba(56,189,248,0.4);" onerror="this.src='images/canvas/canva.jpg';">
+              </div>
             </div>
           </div>
 
@@ -1424,6 +1427,68 @@ Variasi, Harga - (Stok):
   <script src="database.js"></script>
 
   <script>
+// =========================================================================
+// KAMUS PRESET COVER OTOMATIS (LEMBAR 5)
+// =========================================================================
+const AI_COVER_PRESETS = [
+  // 1. YouTube
+  { match: /youtube|yt\b/i, cover: "images/canvas/youtube.jpg" },
+
+  // 2. Canva
+  { match: /canva/i, cover: "images/canvas/canva.jpg" },
+
+  // 3. ChatGPT / OpenAI
+  { match: /chatgpt|gpt|openai/i, cover: "images/canvas/gpt.jpg" },
+
+  // 4. Google Gemini
+  { match: /gemini|google\s*ai/i, cover: "images/canvas/gemini.jpg" },
+
+  // 5. CapCut
+  { match: /capcut/i, cover: "images/canvas/capcut.jpg" },
+
+  // 6. Duolingo
+  { match: /duolingo|duo\b/i, cover: "images/canvas/duo.jpg" },
+
+  // 7. Meitu
+  { match: /meitu/i, cover: "images/canvas/meitu.jpg" },
+
+  // 8. Alight Motion / Motion
+  { match: /alight\s*motion|motion/i, cover: "images/canvas/motion.jpg" },
+
+  // 9. Remini
+  { match: /remini/i, cover: "images/canvas/remini2.jpg" },
+
+  // 10. Vidio Premier
+  { match: /vidio(?!\.com|\.jpg)/i, cover: "images/canvas/vidion.jpg" },
+
+  // 11. Viu
+  { match: /\bviu\b/i, cover: "images/canvas/viu.jpg" },
+
+  // 12. WeTV
+  { match: /wetv/i, cover: "images/canvas/wetv.jpg" },
+
+  // 13. Wink Video Retouch
+  { match: /wink/i, cover: "images/canvas/wink.jpg" },
+
+  // 14. VPN (Nord, Express, 1.1.1.1, dll)
+  { match: /vpn/i, cover: "images/canvas/vpn.jpg" },
+
+  // 15. Zoom Meeting
+  { match: /zoom/i, cover: "images/canvas/zoom.jpg" },
+
+  // 16. Kategori Video Umum / Prime Video
+  { match: /prime\s*video|video\s*ai|\bvideo\b/i, cover: "images/canvas/video.jpg" }
+];
+
+function detectCoverByProductName(nameOrText) {
+  const target = (nameOrText || "").toLowerCase();
+  for (const preset of AI_COVER_PRESETS) {
+    if (preset.match.test(target)) {
+      return preset.cover;
+    }
+  }
+  return "images/canvas/canva.jpg"; // Default fallback
+}
     const ENGINE_API_URL = "http://localhost:3000";
     const STORAGE_KEY_AI_PRODUCTS = "JIWAS_AI_PRODUCTS_OVERRIDE";
 
@@ -2249,11 +2314,11 @@ if (item.type.includes("ENGINE")) badgeClass = "ev-engine";
       }
     }
 
-    // Logika Pembersih & Parser Universal untuk Semua Pola Bot Vendor
+   // Logika Pembersih & Parser Universal untuk Semua Pola Bot Vendor
     function processVendorExtractedText(raw) {
       if (!raw) return;
 
-      // 1. Deteksi Nama Produk
+      // 1. Deteksi Nama Produk (Mencakup YouTube, Duolingo, Meitu, Wink, WeTV, Vidio, VPN, dll)
       let prodName = "";
       const nameMatch = raw.match(/Produk\s*[:\-=]\s*([^\r\n]+)/i);
       if (nameMatch) {
@@ -2261,7 +2326,7 @@ if (item.type.includes("ENGINE")) badgeClass = "ev-engine";
       } else {
         const lines = raw.split(/\r?\n/);
         for (let l of lines) {
-          if (/gemini|canva|capcut|chatgpt|openai|spotify|netflix|zoom|iqiyi|loklok|bstation|viu/i.test(l)) {
+          if (/gemini|canva|capcut|chatgpt|openai|spotify|netflix|zoom|iqiyi|loklok|bstation|viu|youtube|yt|duolingo|duo|meitu|motion|remini|vidio|wetv|wink|vpn/i.test(l)) {
             prodName = l.replace(/[•\-\*]/g, '').trim();
             break;
           }
@@ -2273,7 +2338,18 @@ if (item.type.includes("ENGINE")) badgeClass = "ev-engine";
         if (el) el.value = prodName;
       }
 
-      // 2. Deteksi Deskripsi & Garansi Global
+      // 2. OTOMATIS PANGGIL GAMBAR COVER SESUAI NAMA PRODUK
+      const detectedCover = detectCoverByProductName(prodName + " " + raw);
+      const elLogo = document.getElementById("prodLogo");
+      if (elLogo) {
+        elLogo.value = detectedCover;
+      }
+      const elPreview = document.getElementById("coverPreview");
+      if (elPreview) {
+        elPreview.src = detectedCover;
+      }
+
+      // 3. Deteksi Deskripsi & Garansi Global
       let deskripsi = "";
       let garansiGlobal = "Full Garansi Sesuai Durasi";
       const deskMatch = raw.match(/Desk\s*[:\-=]\s*([^\r\n]+)/i);
@@ -2294,21 +2370,21 @@ if (item.type.includes("ENGINE")) badgeClass = "ev-engine";
       const elGar = document.getElementById("prodGaransi");
       if (elGar) elGar.value = garansiGlobal;
 
-      // 3. Deteksi Kategori Otomatis
+      // 4. Deteksi Kategori Otomatis
       let kategori = "AI";
-      if (/capcut|video|iqiyi|bstation|netflix|viu|loklok/i.test(combinedText)) {
+      if (/capcut|video|iqiyi|bstation|netflix|viu|loklok|youtube|yt|wetv|vidio|motion|wink/i.test(combinedText)) {
         kategori = "Video";
-      } else if (/canva|design|desain|adobe|corel|photoshop/i.test(combinedText)) {
+      } else if (/canva|design|desain|adobe|corel|photoshop|meitu|remini/i.test(combinedText)) {
         kategori = "Design";
       } else if (/gemini|chatgpt|openai|midjourney|claude|deepseek|link redeem/i.test(combinedText)) {
         kategori = "AI";
-      } else if (/spotify|youtube|zoom|office|drive|apple/i.test(combinedText)) {
+      } else if (/spotify|zoom|office|drive|apple|duolingo|duo|vpn/i.test(combinedText)) {
         kategori = "Produktivitas";
       }
       const elCat = document.getElementById("prodKategori");
       if (elCat) elCat.value = kategori;
 
-      // 4. Deteksi Tipe Penyerahan Akun
+      // 5. Deteksi Tipe Penyerahan Akun
       let jenisAkun = "Direct Login (PC & HP)";
       if (/invite|member|famhead|owner|head edu|famplan/i.test(combinedText)) {
         jenisAkun = "Invite Email / Tim";
@@ -2318,7 +2394,7 @@ if (item.type.includes("ENGINE")) badgeClass = "ev-engine";
       const elJenis = document.getElementById("prodJenisAkun");
       if (elJenis) elJenis.value = jenisAkun;
 
-      // 5. Ekstraksi Baris Variasi
+      // 6. Ekstraksi Baris Variasi
       const lines = raw.split(/\r?\n/);
       let varSection = false;
       const parsedVariants = [];
