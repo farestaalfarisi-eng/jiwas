@@ -1131,11 +1131,12 @@ Variasi, Harga - (Stok):
           <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap:12px; margin-bottom:14px;">
             <div>
               <label style="font-size:0.75rem; font-weight:700; color:var(--gold-light); display:block; margin-bottom:4px;">Sumber Vendor:</label>
-              <select id="prodVendor" class="input-growth" style="width:100%;" required>
-                <option value="FNSHOP">FNSHOP Auto Order</option>
-                <option value="INCA_STORE">Inca Store Bot (H2H)</option>
-                <option value="MITRA_LAIN">Vendor Mitra Lainnya</option>
-              </select>
+             <select id="prodVendor" class="input-growth" style="width:100%;" required>
+  <option value="FNSHOP">FNSHOP Auto Order</option>
+  <option value="INCA_STORE">Inca Store Bot (H2H)</option>
+  <option value="IDMASADEPAN">IDMASADEPAN Bot / Store</option>
+  <option value="MITRA_LAIN">Vendor Mitra Lainnya</option>
+</select>
             </div>
 
             <div>
@@ -2338,15 +2339,28 @@ if (item.type.includes("ENGINE")) badgeClass = "ev-engine";
         if (el) el.value = prodName;
       }
 
-      // 2. OTOMATIS PANGGIL GAMBAR COVER SESUAI NAMA PRODUK
+      // 1. Panggil dan pasang gambar cover otomatis
       const detectedCover = detectCoverByProductName(prodName + " " + raw);
       const elLogo = document.getElementById("prodLogo");
-      if (elLogo) {
-        elLogo.value = detectedCover;
-      }
+      if (elLogo) elLogo.value = detectedCover;
       const elPreview = document.getElementById("coverPreview");
-      if (elPreview) {
-        elPreview.src = detectedCover;
+      if (elPreview) elPreview.src = detectedCover;
+
+      // 2. Deteksi vendor otomatis (IDMASADEPAN / INCA_STORE / FNSHOP)
+      let vendorOtomatis = "FNSHOP";
+      const lowerRaw = (prodName + " " + raw).toLowerCase();
+
+      if (/idmasadepan|id\s*masa\s*depan/i.test(lowerRaw)) {
+        vendorOtomatis = "IDMASADEPAN";
+      } else if (/inca|h2h|inca\s*store/i.test(lowerRaw)) {
+        vendorOtomatis = "INCA_STORE";
+      } else if (/fnshop|fn\s*shop/i.test(lowerRaw)) {
+        vendorOtomatis = "FNSHOP";
+      }
+
+      const elVendor = document.getElementById("prodVendor");
+      if (elVendor) {
+        elVendor.value = vendorOtomatis;
       }
 
       // 3. Deteksi Deskripsi & Garansi Global

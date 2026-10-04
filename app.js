@@ -1385,6 +1385,9 @@ function eksekusiOrderAkun(productId, variantName) {
   const target = list.find(p => String(p.id) === String(productId));
   const pName = target ? (target.nama || target.name) : "Akun AI";
   
+  // Baca identitas vendor produk dari database
+  const vendorName = target ? (target.vendor || (target.supplier && target.supplier.supplierId) || "FNSHOP") : "FNSHOP";
+
   let hargaTeks = "Rp15.000";
   if (target && target.variants && Array.isArray(target.variants)) {
     const vObj = target.variants.find(v => v.name.toLowerCase().includes(variantName.toLowerCase()));
@@ -1395,7 +1398,8 @@ function eksekusiOrderAkun(productId, variantName) {
     hargaTeks = `Rp${Number(target.hargaPromo || target.harga).toLocaleString("id-ID")}`;
   }
 
-  bukaModalCheckout(pName, variantName, hargaTeks);
+  // Sisipkan nama vendor langsung di belakang judul produk
+  bukaModalCheckout(`${pName} [${vendorName.toUpperCase()}]`, variantName, hargaTeks);
 }
 
 // -------------------------------------------------------------------------
