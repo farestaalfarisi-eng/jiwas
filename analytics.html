@@ -802,7 +802,7 @@
 
         <div style="background:#161620; padding:12px; border-radius:8px; margin-bottom:14px; display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
           <label style="font-size:0.8rem; font-weight:700; color:var(--gold-light);"><i class="fa-brands fa-whatsapp"></i> Nomor WhatsApp Admin Toko:</label>
-          <input type="text" id="adminWaInput" class="input-pin" style="width:190px;" placeholder="6282255267793">
+          <input type="text" id="adminWaInput" class="input-pin" style="width:190px;" placeholder="6285181780429">
           <span style="font-size:0.7rem; color:var(--text-muted);">*Nomor tujuan saat pembeli klik tombol pesan di etalase</span>
         </div>
 
@@ -1353,10 +1353,10 @@ Variasi, Harga - (Stok):
           <div class="bank-card-box">
             <div>
               <div class="bank-logo-label"><i class="fa-solid fa-building-columns" style="color:var(--gold-primary);"></i> Bank BCA</div>
-              <div class="bank-rek-number" id="bankBcaNum">82255267793</div>
-              <div style="font-size:0.68rem; color:var(--text-muted); margin-top:2px;">A.N. Rifai Alfarisi Butuni</div>
+              <div class="bank-rek-number" id="bankBcaNum">085181780429</div>
+              <div style="font-size:0.68rem; color:var(--text-muted); margin-top:2px;">A.N. jiwas</div>
             </div>
-            <button type="button" class="btn-quick-copy" onclick="salinNomorRekening('82255267793', 'BCA')">
+            <button type="button" class="btn-quick-copy" onclick="salinNomorRekening('085181780429', 'BCA')">
               <i class="fa-solid fa-copy"></i> Salin Rek
             </button>
           </div>
@@ -1364,10 +1364,10 @@ Variasi, Harga - (Stok):
           <div class="bank-card-box">
             <div>
               <div class="bank-logo-label"><i class="fa-solid fa-building-columns" style="color:var(--accent-cyan);"></i> Bank Mandiri / E-Wallet</div>
-              <div class="bank-rek-number" id="bankMandiriNum">082255267793</div>
-              <div style="font-size:0.68rem; color:var(--text-muted); margin-top:2px;">DANA / OVO / GoPay (0822-5526-7793)</div>
+              <div class="bank-rek-number" id="bankMandiriNum">085181780429</div>
+              <div style="font-size:0.68rem; color:var(--text-muted); margin-top:2px;">DANA / OVO / GoPay (085181780429)</div>
             </div>
-            <button type="button" class="btn-quick-copy" onclick="salinNomorRekening('082255267793', 'E-Wallet')">
+            <button type="button" class="btn-quick-copy" onclick="salinNomorRekening('085181780429', 'E-Wallet')">
               <i class="fa-solid fa-copy"></i> Salin No
             </button>
           </div>
@@ -1665,7 +1665,7 @@ try { hitungMarginVarian(); } catch(e) {}
     function renderPinManager() {
       const waInput = document.getElementById("adminWaInput");
       const currentWa = localStorage.getItem("JIWAS_CUSTOM_WA") || 
-                        (typeof NOMOR_WA_ADMIN_CONFIG !== "undefined" ? NOMOR_WA_ADMIN_CONFIG : "6282255267793");
+                        (typeof NOMOR_WA_ADMIN_CONFIG !== "undefined" ? NOMOR_WA_ADMIN_CONFIG : "6285181780429");
       if (waInput) waInput.value = currentWa;
 
       const tbody = document.getElementById("pinTableBody");
@@ -2796,7 +2796,7 @@ if (item.type.includes("ENGINE")) badgeClass = "ev-engine";
       kurangiStokProdukAI(activeQrisProductIdx);
 
       // 2. Format pesan WhatsApp sesuai metode yang dipilih
-      const adminWa = localStorage.getItem("JIWAS_CUSTOM_WA") || "6282255267793";
+      const adminWa = localStorage.getItem("JIWAS_CUSTOM_WA") || "6285181780429";
       let statusMetode = "Sudah Scan & Transfer via QRIS";
       if (currentSelectedPayMethod === 'bank') statusMetode = "Transfer Manual ke Rekening Bank";
       if (currentSelectedPayMethod === 'wa') statusMetode = "Konsultasi / Tanya Rekening via WhatsApp";

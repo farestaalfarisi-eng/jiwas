@@ -1,5 +1,339 @@
 [
   {
+    "id": "ai-wetv-vipp",
+    "nama": "WETV VIPP",
+    "vendor": "FNSHOP",
+    "kategori": "Video",
+    "subKategori": "Direct Login (PC & HP)",
+    "jenisAkun": "Direct Login (PC & HP)",
+    "hargaModal": 6000,
+    "hargaPromo": 11000,
+    "harga": 14850,
+    "variants": [
+      {
+        "name": "i  Share 6U 1Bulan",
+        "kriteria": "Sharing",
+        "garansi": "Full Garansi",
+        "cost": 6000,
+        "price": 11000,
+        "stock": 9,
+        "ready": true
+      },
+      {
+        "name": "i  Share 3U 1Bulan",
+        "kriteria": "Sharing",
+        "garansi": "Full Garansi",
+        "cost": 10000,
+        "price": 18000,
+        "stock": 7,
+        "ready": true
+      },
+      {
+        "name": "i  Share 3 Bulan",
+        "kriteria": "Sharing",
+        "garansi": "Full Garansi",
+        "cost": 15000,
+        "price": 23000,
+        "stock": 0,
+        "ready": false
+      },
+      {
+        "name": "i + Private 1 Bulan",
+        "kriteria": "Private",
+        "garansi": "Full Garansi",
+        "cost": 22000,
+        "price": 34000,
+        "stock": 50,
+        "ready": true
+      }
+    ],
+    "stok": 66,
+    "deskripsi": "Bergaransi + S&K Berlakuv’",
+    "garansi": "Full Garansi Sesuai Durasi",
+    "faq": [
+      {
+        "q": "Apakah akun langsung dikirim?",
+        "a": "Ya, instruksi dan detail akun diproses cepat oleh admin via WhatsApp resmi."
+      },
+      {
+        "q": "Bagaimana cara klaim garansi?",
+        "a": "Cukup konfirmasi ke WhatsApp admin dengan melampirkan no. pesanan Anda."
+      }
+    ],
+    "logo": "images/canvas/wetv.jpg",
+    "badge": "⚡ AUTO VENDOR",
+    "aktif": true
+  },
+  {
+    "id": "ai-netflix-premium",
+    "nama": "NETFLIX PREMIUM",
+    "vendor": "FNSHOP",
+    "kategori": "Video",
+    "subKategori": "Lisensi / Link Redeem",
+    "jenisAkun": "Lisensi / Link Redeem",
+    "hargaModal": 35000,
+    "hargaPromo": 46000,
+    "harga": 62100,
+    "variants": [
+      {
+        "name": "i +1 Profil 1 User",
+        "kriteria": "Reguler",
+        "garansi": "Full Garansi",
+        "cost": 35000,
+        "price": 46000,
+        "stock": 1,
+        "ready": true
+      },
+      {
+        "name": "i  Semi Private 1B",
+        "kriteria": "Private",
+        "garansi": "Full Garansi",
+        "cost": 38000,
+        "price": 49000,
+        "stock": 0,
+        "ready": false
+      },
+      {
+        "name": "i  Singgle Screen",
+        "kriteria": "Reguler",
+        "garansi": "Full Garansi",
+        "cost": 50000,
+        "price": 65000,
+        "stock": 0,
+        "ready": false
+      },
+      {
+        "name": "i + Private Premium 1B",
+        "kriteria": "Private Premium",
+        "garansi": "Full Garansi",
+        "cost": 150000,
+        "price": 195000,
+        "stock": 5,
+        "ready": true
+      }
+    ],
+    "stok": 6,
+    "deskripsi": "Fullgaransi S&K Berlaku.",
+    "garansi": "Full Garansi Sesuai Durasi",
+    "faq": [
+      {
+        "q": "Apakah akun langsung dikirim?",
+        "a": "Ya, instruksi dan detail akun diproses cepat oleh admin via WhatsApp resmi."
+      },
+      {
+        "q": "Bagaimana cara klaim garansi?",
+        "a": "Cukup konfirmasi ke WhatsApp admin dengan melampirkan no. pesanan Anda."
+      }
+    ],
+    "logo": "images/canvas/canva.jpg",
+    "badge": "⚡ AUTO VENDOR",
+    "aktif": true
+  },
+  {
+    "id": "ai-1qiyi-vip-1b",
+    "nama": "1QIYI VIP 1B",
+    "vendor": "FNSHOP",
+    "kategori": "Video",
+    "subKategori": "Lisensi / Link Redeem",
+    "jenisAkun": "Lisensi / Link Redeem",
+    "hargaModal": 2000,
+    "hargaPromo": 6000,
+    "harga": 8100,
+    "variants": [
+      {
+        "name": "i  lqiyi Share Basic",
+        "kriteria": "Sharing Basic",
+        "garansi": "Full Garansi",
+        "cost": 2000,
+        "price": 6000,
+        "stock": 0,
+        "ready": false
+      },
+      {
+        "name": "i + Igiyi Share Standar",
+        "kriteria": "Sharing Standar",
+        "garansi": "Full Garansi",
+        "cost": 4000,
+        "price": 9000,
+        "stock": 0,
+        "ready": false
+      },
+      {
+        "name": "i  Igiyi Share Premium",
+        "kriteria": "Sharing Premium",
+        "garansi": "Full Garansi",
+        "cost": 6000,
+        "price": 11000,
+        "stock": 0,
+        "ready": false
+      },
+      {
+        "name": "i  lqiyi Basic Private",
+        "kriteria": "Private Basic",
+        "garansi": "Full Garansi",
+        "cost": 10000,
+        "price": 18000,
+        "stock": 0,
+        "ready": false
+      },
+      {
+        "name": "i  Iqiyi Standart Private",
+        "kriteria": "Private Standar",
+        "garansi": "Full Garansi",
+        "cost": 13000,
+        "price": 21000,
+        "stock": 5,
+        "ready": true
+      },
+      {
+        "name": "i + Igiyi Premium Private",
+        "kriteria": "Private Premium",
+        "garansi": "Full Garansi",
+        "cost": 15000,
+        "price": 23000,
+        "stock": 5,
+        "ready": true
+      }
+    ],
+    "stok": 10,
+    "deskripsi": "Fullgaransi Durasi 1 Bulan,",
+    "garansi": "Full Garansi Sesuai Durasi",
+    "faq": [
+      {
+        "q": "Apakah akun langsung dikirim?",
+        "a": "Ya, instruksi dan detail akun diproses cepat oleh admin via WhatsApp resmi."
+      },
+      {
+        "q": "Bagaimana cara klaim garansi?",
+        "a": "Cukup konfirmasi ke WhatsApp admin dengan melampirkan no. pesanan Anda."
+      }
+    ],
+    "logo": "images/canvas/canva.jpg",
+    "badge": "⚡ AUTO VENDOR",
+    "aktif": true
+  },
+  {
+    "id": "ai-wetv-vipp",
+    "nama": "WETV VIPP",
+    "vendor": "FNSHOP",
+    "kategori": "Video",
+    "subKategori": "Direct Login (PC & HP)",
+    "jenisAkun": "Direct Login (PC & HP)",
+    "hargaModal": 6000,
+    "hargaPromo": 11000,
+    "harga": 14850,
+    "variants": [
+      {
+        "name": "i  Share 6U 1Bulan",
+        "kriteria": "Sharing",
+        "garansi": "Full Garansi",
+        "cost": 6000,
+        "price": 11000,
+        "stock": 9,
+        "ready": true
+      },
+      {
+        "name": "i  Share 3U 1Bulan",
+        "kriteria": "Sharing",
+        "garansi": "Full Garansi",
+        "cost": 10000,
+        "price": 18000,
+        "stock": 7,
+        "ready": true
+      },
+      {
+        "name": "i  Share 3 Bulan",
+        "kriteria": "Sharing",
+        "garansi": "Full Garansi",
+        "cost": 15000,
+        "price": 23000,
+        "stock": 0,
+        "ready": false
+      },
+      {
+        "name": "i + Private 1 Bulan",
+        "kriteria": "Private",
+        "garansi": "Full Garansi",
+        "cost": 22000,
+        "price": 34000,
+        "stock": 50,
+        "ready": true
+      }
+    ],
+    "stok": 66,
+    "deskripsi": "Bergaransi + S&K Berlakuv’",
+    "garansi": "Full Garansi Sesuai Durasi",
+    "faq": [
+      {
+        "q": "Apakah akun langsung dikirim?",
+        "a": "Ya, instruksi dan detail akun diproses cepat oleh admin via WhatsApp resmi."
+      },
+      {
+        "q": "Bagaimana cara klaim garansi?",
+        "a": "Cukup konfirmasi ke WhatsApp admin dengan melampirkan no. pesanan Anda."
+      }
+    ],
+    "logo": "images/canvas/wetv.jpg",
+    "badge": "⚡ AUTO VENDOR",
+    "aktif": true
+  },
+  {
+    "id": "ai-youtube-premium",
+    "nama": "YOUTUBE PREMIUM",
+    "vendor": "FNSHOP",
+    "kategori": "Video",
+    "subKategori": "Invite Email / Tim",
+    "jenisAkun": "Invite Email / Tim",
+    "hargaModal": 2500,
+    "hargaPromo": 7000,
+    "harga": 9450,
+    "variants": [
+      {
+        "name": "i + Famplan 1 Bulan",
+        "kriteria": "Famplan",
+        "garansi": "Full Garansi",
+        "cost": 2500,
+        "price": 7000,
+        "stock": 0,
+        "ready": false
+      },
+      {
+        "name": "i + Jaspay Head/Indplan",
+        "kriteria": "Indplan Head/Owner",
+        "garansi": "Full Garansi",
+        "cost": 2500,
+        "price": 7000,
+        "stock": 5,
+        "ready": true
+      },
+      {
+        "name": "i + Indplan 1B Fullgar",
+        "kriteria": "Indplan",
+        "garansi": "Full Garansi",
+        "cost": 16000,
+        "price": 28000,
+        "stock": 5,
+        "ready": true
+      }
+    ],
+    "stok": 10,
+    "deskripsi": "Youtube + Yt Music",
+    "garansi": "Full Garansi Sesuai Durasi",
+    "faq": [
+      {
+        "q": "Apakah akun langsung dikirim?",
+        "a": "Ya, instruksi dan detail akun diproses cepat oleh admin via WhatsApp resmi."
+      },
+      {
+        "q": "Bagaimana cara klaim garansi?",
+        "a": "Cukup konfirmasi ke WhatsApp admin dengan melampirkan no. pesanan Anda."
+      }
+    ],
+    "logo": "images/canvas/youtube.jpg",
+    "badge": "⚡ AUTO VENDOR",
+    "aktif": true
+  },
+  {
     "id": "ai-canva-owner",
     "nama": "CANVA OWNER",
     "vendor": "FNSHOP",
