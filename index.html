@@ -915,6 +915,40 @@ EXACT 1:1 facial likeness of the reference subject in the provided reference pho
     </div>
   </aside>
 
+<script>
+  // SISTEM SAPU BERSIH TOTAL CACHE & STORAGE HP/LAPTOP
+  const CURRENT_APP_VERSION = "2026.3";
+  if (localStorage.getItem("JIWAS_APP_VERSION") !== CURRENT_APP_VERSION) {
+    // 1. Bersihkan seluruh LocalStorage & SessionStorage
+    localStorage.clear();
+    sessionStorage.clear();
+
+    // 2. Hapus Cache Storage PWA (File JS/HTML lama di HP)
+    if ('caches' in window) {
+      caches.keys().then(names => {
+        for (let name of names) caches.delete(name);
+      });
+    }
+
+    // 3. Hapus database IndexedDB lokal jika ada
+    if ('indexedDB' in window) {
+      indexedDB.deleteDatabase("jiwas_db");
+      indexedDB.deleteDatabase("keyval-store");
+    }
+
+    // 4. Matikan Service Worker lama agar unduh data segar dari server
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistrations().then(registrations => {
+        for (let registration of registrations) {
+          registration.unregister();
+        }
+      });
+    }
+
+    localStorage.setItem("JIWAS_APP_VERSION", CURRENT_APP_VERSION);
+    console.log("Semua memori lama HP berhasil disapu bersih.");
+  }
+</script>
  <!-- MASTER SCRIPTS (URUTAN WAJIB & ANTI-CACHE) -->
   <script src="config-pin.js?v=2026"></script>
   <script src="data.js?v=2026.2"></script>
@@ -1163,7 +1197,7 @@ function bukaModalCheckout(item, subTier, subPrice) {
       if (currentSelectedPayMethod === 'bank') statusBayar = "Transfer Rekening Bank";
       if (currentSelectedPayMethod === 'wa') statusBayar = "Konsultasi / Tanya Rekening";
 
-      const adminWa = "6282255267793";
+      const adminWa = "6285181780429";
       const pesan = 
 `Halo Admin JIWAS Atelier! ✨
 
