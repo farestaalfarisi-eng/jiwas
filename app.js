@@ -148,6 +148,11 @@ function getDatabaseApps() {
 
 
 function getDatabaseAkun() {
+  // Utamakan DATABASE_AI_ACCOUNT langsung dari database.js agar tidak tertimpa cache rusak
+  if (typeof DATABASE_AI_ACCOUNT !== "undefined" && Array.isArray(DATABASE_AI_ACCOUNT) && DATABASE_AI_ACCOUNT.length > 0) {
+    return DATABASE_AI_ACCOUNT.filter(item => item.aktif !== false);
+  }
+
   try {
     const customAi = localStorage.getItem("JIWAS_AI_PRODUCTS_OVERRIDE");
     if (customAi) {
@@ -160,9 +165,6 @@ function getDatabaseAkun() {
     console.warn("Gagal membaca produk custom:", e);
   }
 
-  if (typeof DATABASE_AI_ACCOUNT !== "undefined" && Array.isArray(DATABASE_AI_ACCOUNT) && DATABASE_AI_ACCOUNT.length > 0) {
-    return DATABASE_AI_ACCOUNT;
-  }
   return [];
 }
 
@@ -315,13 +317,14 @@ function initApp() {
 }
 
 // -------------------------------------------------------------------------
-// 4. SINKRONISASI SERVER KATALOG & STOK LIVE
+// 4. SINKRONISASI SERVER KATALOG & STOK LIVE (VERSI AMAN ANTI-404)
 // -------------------------------------------------------------------------
 async function sinkronkanKatalogOnline() {
-  // Hanya fetch jika sedang di localhost agar tidak memicu 404 di server Vercel
   const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
   if (!isLocal) {
-    // Di server online, gunakan langsung database.js lokal tanpa override
+    // Di server online (Vercel), JANGAN panggil /api/products agar tidak 404
+    renderHomeDigitalAi();
+    renderKatalogAkun();
     return;
   }
 
@@ -329,20 +332,20 @@ async function sinkronkanKatalogOnline() {
     const res = await fetch('/api/products');
     if (!res.ok) return;
     const data = await res.json();
-    if (data.success && Array.isArray(data.products) && data.products.length > 1) {
+    if (data.success && Array.isArray(data.products) && data.products.length > 0) {
       localStorage.setItem("JIWAS_AI_PRODUCTS_OVERRIDE", JSON.stringify(data.products));
       renderHomeDigitalAi();
       renderKatalogAkun();
     }
   } catch (e) {
-    console.warn("Mode fallback aktif:", e);
+    console.warn("Lokal backend offline:", e);
   }
 }
 
 async function sinkronkanStokIncaRealtime() {
   const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
   if (!isLocal) {
-    // Lewati cek stok online jika backend serverless belum dibuat di Vercel
+    // Di server online (Vercel), lewati pemanggilan live-stock lokal port 3001
     return;
   }
 
@@ -379,7 +382,7 @@ async function sinkronkanStokIncaRealtime() {
     renderHomeDigitalAi();
     renderKatalogAkun();
   } catch (err) {
-    console.warn("Gagal sinkron stok:", err);
+    console.warn("Gagal sinkron stok lokal:", err);
   }
 }
 // -------------------------------------------------------------------------
