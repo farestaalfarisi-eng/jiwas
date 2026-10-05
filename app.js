@@ -318,26 +318,36 @@ function initApp() {
 // 4. SINKRONISASI SERVER KATALOG & STOK LIVE
 // -------------------------------------------------------------------------
 async function sinkronkanKatalogOnline() {
+  // Hanya fetch jika sedang di localhost agar tidak memicu 404 di server Vercel
+  const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+  if (!isLocal) {
+    // Di server online, gunakan langsung database.js lokal tanpa override
+    return;
+  }
+
   try {
     const res = await fetch('/api/products');
     if (!res.ok) return;
     const data = await res.json();
-    if (data.success && Array.isArray(data.products) && data.products.length > 0) {
+    if (data.success && Array.isArray(data.products) && data.products.length > 1) {
       localStorage.setItem("JIWAS_AI_PRODUCTS_OVERRIDE", JSON.stringify(data.products));
       renderHomeDigitalAi();
       renderKatalogAkun();
     }
   } catch (e) {
-    // Mode offline / fallback bawaan
+    console.warn("Mode fallback aktif:", e);
   }
 }
 
 async function sinkronkanStokIncaRealtime() {
   const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
-  const LIVE_URL = isLocal ? "http://localhost:3001/api/live-stock" : "/api/live-stock";
+  if (!isLocal) {
+    // Lewati cek stok online jika backend serverless belum dibuat di Vercel
+    return;
+  }
 
   try {
-    const res = await fetch(LIVE_URL);
+    const res = await fetch("http://localhost:3001/api/live-stock");
     if (!res.ok) return;
     const result = await res.json();
 
@@ -369,10 +379,9 @@ async function sinkronkanStokIncaRealtime() {
     renderHomeDigitalAi();
     renderKatalogAkun();
   } catch (err) {
-    // Tetap menggunakan basis data lokal tanpa crash
+    console.warn("Gagal sinkron stok:", err);
   }
 }
-
 // -------------------------------------------------------------------------
 // 5. VISITOR, AFFINITY & DECAYING SHOWCASE
 // -------------------------------------------------------------------------
