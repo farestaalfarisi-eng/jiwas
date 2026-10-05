@@ -276,38 +276,7 @@ window.KATALOG_REGISTRY = [
     sales: "180+ Terjual"
   },
 
-  // --- AKUN AI & DIGITAL TOOLS (LIVE) ---
-  {
-    id: "chatgpt-plus",
-    title: "ChatGPT Plus Shared / Private",
-    folder: "canvas",
-    category: "Akun AI",
-    type: "digital",
-    status: "live",
-    priceText: "Rp35.000",
-    description: "Akses ChatGPT-4o & Canvas resmi tanpa batas untuk pembuatan konten dan riset."
-  },
-  {
-    id: "midjourney-pro",
-    title: "Midjourney Fast Hours Access",
-    folder: "canvas",
-    category: "Akun AI",
-    type: "digital",
-    status: "live",
-    priceText: "Rp45.000",
-    description: "Akses image generator Midjourney kualitas fotorealistik dengan kuota fast hours melimpah."
-  },
-  {
-    id: "canva-pro",
-    title: "Canva Pro Desain Suite",
-    folder: "canvas",
-    category: "Akun AI",
-    type: "digital",
-    status: "live",
-    priceText: "Rp15.000",
-    description: "Akun Canva Pro Lifetime invite untuk template premium dan hapus background instan."
-  },
-{
+ {
     id: "zen-relaxation",
     title: "Zen & Shinkai Serenity 9:16",
     folder: "zen-relaxation",
