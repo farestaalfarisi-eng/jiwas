@@ -104,6 +104,49 @@ function getActiveRegistry() {
   return DEFAULT_FALLBACK_KATALOG;
 }
 
+// -------------------------------------------------------------------------
+// BASIS DATA APLIKASI & SOFTWARE DENGAN 3 TINGKATAN HARGA
+// -------------------------------------------------------------------------
+const DATABASE_APPS = [
+  {
+    id: "app-media-engine",
+    title: "Batch Media & Video Processor Engine",
+    kategori: "automation",
+    badge: "⚡ DESKTOP TOOL",
+    rating: "5.0/5",
+    sales: "64+ Terjual",
+    desc: "Otomasi kompresi video, resize batch foto, dan split frame dalam hitungan detik tanpa upload cloud.",
+    demoVideo: "https://assets.mixkit.co/videos/preview/mixkit-software-developer-working-on-code-screen-close-up-41364-large.mp4",
+    cover: "images/velvet/cover.jpg",
+    variants: [
+      { name: "Starter", price: 49000, desc: "1 Lisensi Penggunaan" },
+      { name: "Pro Suite", price: 149000, desc: "Full Modul + Free Update" },
+      { name: "White-Label", price: 499000, desc: "Source Code + Hak Jual" }
+    ]
+  },
+  {
+    id: "app-catalog-generator",
+    title: "AI Prompt & Catalog Generator Suite",
+    kategori: "web",
+    badge: "🔥 WEB APP",
+    rating: "4.9/5",
+    sales: "42+ Terjual",
+    desc: "Web app siap pakai untuk racik ratusan prompt AI foto/video terstruktur dengan formula otomatis.",
+    demoVideo: "https://assets.mixkit.co/videos/preview/mixkit-software-developer-working-on-code-screen-close-up-41364-large.mp4",
+    cover: "images/velvet/cover.jpg",
+    variants: [
+      { name: "Starter", price: 49000, desc: "Akses Web App Standar" },
+      { name: "Pro Suite", price: 149000, desc: "Full Generator + Export CSV" },
+      { name: "White-Label", price: 499000, desc: "Source Code Lengkap" }
+    ]
+  }
+];
+
+function getDatabaseApps() {
+  return DATABASE_APPS;
+}
+
+
 function getDatabaseAkun() {
   try {
     const customAi = localStorage.getItem("JIWAS_AI_PRODUCTS_OVERRIDE");
@@ -268,6 +311,7 @@ function initApp() {
   renderAiAccountCategories();
   initGlobalClickListener();
   cekAutoUnlockURL();
+  renderHomeSoftwarePreview();
 }
 
 // -------------------------------------------------------------------------
@@ -787,6 +831,7 @@ function switchMainTab(tabType, btnEl) {
   const secAkun = document.getElementById("sectionAkunAI");
   const secDetail = document.getElementById("sectionDetailPack");
   const secComm = document.getElementById("sectionCommercialStudio");
+  const secApps = document.getElementById("sectionAppsStudio");
   const heroHeader = document.getElementById("atelierMainHeader");
 
   if (secAtelier) secAtelier.classList.add("hidden");
@@ -796,6 +841,7 @@ function switchMainTab(tabType, btnEl) {
   if (secAkun) secAkun.classList.add("hidden");
   if (secDetail) secDetail.classList.add("hidden");
   if (secComm) secComm.classList.add("hidden");
+  if (secApps) secApps.classList.add("hidden");
 
   if (tabType === 'atelier') {
     if (secAtelier) secAtelier.classList.remove("hidden");
@@ -2281,7 +2327,10 @@ function filterByQuickChip(categoryTag, btnEl) {
     switchMainTab('vod');
     return;
   }
-
+if (categoryTag === 'apps') {
+    bukaHalamanAplikasi();
+    return;
+  }
   if (categoryTag === 'umkm') {
     bukaHalamanKomersial();
     return;
@@ -2684,4 +2733,203 @@ function aktivasiLazyVideoObserver() {
   document.querySelectorAll('.video-lazy-container').forEach(el => {
     lazyVideoObserver.observe(el);
   });
+}
+// =========================================================================
+// MODUL KHUSUS: ETALASE APLIKASI & 3 TINGKATAN HARGA (JIWAS APPS)
+// =========================================================================
+let activeAppFilter = "all";
+
+function bukaHalamanAplikasi() {
+  const secAtelier = document.getElementById("sectionAtelier");
+  const secFoto = document.getElementById("sectionFotoAI");
+  const secVideo = document.getElementById("sectionVideoAI");
+  const secVod = document.getElementById("sectionVodAI");
+  const secAkun = document.getElementById("sectionAkunAI");
+  const secDetail = document.getElementById("sectionDetailPack");
+  const secComm = document.getElementById("sectionCommercialStudio");
+  const secApps = document.getElementById("sectionAppsStudio");
+  const heroHeader = document.getElementById("atelierMainHeader");
+
+  if (heroHeader) heroHeader.classList.add("hidden");
+  if (secAtelier) secAtelier.classList.add("hidden");
+  if (secFoto) secFoto.classList.add("hidden");
+  if (secVideo) secVideo.classList.add("hidden");
+  if (secVod) secVod.classList.add("hidden");
+  if (secAkun) secAkun.classList.add("hidden");
+  if (secDetail) secDetail.classList.add("hidden");
+  if (secComm) secComm.classList.add("hidden");
+  if (secApps) secApps.classList.remove("hidden");
+
+  renderKatalogSemuaAplikasi();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function tutupHalamanKomersial() {
+  const secAtelier = document.getElementById("sectionAtelier");
+  const heroHeader = document.getElementById("atelierMainHeader");
+  const secComm = document.getElementById("sectionCommercialStudio");
+
+  // Tampilkan beranda terlebih dahulu agar layout tidak kosong
+  if (heroHeader) heroHeader.classList.remove("hidden");
+  if (secAtelier) secAtelier.classList.remove("hidden");
+
+  // Baru sembunyikan halaman komersial
+  if (secComm) secComm.classList.add("hidden");
+
+  // Aktifkan kembali tab Atelier di navigasi bawah
+  document.querySelectorAll(".b-nav-item").forEach(b => b.classList.remove("active"));
+  document.getElementById("tabBtnAtelier")?.classList.add("active");
+
+  window.scrollTo(0, 0);
+}
+
+function tutupHalamanAplikasi() {
+  const secAtelier = document.getElementById("sectionAtelier");
+  const heroHeader = document.getElementById("atelierMainHeader");
+  const secApps = document.getElementById("sectionAppsStudio");
+
+  if (heroHeader) heroHeader.classList.remove("hidden");
+  if (secAtelier) secAtelier.classList.remove("hidden");
+
+  if (secApps) secApps.classList.add("hidden");
+
+  document.querySelectorAll(".b-nav-item").forEach(b => b.classList.remove("active"));
+  document.getElementById("tabBtnAtelier")?.classList.add("active");
+
+  window.scrollTo(0, 0);
+}
+
+function renderHomeSoftwarePreview() {
+  const container = document.getElementById("gridHomeSoftwarePreview");
+  if (!container) return;
+  container.innerHTML = "";
+
+  const items = getDatabaseApps().slice(0, 2);
+  items.forEach(app => {
+    const card = document.createElement("div");
+    card.className = "catalog-card";
+    card.innerHTML = buildAppCardHTML(app);
+    container.appendChild(card);
+  });
+}
+
+function renderKatalogSemuaAplikasi(searchKey = "") {
+  const container = document.getElementById("gridAllAppItems");
+  if (!container) return;
+  container.innerHTML = "";
+
+  let list = getDatabaseApps();
+
+  if (activeAppFilter !== "all") {
+    list = list.filter(item => item.kategori === activeAppFilter);
+  }
+
+  if (searchKey.trim() !== "") {
+    const q = searchKey.toLowerCase();
+    list = list.filter(item => (item.title + " " + item.desc + " " + item.id).toLowerCase().includes(q));
+  }
+
+  if (list.length === 0) {
+    container.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:30px; color:#888;">Tidak ada software ditemukan.</div>';
+    return;
+  }
+
+  list.forEach(app => {
+    const card = document.createElement("div");
+    card.className = "catalog-card";
+    card.innerHTML = buildAppCardHTML(app);
+    container.appendChild(card);
+  });
+}
+
+function buildAppCardHTML(app) {
+  const v1 = app.variants[0];
+  const v2 = app.variants[1];
+  const v3 = app.variants[2];
+
+  return `
+    <div style="position:relative;">
+      <span class="badge-pill" style="background:#0284c7; color:#fff; border:none;">${app.badge}</span>
+      <img src="${app.cover}" alt="${app.title}" class="aspect-9-16 img-loaded" onerror="this.src='images/velvet/cover.jpg';">
+    </div>
+    <div class="card-info">
+      <div>
+        <h3 class="card-title">${app.title}</h3>
+        <div class="card-rating-badge" style="color:#22c55e;">★ ${app.rating} • ${app.sales}</div>
+        <p style="font-size:0.68rem; color:#9ca3af; margin:4px 0 8px; line-height:1.3;">${app.desc}</p>
+      </div>
+
+      <!-- Tombol Demo Interaktif Anti-Curi -->
+      <button class="btn-copy" style="width:100%; justify-content:center; padding:5px; margin-bottom:8px; border-color:#38bdf8; color:#38bdf8;" onclick="bukaModalAppDemo('${app.id}')">
+        <i class="fa-solid fa-play"></i> Uji Coba Demo (Read-Only)
+      </button>
+
+      <!-- 3 Tingkatan Harga -->
+      <div class="app-tier-selector-box">
+        <button class="btn-app-tier" onclick="bukaModalCheckout('${app.title}', '${v1.name}', 'Rp${v1.price.toLocaleString('id-ID')}')">
+          ${v1.name}<br><strong>Rp${(v1.price / 1000).toFixed(0)}rb</strong>
+        </button>
+        <button class="btn-app-tier highlight" onclick="bukaModalCheckout('${app.title}', '${v2.name}', 'Rp${v2.price.toLocaleString('id-ID')}')">
+          ${v2.name}<br><strong>Rp${(v2.price / 1000).toFixed(0)}rb</strong>
+        </button>
+        <button class="btn-app-tier" onclick="bukaModalCheckout('${app.title}', '${v3.name}', 'Rp${v3.price.toLocaleString('id-ID')}')">
+          ${v3.name}<br><strong>Rp${(v3.price / 1000).toFixed(0)}rb</strong>
+        </button>
+      </div>
+    </div>
+  `;
+}
+
+function filterChipApp(kategoriKey, btnEl) {
+  document.querySelectorAll("#appFilterChips .ai-chip").forEach(b => b.classList.remove("active"));
+  if (btnEl) btnEl.classList.add("active");
+  activeAppFilter = kategoriKey;
+  renderKatalogSemuaAplikasi();
+}
+
+function filterAppsLive(keyword) {
+  renderKatalogSemuaAplikasi(keyword);
+}
+
+function bukaModalAppDemo(appId) {
+  const app = getDatabaseApps().find(a => a.id === appId);
+  if (!app) return;
+
+  const modal = document.getElementById("appDemoModal");
+  const title = document.getElementById("appDemoTitle");
+  const player = document.getElementById("appDemoVideoPlayer");
+  const desc = document.getElementById("appDemoDesc");
+  const actions = document.getElementById("appDemoTierActions");
+
+  if (title) title.innerText = app.title;
+  if (player) {
+    player.src = app.demoVideo;
+    player.play().catch(() => {});
+  }
+  if (desc) desc.innerText = `${app.desc} — Pilih lisensi di bawah untuk membuka versi penuh & kode sumber.`;
+
+  if (actions) {
+    actions.innerHTML = `
+      <div style="display:flex; gap:6px;">
+        ${app.variants.map((v, i) => `
+          <button class="btn-copy" style="flex:1; justify-content:center; padding:8px 4px; font-size:0.68rem; ${i === 1 ? 'background:var(--gold-gradient); color:#000; font-weight:800;' : ''}" 
+            onclick="tutupModalAppDemo(); bukaModalCheckout('${app.title}', '${v.name}', 'Rp${v.price.toLocaleString('id-ID')}');">
+            ${v.name}<br>Rp${v.price.toLocaleString('id-ID')}
+          </button>
+        `).join('')}
+      </div>
+    `;
+  }
+
+  if (modal) modal.classList.remove("hidden");
+}
+
+function tutupModalAppDemo() {
+  const modal = document.getElementById("appDemoModal");
+  const player = document.getElementById("appDemoVideoPlayer");
+  if (player) {
+    player.pause();
+    player.src = "";
+  }
+  if (modal) modal.classList.add("hidden");
 }

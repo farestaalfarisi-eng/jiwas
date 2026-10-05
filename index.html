@@ -129,6 +129,7 @@
         <!-- QUICK FILTER CHIPS SIMETRIS -->
         <div class="search-quick-tags">
           <button class="quick-tag-chip active" onclick="filterByQuickChip('all', this)">Semua</button>
+          <button class="quick-tag-chip" onclick="filterByQuickChip('apps', this)" style="border-color:var(--gold-primary); color:var(--gold-light);"><i class="fa-solid fa-code"></i> #Software</button>
           <button class="quick-tag-chip" onclick="filterByQuickChip('umkm', this)">#UMKM</button>
           <button class="quick-tag-chip" onclick="filterByQuickChip('keluarga', this)">#Keluarga</button>
           <button class="quick-tag-chip" onclick="filterByQuickChip('hijab', this)">#Hijab</button>
@@ -149,6 +150,26 @@
         <div class="grid-catalog" id="gridHomeCategories"></div>
       </section>
 
+<hr class="section-divider">
+
+      <section id="atelierSoftwareSpotlightSection" style="margin-bottom:28px;">
+        <div class="hero-box" style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:14px;">
+          <div>
+            <span class="hero-badge" style="background:rgba(212,175,55,0.15); color:var(--gold-light); border:1px solid rgba(212,175,55,0.4);">
+              <i class="fa-solid fa-laptop-code"></i> HIGH-MARGIN SOFTWARE
+            </span>
+            <h2 class="hero-title" style="font-size:1.15rem;">Aplikasi & Tools Otomasi</h2>
+            <p class="brand-tagline">Software desktop & web app siap pakai untuk pangkas waktu kerja dan boost profit.</p>
+          </div>
+          <button class="btn-copy" style="font-size:0.7rem; padding:4px 10px; background:var(--gold-gradient); color:#000; font-weight:800;" onclick="bukaHalamanAplikasi()">
+            Lihat Semua <i class="fa-solid fa-arrow-right"></i>
+          </button>
+        </div>
+
+        <div class="grid-catalog" id="gridHomeSoftwarePreview"></div>
+      </section>
+
+      <hr class="section-divider">
       <!-- HUB STUDIO KOMERSIAL & UMKM DI HOME -->
       <hr class="section-divider">
 
@@ -434,6 +455,40 @@ EXACT 1:1 facial likeness of the reference subject in the provided reference pho
       <div class="grid-catalog" id="gridAllCommercialItems"></div>
     </section>
 
+    <!-- SECTION KHUSUS: ETALASE APLIKASI & SOFTWARE (DEDICATED) -->
+    <section id="sectionAppsStudio" class="hidden">
+      <div class="detail-header" style="margin-bottom:14px;">
+        <button class="btn-back" onclick="tutupHalamanAplikasi()"><i class="fa-solid fa-arrow-left"></i> Kembali</button>
+        <div>
+          <span class="hero-badge" style="background:rgba(56,189,248,0.15); color:#38bdf8; border:1px solid #38bdf8;">SOFTWARE & AUTOMATION</span>
+          <h2 class="hero-title" style="font-size:1.15rem;">Etalase Aplikasi & Tools Kreator</h2>
+        </div>
+      </div>
+
+      <!-- Search Box & Filter Chips Kategori Aplikasi -->
+      <div class="ai-account-wrapper" style="margin-bottom:18px;">
+        <div class="ai-search-box">
+          <i class="fa-solid fa-magnifying-glass ai-search-icon"></i>
+          <input 
+            type="text" 
+            class="ai-search-input" 
+            placeholder="Cari software: Otomasi, Media, Converter, Desktop, Bot..." 
+            oninput="filterAppsLive(this.value)"
+          >
+        </div>
+
+        <div class="ai-categories-scroll" id="appFilterChips">
+          <button class="ai-chip active" onclick="filterChipApp('all', this)">Semua Software</button>
+          <button class="ai-chip" onclick="filterChipApp('automation', this)">⚡ Otomasi & Script</button>
+          <button class="ai-chip" onclick="filterChipApp('media', this)">🎬 Media & Video</button>
+          <button class="ai-chip" onclick="filterChipApp('web', this)">🌐 Web Apps</button>
+        </div>
+      </div>
+
+      <!-- Grid Katalog Semua Aplikasi -->
+      <div class="grid-catalog" id="gridAllAppItems"></div>
+    </section>
+    
     <!-- 7. SECTION DETAIL PACK (100 PROMPT) -->
     <section id="sectionDetailPack" class="hidden">
       <div class="detail-header">
@@ -677,6 +732,40 @@ EXACT 1:1 facial likeness of the reference subject in the provided reference pho
   </nav>
 
   <!-- FLOATING WA & NOTIFICATIONS -->
+   <!-- TOMBOL MELAYANG MENU APLIKASI (DI ATAS WA) -->
+  <div class="floating-app-capsule" onclick="bukaHalamanAplikasi()" title="Buka Etalase Aplikasi">
+    <div class="app-capsule-badge">PROFIT TINGGI</div>
+    <i class="fa-solid fa-laptop-code"></i>
+    <span>APLIKASI</span>
+    <span class="live-dot gold"></span>
+  </div>
+
+  <!-- FLOATING WA & NOTIFICATIONS -->
+  <a href="javascript:void(0)" onclick="hubungiAdminWaLangsung()" class="wa-floating-btn" aria-label="Hubungi Admin WhatsApp">
+    <i class="fa-brands fa-whatsapp"></i>
+  </a>
+
+  <!-- MODAL DEMO INTERAKTIF ANTI-CURI -->
+  <div id="appDemoModal" class="modal-overlay hidden" style="z-index: 10002;">
+    <div class="modal-content" style="max-width: 420px; text-align: left; background: #0e0e15;">
+      <button class="btn-modal-close" onclick="tutupModalAppDemo()" aria-label="Tutup"><i class="fa-solid fa-xmark"></i></button>
+      <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+        <span class="badge-pill" style="position:static; background:#0284c7; color:#fff;">DEMO PREVIEW</span>
+        <span style="font-size:0.7rem; color:#22c55e;"><i class="fa-solid fa-shield-halved"></i> Read-Only (Anti-Bajak)</span>
+      </div>
+      <h3 id="appDemoTitle" style="color:var(--gold-light); font-size:1.05rem; margin-bottom:6px;">Cuplikan Aplikasi</h3>
+      
+      <!-- Video Demo Container dengan Watermark Overlay -->
+      <div class="app-demo-screen-box">
+        <div class="app-watermark-overlay">JIWAS DEMO PREVIEW • READ ONLY</div>
+        <video id="appDemoVideoPlayer" controls loop playsinline style="width:100%; height:auto; display:block; border-radius:6px;"></video>
+      </div>
+
+      <p id="appDemoDesc" style="margin-top:10px; font-size:0.75rem; color:#9ca3af; line-height:1.4;"></p>
+      
+      <div id="appDemoTierActions" style="margin-top:12px;"></div>
+    </div>
+  </div>
   <a href="javascript:void(0)" onclick="hubungiAdminWaLangsung()" class="wa-floating-btn" aria-label="Hubungi Admin WhatsApp">
     <i class="fa-brands fa-whatsapp"></i>
   </a>
