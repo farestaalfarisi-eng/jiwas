@@ -2380,9 +2380,9 @@ function prosesKeQRIS(e) {
     if (rawPrice.includes("10.000") || rawTier.includes("10k") || rawTier.includes("starter")) {
       qrisImgEl.src = "images/qris-10k.jpg";
     } else if (rawPrice.includes("25.000") || rawTier.includes("25k") || rawTier.includes("vip")) {
-      qrisImgEl.src = "images/qris-25k.jpg";
+      qrisImgEl.src = "images/qris-10k.jpg";
     } else {
-      qrisImgEl.src = "images/qris-dana.jpg";
+      qrisImgEl.src = "images/qris-10k.jpg";
     }
   }
 
