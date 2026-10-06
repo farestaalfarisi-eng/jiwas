@@ -148,23 +148,10 @@ function getDatabaseApps() {
 
 
 function getDatabaseAkun() {
-  // Utamakan DATABASE_AI_ACCOUNT langsung dari database.js agar tidak tertimpa cache rusak
-  if (typeof DATABASE_AI_ACCOUNT !== "undefined" && Array.isArray(DATABASE_AI_ACCOUNT) && DATABASE_AI_ACCOUNT.length > 0) {
+  // Acuan tunggal hasil deploy dari database.js
+  if (typeof DATABASE_AI_ACCOUNT !== "undefined" && Array.isArray(DATABASE_AI_ACCOUNT)) {
     return DATABASE_AI_ACCOUNT.filter(item => item.aktif !== false);
   }
-
-  try {
-    const customAi = localStorage.getItem("JIWAS_AI_PRODUCTS_OVERRIDE");
-    if (customAi) {
-      const parsed = JSON.parse(customAi);
-      if (Array.isArray(parsed) && parsed.length > 0) {
-        return parsed.filter(item => item.aktif !== false);
-      }
-    }
-  } catch (e) {
-    console.warn("Gagal membaca produk custom:", e);
-  }
-
   return [];
 }
 

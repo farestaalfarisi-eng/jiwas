@@ -16,22 +16,22 @@ window.AiAccountEngine = {
   getProducts: function () {
     let products = [];
 
-    // 1. PRIORITAS UTAMA: Ambil data hasil input / edit / hapus dari analytics.html
-    try {
-      const stored = localStorage.getItem("JIWAS_AI_PRODUCTS_OVERRIDE");
-      if (stored) {
-        const parsed = JSON.parse(stored);
-        if (Array.isArray(parsed)) {
-          products = parsed;
-        }
-      }
-    } catch (e) {
-      console.warn("[AI ENGINE]: Gagal membaca storage analytics", e);
-    }
-
-    // 2. FALLBACK CADANGAN: Gunakan database.js jika di analytics belum ada data
-    if (products.length === 0 && typeof DATABASE_AI_ACCOUNT !== "undefined" && Array.isArray(DATABASE_AI_ACCOUNT)) {
+    // 1. PRIORITAS UTAMA: Ambil langsung dari file database.js hasil deploy
+    if (typeof DATABASE_AI_ACCOUNT !== "undefined" && Array.isArray(DATABASE_AI_ACCOUNT) && DATABASE_AI_ACCOUNT.length > 0) {
       products = DATABASE_AI_ACCOUNT;
+    } else {
+      // 2. FALLBACK CADANGAN: Storage browser jika database.js belum siap
+      try {
+        const stored = localStorage.getItem("JIWAS_AI_PRODUCTS_OVERRIDE");
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          if (Array.isArray(parsed)) {
+            products = parsed;
+          }
+        }
+      } catch (e) {
+        console.warn("[AI ENGINE]: Gagal membaca storage", e);
+      }
     }
 
     // Normalisasi struktur varian agar etalase aman dari error

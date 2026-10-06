@@ -26,11 +26,9 @@ const SupplierConnector = {
    */
   resolveProductData: function (id) {
     try {
-      // 1. Cek penyimpanan override Admin (Lembar 5)
-      const customAi = localStorage.getItem("JIWAS_AI_PRODUCTS_OVERRIDE");
-      if (customAi) {
-        const parsed = JSON.parse(customAi);
-        const item = parsed.find(p => String(p.id) === String(id));
+      // 1. Cek langsung basis data hasil deploy
+      if (typeof DATABASE_AI_ACCOUNT !== "undefined" && Array.isArray(DATABASE_AI_ACCOUNT)) {
+        const item = DATABASE_AI_ACCOUNT.find(p => String(p.id) === String(id));
         if (item) return item;
       }
 
@@ -39,21 +37,11 @@ const SupplierConnector = {
         const p = getProductById(id);
         if (p) return p;
       }
-
-      // 3. Cek array database.js
-      if (typeof DATABASE_AI_ACCOUNT !== "undefined" && Array.isArray(DATABASE_AI_ACCOUNT)) {
-        return DATABASE_AI_ACCOUNT.find(p => String(p.id) === String(id)) || null;
-      }
     } catch (e) {
       console.warn("[SupplierConnector] Gagal melacak database produk:", e);
     }
     return null;
   },
-
-  getProductById: function (id) {
-    return this.resolveProductData(id);
-  },
-
   /**
    * Mengembalikan semua produk yang siap dirender di katalog
    */
