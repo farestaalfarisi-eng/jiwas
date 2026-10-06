@@ -2182,12 +2182,13 @@ function handleAiAccountSearch(keyword) {
   });
 }
 
-const AiAccountEngine = {
-  handleSearch: function(keyword) {
-    handleAiAccountSearch(keyword);
-  }
+// Pastikan tidak menimpa fungsi renderProducts dan init bawaan ai-account-app.js
+if (typeof window.AiAccountEngine === "undefined") {
+  window.AiAccountEngine = {};
+}
+window.AiAccountEngine.handleSearch = function(keyword) {
+  handleAiAccountSearch(keyword);
 };
-window.AiAccountEngine = AiAccountEngine;
 window.handleAiAccountSearch = handleAiAccountSearch;
 
 function resetLiveAtelierSearch() {
