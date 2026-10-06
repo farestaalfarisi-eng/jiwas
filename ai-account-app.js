@@ -16,24 +16,25 @@ window.AiAccountEngine = {
   getProducts: function () {
     let products = [];
 
-    // Prioritaskan database.js asli agar tidak tertimpa 1 item rusak
-    if (typeof DATABASE_AI_ACCOUNT !== "undefined" && Array.isArray(DATABASE_AI_ACCOUNT) && DATABASE_AI_ACCOUNT.length > 0) {
-      products = DATABASE_AI_ACCOUNT;
-    } else {
-      try {
-        const stored = localStorage.getItem("JIWAS_AI_PRODUCTS_OVERRIDE");
-        if (stored) {
-          const parsed = JSON.parse(stored);
-          if (Array.isArray(parsed) && parsed.length > 0) {
-            products = parsed;
-          }
+    // 1. PRIORITAS UTAMA: Ambil data hasil input / edit / hapus dari analytics.html
+    try {
+      const stored = localStorage.getItem("JIWAS_AI_PRODUCTS_OVERRIDE");
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (Array.isArray(parsed)) {
+          products = parsed;
         }
-      } catch (e) {
-        console.warn("[AI ENGINE]: Gagal membaca database", e);
       }
+    } catch (e) {
+      console.warn("[AI ENGINE]: Gagal membaca storage analytics", e);
     }
 
-    // Normalisasi struktur varian agar setiap produk memiliki array variants yang valid
+    // 2. FALLBACK CADANGAN: Gunakan database.js jika di analytics belum ada data
+    if (products.length === 0 && typeof DATABASE_AI_ACCOUNT !== "undefined" && Array.isArray(DATABASE_AI_ACCOUNT)) {
+      products = DATABASE_AI_ACCOUNT;
+    }
+
+    // Normalisasi struktur varian agar etalase aman dari error
     return products
       .filter(p => p.aktif !== false)
       .map(p => {
@@ -51,7 +52,6 @@ window.AiAccountEngine = {
               }
             ];
 
-        // Hitung harga termurah (teaser) untuk tampilan etalase awal
         const minPrice = Math.min(...vList.map(v => Number(v.price) || 15000));
         const totalStok = vList.reduce((sum, v) => sum + (parseInt(v.stock, 10) || 0), 0);
 

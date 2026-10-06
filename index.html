@@ -1005,18 +1005,13 @@ EXACT 1:1 facial likeness of the reference subject in the provided reference pho
   </aside>
 
 <script>
-  // SISTEM PEMBERSIH CACHE & STORAGE
+  // SISTEM PEMBERSIH CACHE & ASSET (AMAN: TANPA MENGHAPUS PRODUK ANALYTICS)
   (function() {
     try {
-      localStorage.removeItem("JIWAS_AI_PRODUCTS_OVERRIDE");
-      sessionStorage.clear();
-
-      const CURRENT_APP_VERSION = "2026.9_FORCE_CLEAN";
+      const CURRENT_APP_VERSION = "2026.9_STABLE";
       if (localStorage.getItem("JIWAS_APP_VERSION") !== CURRENT_APP_VERSION) {
-        localStorage.clear();
-        sessionStorage.clear();
-
-        // 1. Hapus Cache Storage Service Worker
+        
+        // 1. Hapus cache file statis browser (CSS / JS lama)
         if ('caches' in window) {
           caches.keys().then(names => {
             for (let name of names) caches.delete(name);
@@ -1026,25 +1021,14 @@ EXACT 1:1 facial likeness of the reference subject in the provided reference pho
         // 2. Unregister Service Worker lama
         if ('serviceWorker' in navigator) {
           navigator.serviceWorker.getRegistrations().then(registrations => {
-            for (let registration of registrations) {
-              registration.unregister();
-            }
+            for (let registration of registrations) registration.unregister();
           });
         }
 
-        // 3. Hapus IndexedDB jika ada
-        if ('indexedDB' in window) {
-          try {
-            indexedDB.deleteDatabase("jiwas_db");
-            indexedDB.deleteDatabase("keyval-store");
-          } catch(err) {}
-        }
-
         localStorage.setItem("JIWAS_APP_VERSION", CURRENT_APP_VERSION);
-        console.log("Pembersihan cache & sinkronisasi versi selesai.");
       }
     } catch (e) {
-      console.warn("Gagal mengeksekusi pembersihan cache:", e);
+      console.warn("Storage sync check:", e);
     }
   })();
 </script>

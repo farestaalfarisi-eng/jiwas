@@ -2186,6 +2186,11 @@ function handleAiAccountSearch(keyword) {
 if (typeof window.AiAccountEngine === "undefined") {
   window.AiAccountEngine = {};
 }
+// Cek dulu apakah AiAccountEngine sudah ada dari ai-account-app.js
+if (typeof window.AiAccountEngine === "undefined") {
+  window.AiAccountEngine = {};
+}
+// Tambahkan fungsi handleSearch tanpa menghapus fungsi render bawaan
 window.AiAccountEngine.handleSearch = function(keyword) {
   handleAiAccountSearch(keyword);
 };
