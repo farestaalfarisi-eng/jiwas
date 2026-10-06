@@ -16,11 +16,11 @@ window.AiAccountEngine = {
   getProducts: function () {
     let products = [];
 
-    // 1. PRIORITAS UTAMA: Ambil langsung dari file database.js hasil deploy
+    // 1. PRIORITAS UTAMA: Selalu baca data resmi deploy dari database.js
     if (typeof DATABASE_AI_ACCOUNT !== "undefined" && Array.isArray(DATABASE_AI_ACCOUNT) && DATABASE_AI_ACCOUNT.length > 0) {
       products = DATABASE_AI_ACCOUNT;
     } else {
-      // 2. FALLBACK CADANGAN: Storage browser jika database.js belum siap
+      // 2. FALLBACK CADANGAN: Hanya jika database.js belum termuat
       try {
         const stored = localStorage.getItem("JIWAS_AI_PRODUCTS_OVERRIDE");
         if (stored) {

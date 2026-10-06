@@ -1007,10 +1007,29 @@ EXACT 1:1 facial likeness of the reference subject in the provided reference pho
 
 <script>
   // SISTEM PEMBERSIH CACHE & ASSET (AMAN: TANPA MENGHAPUS PRODUK ANALYTICS)
+  <script>
   (function() {
     try {
-      const CURRENT_APP_VERSION = "2026.9_STABLE";
+      const CURRENT_APP_VERSION = "2026.11_SYNC";
       if (localStorage.getItem("JIWAS_APP_VERSION") !== CURRENT_APP_VERSION) {
+        
+        // Bersihkan cache file JS/CSS lama
+        if ('caches' in window) {
+          caches.keys().then(names => {
+            for (let name of names) caches.delete(name);
+          });
+        }
+
+        // Hapus sisa override lokal agar tunduk pada hasil deploy database.js
+        localStorage.removeItem("JIWAS_AI_PRODUCTS_OVERRIDE");
+
+        localStorage.setItem("JIWAS_APP_VERSION", CURRENT_APP_VERSION);
+      }
+    } catch (e) {
+      console.warn("Storage sync check:", e);
+    }
+  })();
+</script>
         
         // 1. Hapus cache file statis browser (CSS / JS lama)
         if ('caches' in window) {
@@ -1034,17 +1053,17 @@ EXACT 1:1 facial likeness of the reference subject in the provided reference pho
   })();
 </script>
  <!-- MASTER SCRIPTS (URUTAN WAJIB & ANTI-CACHE) -->
-  <script src="config-pin.js?v=2026.10"></script>
-  <script src="data.js?v=2026.10"></script>
-  <script src="showcase-data.js?v=2026.10"></script>
-  <script src="database.js?v=2026.10"></script>
-  <script src="components.js?v=2026.10"></script>
-  <script src="ai-account-app.js?v=2026.10"></script>
-  <script src="prompts/videos/zen-relaxation.js?v=2026.10"></script>
-  <script src="prompts/videos/nature-cinematic.js?v=2026.10"></script>
-  <script src="prompts/umkm/commercial.js?v=2026.10"></script>
-  <script src="prompts/family36.js?v=2026.10"></script>
-  <script src="app.js?v=2026.10"></script>
+  <script src="config-pin.js?v=2026.11"></script>
+  <script src="data.js?v=2026.11"></script>
+  <script src="showcase-data.js?v=2026.11"></script>
+  <script src="database.js?v=2026.11"></script>
+  <script src="components.js?v=2026.11"></script>
+  <script src="ai-account-app.js?v=2026.11"></script>
+  <script src="prompts/videos/zen-relaxation.js?v=2026.11"></script>
+  <script src="prompts/videos/nature-cinematic.js?v=2026.11"></script>
+  <script src="prompts/umkm/commercial.js?v=2026.11"></script>
+  <script src="prompts/family36.js?v=2026.11"></script>
+  <script src="app.js?v=2026.11"></script>
 
 <script>
     // =========================================================================

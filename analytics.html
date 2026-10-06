@@ -2852,13 +2852,18 @@ if (item.type.includes("ENGINE")) badgeClass = "ev-engine";
     }
 
     function getMasterAiProducts() {
+      // Utamakan file database.js yang ter-deploy agar command center mencerminkan kondisi riil
+      if (typeof DATABASE_AI_ACCOUNT !== "undefined" && Array.isArray(DATABASE_AI_ACCOUNT) && DATABASE_AI_ACCOUNT.length > 0) {
+        return DATABASE_AI_ACCOUNT;
+      }
+
       try {
         const stored = localStorage.getItem(STORAGE_KEY_AI_PRODUCTS);
         if (stored) return JSON.parse(stored);
       } catch (e) {}
 
-      if (typeof DATABASE_AI_ACCOUNT !== "undefined" && Array.isArray(DATABASE_AI_ACCOUNT)) {
-        return DATABASE_AI_ACCOUNT.map(p => {
+      return [];
+    }
           const vList = p.variants || [
             { name: "7 Hari", cost: Math.round((p.hargaPromo || 15000) * 0.4), price: Math.round((p.hargaPromo || 15000) * 0.6), stock: 10, ready: true },
             { name: "30 Hari", cost: Math.round((p.hargaPromo || 15000) * 0.6), price: (p.hargaPromo || 15000), stock: 10, ready: true }
