@@ -876,8 +876,13 @@ function switchMainTab(tabType, btnEl) {
   }
   if (tabType === 'akun' && secAkun) {
     secAkun.classList.remove("hidden");
-    renderKatalogAkun();
-    renderAiAccountCategories();
+    if (typeof AiAccountEngine !== "undefined") {
+      AiAccountEngine.renderCategories();
+      AiAccountEngine.renderProducts();
+    } else {
+      renderKatalogAkun();
+      renderAiAccountCategories();
+    }
   }
 
   window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -964,64 +969,11 @@ function renderHomeCategories() {
 }
 
 function renderHomeDigitalAi() {
-  const container = document.getElementById("gridHomeDigitalAi");
-  if (!container) return;
-  container.innerHTML = "";
-
-  const accounts = getDatabaseAkun();
-  const featured = accounts.slice(0, 4);
-
-  featured.forEach(acc => {
-    const card = document.createElement("div");
-    card.className = "catalog-card card-square-ai";
-
-    const imgSrc = acc.logo || acc.cover || `images/canvas/${acc.id || 'canva'}.jpg`;
-    const vList = acc.variants || [];
-
-   let variantButtonsHTML = "";
-    if (vList.length > 0) {
-      variantButtonsHTML = `
-        <div style="display:flex; gap:6px; margin:8px 0;">
-          ${vList.map((v, i) => {
-            const isOutOfStock = v.stock === 0 || v.ready === false;
-            if (isOutOfStock) {
-              return `
-                <button class="btn-quick-copy btn-out-of-stock" disabled>
-                  ${v.name}<br><strong>Habis</strong>
-                </button>
-              `;
-            }
-            return `
-              <button class="btn-quick-copy" style="flex:1; justify-content:center; padding:5px 2px; font-size:0.68rem; ${i === 0 ? 'border-color:#38bdf8; color:#38bdf8;' : 'border-color:var(--gold-primary); color:var(--gold-light);'}" 
-                onclick="eksekusiOrderAkun('${acc.id}', '${v.name}')">
-                ${v.name}<br><strong>Rp${Number(v.price).toLocaleString('id-ID')}</strong>
-              </button>
-            `;
-          }).join("")}
-        </div>
-      `;
-    }
-
-    card.innerHTML = `
-      <div style="position:relative;">
-        <span class="badge-pill" style="background:#0284c7; color:#fff; border:none;">${acc.badge || '⚡ AUTO BOT'}</span>
-        <img src="${imgSrc}" alt="${acc.nama}" class="aspect-1-1" loading="eager" onload="this.classList.add('img-loaded')" onerror="this.onerror=null; this.src='images/canvas/canva.jpg'; this.classList.add('img-loaded');">
-      </div>
-      <div class="card-info">
-        <div>
-          <h3 class="card-title">${acc.nama}</h3>
-          <div class="card-rating-badge" style="color:#22c55e;"><i class="fa-solid fa-bolt"></i> Siap Pakai Instan</div>
-          ${variantButtonsHTML}
-        </div>
-        <button class="btn-share-promo" style="width:100%; margin-top:6px;" onclick="bagikanPromoProdukAkun('${acc.id}')">
-          <i class="fa-solid fa-share-nodes"></i> Bagikan Promo
-        </button>
-      </div>
-    `;
-    container.appendChild(card);
-  });
+  if (typeof AiAccountEngine !== "undefined" && typeof AiAccountEngine.renderProducts === "function") {
+    AiAccountEngine.renderProducts();
+    return;
+  }
 }
-
 function renderKatalogFoto() {
   const container = document.getElementById("gridFotoKatalog");
   if (!container) return;
@@ -1332,89 +1284,17 @@ function kirimRequestVodWA(e) {
 }
 
 function renderKatalogAkun(filteredList) {
-  const container = document.getElementById("aiAccountCatalogGrid") || document.getElementById("gridAkunKatalog") || document.getElementById("gridAkunAI");
-  if (!container) return;
-  container.innerHTML = "";
-
-  const accounts = filteredList || getDatabaseAkun();
-
-  if (accounts.length === 0) {
-    container.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:30px; color:#888;">Belum ada akun AI yang aktif di kategori ini.</div>';
+  if (typeof AiAccountEngine !== "undefined" && typeof AiAccountEngine.renderProducts === "function") {
+    AiAccountEngine.renderProducts();
     return;
   }
-
-  accounts.forEach(acc => {
-    const card = document.createElement("div");
-    card.className = "catalog-card card-square-ai";
-
-    const imgSrc = acc.logo || acc.cover || `images/canvas/${acc.id || 'canva'}.jpg`;
-    const vList = acc.variants || [];
-
-   let variantButtonsHTML = "";
-    if (vList.length > 0) {
-      variantButtonsHTML = `
-        <div style="display:flex; gap:6px; margin:8px 0;">
-          ${vList.map((v, i) => {
-            const isOutOfStock = v.stock === 0 || v.ready === false;
-            if (isOutOfStock) {
-              return `
-                <button class="btn-quick-copy btn-out-of-stock" disabled>
-                  ${v.name}<br><strong>Habis</strong>
-                </button>
-              `;
-            }
-            return `
-              <button class="btn-quick-copy" style="flex:1; justify-content:center; padding:5px 2px; font-size:0.68rem; ${i === 0 ? 'border-color:#38bdf8; color:#38bdf8;' : 'border-color:var(--gold-primary); color:var(--gold-light);'}" 
-                onclick="eksekusiOrderAkun('${acc.id}', '${v.name}')">
-                ${v.name}<br><strong>Rp${Number(v.price).toLocaleString('id-ID')}</strong>
-              </button>
-            `;
-          }).join("")}
-        </div>
-      `;
-    }
-
-    card.innerHTML = `
-      <div style="position:relative;">
-        <span class="badge-pill" style="background:#0284c7; color:#fff; border:none;">${acc.badge || '⚡ RESMI'}</span>
-        <img src="${imgSrc}" alt="${acc.nama}" class="aspect-1-1" loading="eager" onload="this.classList.add('img-loaded')" onerror="this.onerror=null; this.src='images/canvas/canva.jpg'; this.classList.add('img-loaded');">
-      </div>
-      <div class="card-info">
-        <div>
-          <h3 class="card-title">${acc.nama}</h3>
-          <div class="card-rating-badge" style="color:#38bdf8;"><i class="fa-solid fa-check-circle"></i> Ready Stok</div>
-          <div style="font-size:0.75rem; color:#9ca3af; margin:4px 0; line-height:1.3;">${acc.deskripsi || ''}</div>
-        </div>
-        ${variantButtonsHTML}
-        <button class="btn-share-promo" style="width:100%; margin-top:6px;" onclick="bagikanPromoProdukAkun('${acc.id}')">
-          <i class="fa-solid fa-share-nodes"></i> Bagikan Promo
-        </button>
-      </div>
-    `;
-    container.appendChild(card);
-  });
 }
 
-// -------------------------------------------------------------------------
-// RENDER KATEGORI CHIP AKUN AI
-// -------------------------------------------------------------------------
 function renderAiAccountCategories() {
-  const container = document.getElementById("aiCategoriesContainer");
-  if (!container) return;
-
-  const categories = [
-    { key: "all", label: "Semua Akun AI" },
-    { key: "Design", label: "🎨 Desain & Gambar" },
-    { key: "Video", label: "🎬 Video Motion" },
-    { key: "AI", label: "🤖 AI & Smart Tools" },
-    { key: "Produktivitas", label: "⚡ Produktivitas & Streaming" }
-  ];
-
-  container.innerHTML = categories.map((cat, idx) => `
-    <button class="ai-chip ${idx === 0 ? 'active' : ''}" onclick="filterAiAccountByCategory('${cat.key}', this)">
-      ${cat.label}
-    </button>
-  `).join("");
+  if (typeof AiAccountEngine !== "undefined" && typeof AiAccountEngine.renderCategories === "function") {
+    AiAccountEngine.renderCategories();
+    return;
+  }
 }
 
 function filterAiAccountByCategory(categoryKey, btnEl) {
