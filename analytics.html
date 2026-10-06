@@ -2852,36 +2852,34 @@ if (item.type.includes("ENGINE")) badgeClass = "ev-engine";
     }
 
     function getMasterAiProducts() {
-      // Utamakan file database.js yang ter-deploy agar command center mencerminkan kondisi riil
+      // 1. Utamakan file database.js yang ter-deploy agar command center mencerminkan kondisi riil
       if (typeof DATABASE_AI_ACCOUNT !== "undefined" && Array.isArray(DATABASE_AI_ACCOUNT) && DATABASE_AI_ACCOUNT.length > 0) {
-        return DATABASE_AI_ACCOUNT;
-      }
-
-      try {
-        const stored = localStorage.getItem(STORAGE_KEY_AI_PRODUCTS);
-        if (stored) return JSON.parse(stored);
-      } catch (e) {}
-
-      return [];
-    }
+        return DATABASE_AI_ACCOUNT.map(p => {
           const vList = p.variants || [
             { name: "7 Hari", cost: Math.round((p.hargaPromo || 15000) * 0.4), price: Math.round((p.hargaPromo || 15000) * 0.6), stock: 10, ready: true },
             { name: "30 Hari", cost: Math.round((p.hargaPromo || 15000) * 0.6), price: (p.hargaPromo || 15000), stock: 10, ready: true }
           ];
           return {
             ...p,
-            vendor: (p.supplier && p.supplier.supplierId) || "FNSHOP",
+            vendor: p.vendor || (p.supplier && p.supplier.supplierId) || "FNSHOP",
             variants: vList,
             hargaModal: vList[0].cost || 5000,
             hargaPromo: vList[0].price || 15000,
             harga: Math.round((vList[0].price || 15000) * 1.35),
             garansi: p.garansi || "Full Garansi Sesuai Durasi",
             faq: p.faq || [],
-            aktif: true,
+            aktif: p.aktif !== false,
             stok: p.stok !== undefined ? p.stok : 10
           };
         });
       }
+
+      // 2. Fallback ke penyimpanan lokal jika database.js belum termuat
+      try {
+        const stored = localStorage.getItem(STORAGE_KEY_AI_PRODUCTS);
+        if (stored) return JSON.parse(stored);
+      } catch (e) {}
+
       return [];
     }
 
