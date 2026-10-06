@@ -15,18 +15,21 @@ window.AiAccountEngine = {
    */
   getProducts: function () {
     let products = [];
-    try {
-      const stored = localStorage.getItem("JIWAS_AI_PRODUCTS_OVERRIDE");
-      if (stored) {
-        products = JSON.parse(stored);
-      }
-    } catch (e) {
-      console.warn("[AI ENGINE]: Gagal membaca cache localStorage JIWAS_AI_PRODUCTS_OVERRIDE", e);
-    }
 
-    if (!products || products.length === 0) {
-      if (typeof DATABASE_AI_ACCOUNT !== "undefined" && Array.isArray(DATABASE_AI_ACCOUNT)) {
-        products = DATABASE_AI_ACCOUNT;
+    // Prioritaskan database.js asli agar tidak tertimpa 1 item rusak
+    if (typeof DATABASE_AI_ACCOUNT !== "undefined" && Array.isArray(DATABASE_AI_ACCOUNT) && DATABASE_AI_ACCOUNT.length > 0) {
+      products = DATABASE_AI_ACCOUNT;
+    } else {
+      try {
+        const stored = localStorage.getItem("JIWAS_AI_PRODUCTS_OVERRIDE");
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            products = parsed;
+          }
+        }
+      } catch (e) {
+        console.warn("[AI ENGINE]: Gagal membaca database", e);
       }
     }
 

@@ -1006,11 +1006,33 @@ EXACT 1:1 facial likeness of the reference subject in the provided reference pho
 
 <script>
   // SISTEM SAPU BERSIH TOTAL CACHE & STORAGE HP/LAPTOP
-  const CURRENT_APP_VERSION = "2026.4";
+  <script>
+  // PAKSA HAPUS DATA OVERRIDE PERUSAK ETALASE
+  localStorage.removeItem("JIWAS_AI_PRODUCTS_OVERRIDE");
+  sessionStorage.clear();
+
+  const CURRENT_APP_VERSION = "2026.9_FORCE_CLEAN";
   if (localStorage.getItem("JIWAS_APP_VERSION") !== CURRENT_APP_VERSION) {
-    // 1. Bersihkan seluruh LocalStorage & SessionStorage
     localStorage.clear();
     sessionStorage.clear();
+
+    if ('caches' in window) {
+      caches.keys().then(names => {
+        for (let name of names) caches.delete(name);
+      });
+    }
+
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistrations().then(registrations => {
+        for (let registration of registrations) {
+          registration.unregister();
+        }
+      });
+    }
+
+    localStorage.setItem("JIWAS_APP_VERSION", CURRENT_APP_VERSION);
+  }
+</script>
 
     // 2. Hapus Cache Storage PWA (File JS/HTML lama di HP)
     if ('caches' in window) {
