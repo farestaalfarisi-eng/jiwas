@@ -16,25 +16,25 @@ window.AiAccountEngine = {
   getProducts: function () {
     let products = [];
 
-    // 1. PRIORITAS UTAMA: Selalu baca data resmi deploy dari database.js
-    if (typeof DATABASE_AI_ACCOUNT !== "undefined" && Array.isArray(DATABASE_AI_ACCOUNT) && DATABASE_AI_ACCOUNT.length > 0) {
-      products = DATABASE_AI_ACCOUNT;
-    } else {
-      // 2. FALLBACK CADANGAN: Hanya jika database.js belum termuat
-      try {
-        const stored = localStorage.getItem("JIWAS_AI_PRODUCTS_OVERRIDE");
-        if (stored) {
-          const parsed = JSON.parse(stored);
-          if (Array.isArray(parsed)) {
-            products = parsed;
-          }
+    // 1. PRIORITAS UTAMA: Baca override hasil input Lembar 5 jika ada
+    try {
+      const stored = localStorage.getItem("JIWAS_AI_PRODUCTS_OVERRIDE");
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          products = parsed;
         }
-      } catch (e) {
-        console.warn("[AI ENGINE]: Gagal membaca storage", e);
       }
+    } catch (e) {
+      console.warn("[AI ENGINE]: Gagal membaca storage", e);
     }
 
-    // Normalisasi struktur varian agar etalase aman dari error
+    // 2. FALLBACK: Jika tidak ada di storage override, baca database.js
+    if (products.length === 0 && typeof DATABASE_AI_ACCOUNT !== "undefined" && Array.isArray(DATABASE_AI_ACCOUNT)) {
+      products = DATABASE_AI_ACCOUNT;
+    }
+
+    // Normalisasi struktur varian
     return products
       .filter(p => p.aktif !== false)
       .map(p => {

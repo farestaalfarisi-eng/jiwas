@@ -4,8 +4,8 @@
 // =========================================================================
 
 const DATABASE_AI_ACCOUNT = [
-  // ==================== KATEGORI: UMKM & KOMERSIAL ====================
   
+];
 
 // Pasang ke jendela runtime global
 if (typeof window !== "undefined") {
