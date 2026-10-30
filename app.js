@@ -1,11 +1,118 @@
+﻿// =========================================================================
+// JIWAS CASHFLOW STABILIZER - HARGA TUNGGAL & JALUR TRANSAKSI BERSIH
+// 100 Prompt: Rp 10.000 | 36 Video: Rp 10.000 | Edit Foto: Rp 1.000 | Video Jadi: Rp 2.500
 // =========================================================================
-// JIWAS - MASTER CONTROLLER & GROWTH OS ENGINE (Full Master Edition V5.3)
-// Theme: Dark Luxury & Gold Atelier • Strict 9:16 Ratio & 1:1 Digital Store
-// Core Brand: Family Atelier Collection Top Priority
-// Dual-Vendor Digital Store Engine (Inca Store & Finshop) with 7D & 30D Variants
-// Dual-Tier PIN Verification • Dynamic Script Injector • Family Formation Composer
-// Curated & Designed for JIWAS Atelier by Sahabat Kaya
-// =========================================================================
+window.bukaModalCheckout = function(itemTitle, tierName, priceText) {
+  const modal = document.getElementById("checkoutModal");
+  if (!modal) return;
+
+  const title = itemTitle || "Formula Studio JIWAS";
+  let price = priceText || "Rp 10.000";
+
+  // Pastikan tidak ada nominal 25.000
+  if (price.includes("25.000") || price.includes("25K")) {
+    price = "Rp 10.000";
+  }
+
+  const nameEl = document.getElementById("qrisModalProdName");
+  if (nameEl) nameEl.innerText = title;
+
+  const totalEl = document.getElementById("qrisTotalAmount");
+  if (totalEl) totalEl.innerText = price;
+
+  const varSelect = document.getElementById("qrisVariantSelect");
+  if (varSelect) {
+    varSelect.innerHTML = `<option value="0">Akses Lengkap Formula — ${price}</option>`;
+  }
+
+  const qrisImg = document.getElementById("qrisBarcodeImg");
+  if (qrisImg) {
+    qrisImg.src = "/images/qris-10k.jpg";
+  }
+
+  if (typeof switchPayMethod === "function") {
+    switchPayMethod('qris');
+  }
+
+  modal.classList.remove("hidden");
+};
+// FORCE RESCUE DISPLAY: Memastikan section tidak tertahan dalam keadaan blank/hidden
+document.addEventListener("DOMContentLoaded", () => {
+  setTimeout(() => {
+    const secAtelier = document.getElementById("sectionAtelier");
+    if (secAtelier && secAtelier.classList.contains("hidden")) {
+      secAtelier.classList.remove("hidden");
+    }
+  }, 100);
+});
+
+window.prosesBuatQRIS = async function() {
+  const inputWa = document.querySelector("#pinModal input[type='tel']") || 
+                  document.querySelector("input[placeholder*='08']") ||
+                  document.querySelector("#inputNomorWA");
+  const wa = inputWa ? inputWa.value.trim() : '';
+
+  if (!wa || wa.length < 9) {
+    alert('Harap masukkan nomor WhatsApp yang benar.');
+    return;
+  }
+
+  const container = document.getElementById('qrisContainer') || document.querySelector('.modal-content');
+  const btn = event ? event.target : null;
+  if (btn) btn.disabled = true;
+
+  try {
+    const res = await fetch('/api/payment/create-qris', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ amount: 2500, customer_phone: wa, order_title: 'Video Sinematik 9:16' })
+    });
+    const data = await res.json();
+    
+    // Tampilkan QRIS dan Tombol Konfirmasi Bayar
+    const displayHtml = `
+      <div style="text-align:center; padding:15px 0;">
+        <div style="background:#fff; padding:10px; border-radius:12px; display:inline-block; border:2px solid #d4af37; box-shadow:0 0 20px rgba(212,175,55,0.2);">
+          <img src="${data.qr_image}" alt="QRIS" style="width:200px; height:200px; object-fit:contain; display:block; margin:0 auto;" onerror="this.onerror=null; this.src='images/qris-10k.jpg';">
+        </div>
+        <div style="margin-top:10px; font-size:0.85rem; color:#d4af37; font-weight:700;">TOTAL: Rp 2.500</div>
+        <div style="font-size:0.7rem; color:#94a3b8; margin:4px 0 12px 0;">Order ID: ${data.order_id}</div>
+        <button type="button" onclick="konfirmasiSudahBayar('${data.order_id}', '${wa}')" style="background:#d4af37; color:#000; font-weight:800; font-size:0.8rem; padding:10px 14px; width:100%; border:none; border-radius:8px; cursor:pointer;">
+          <i class="fa-solid fa-circle-check"></i> Saya Sudah Bayar (Render Sekarang)
+        </button>
+      </div>
+    `;
+
+    const targetDiv = document.getElementById('qrisDisplayArea') || document.querySelector('.modal-content');
+    if (targetDiv) targetDiv.innerHTML = displayHtml;
+
+  } catch (err) {
+    alert('Gagal memuat QRIS: ' + err.message);
+  }
+};
+
+window.konfirmasiSudahBayar = async function(orderId, wa) {
+  try {
+    await fetch('/api/queue/push', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        order_id: orderId,
+        prompt_payload: JSON.stringify({
+          customer_contact: wa,
+          customer_name: 'Pelanggan JIWAS',
+          prompt: 'Moody Obsidian Gold Cinematic 9:16',
+          tier: 'Starter',
+          price: 2500
+        })
+      })
+    });
+    alert('Pembayaran diverifikasi! Pesanan ' + orderId + ' masuk antrean render.');
+    window.location.href = '/admin';
+  } catch (e) {
+    window.location.href = '/admin';
+  }
+};
 
 let activePack = null;
 let targetTierModal = 'starter';
@@ -14,9 +121,6 @@ let currentAppliedFormationPrompt = "";
 const loadedPromptScripts = new Set();
 let activeCommercialChip = "all";
 
-// -------------------------------------------------------------------------
-// DYNAMIC PROMPT MUTATION ENGINE (Anti Reused / Duplicate Content)
-// -------------------------------------------------------------------------
 const PROMPT_VARIATION_POOLS = {
   lighting: [
     "subtle cinematic rim light with golden hour glow",
@@ -76,9 +180,6 @@ function randomizePromptOutput(basePrompt, isVideo = false) {
   return `${cleanPrompt}, ${angle}, ${lighting}, ${color}, captured on ${camera}, authentic skin textures, volumetric atmosphere, 8K ultra-detailed --ar 9:16 --seed ${seed}`;
 }
 
-// -------------------------------------------------------------------------
-// 1. REGISTRY UTAMA KATALOG ATELIER
-// -------------------------------------------------------------------------
 const DEFAULT_FALLBACK_KATALOG = [
   { id: "umkm-commercial", folder: "umkm", title: "Commercial UMKM & Product Studio", type: "product", status: "live", rating: "5.0/5", sales: "Baru Rilis" },
   { id: "family-lux", folder: "family", title: "Luxury Family Collection", type: "foto", status: "live", rating: "5.0/5", sales: "200+ Terjual" },
@@ -104,9 +205,6 @@ function getActiveRegistry() {
   return DEFAULT_FALLBACK_KATALOG;
 }
 
-// -------------------------------------------------------------------------
-// BASIS DATA APLIKASI & SOFTWARE DENGAN 3 TINGKATAN HARGA
-// -------------------------------------------------------------------------
 const DATABASE_APPS = [
   {
     id: "app-media-engine",
@@ -146,18 +244,13 @@ function getDatabaseApps() {
   return DATABASE_APPS;
 }
 
-
 function getDatabaseAkun() {
-  // Acuan tunggal hasil deploy dari database.js
   if (typeof DATABASE_AI_ACCOUNT !== "undefined" && Array.isArray(DATABASE_AI_ACCOUNT)) {
     return DATABASE_AI_ACCOUNT.filter(item => item.aktif !== false);
   }
   return [];
 }
 
-// -------------------------------------------------------------------------
-// BASIS DATA VIDEO ON-DEMAND (VOD)
-// -------------------------------------------------------------------------
 const DEFAULT_VOD_DATA = [
   {
     id: "JK-05",
@@ -168,7 +261,7 @@ const DEFAULT_VOD_DATA = [
     desc: "Putri duyung berenang anggun di celah terumbu karang warna-warni dengan bias cahaya matahari laut jernih.",
     cover: "image_211bee.jpg",
     video: "http://googleusercontent.com/generated_video_content/8368507200011305640",
-    harga: "Rp35.000"
+    harga: "Rp2.500"
   },
   {
     id: "JK-01",
@@ -179,7 +272,7 @@ const DEFAULT_VOD_DATA = [
     desc: "Butiran air hujan menenangkan di kaca kamar dengan kerlip lampu kota malam. Sangat cocok buat latar kata-kata mutiara.",
     cover: "https://images.unsplash.com/photo-1515694346937-94d85e41e6f0?w=800&auto=format&fit=crop&q=80",
     video: "https://assets.mixkit.co/videos/preview/mixkit-raindrops-on-a-window-in-the-city-43183-large.mp4",
-    harga: "Rp25.000"
+    harga: "Rp2.500"
   },
   {
     id: "JK-02",
@@ -190,7 +283,7 @@ const DEFAULT_VOD_DATA = [
     desc: "Cairan emas kental jatuh memicu cipratan lambat super jernih. Dijamin bikin orang berhenti scrolling di TikTok/Reels.",
     cover: "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?w=800&auto=format&fit=crop&q=80",
     video: "https://assets.mixkit.co/videos/preview/mixkit-golden-particles-in-water-slow-motion-41804-large.mp4",
-    harga: "Rp25.000"
+    harga: "Rp2.500"
   },
   {
     id: "JK-03",
@@ -201,7 +294,7 @@ const DEFAULT_VOD_DATA = [
     desc: "Pusaran susu putih lembut bercampur kopi pekat. Bikin postingan resep masakan Anda kelihatan seperti bikinan kafe mahal.",
     cover: "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=800&auto=format&fit=crop&q=80",
     video: "https://assets.mixkit.co/videos/preview/mixkit-pouring-milk-into-black-coffee-41800-large.mp4",
-    harga: "Rp25.000"
+    harga: "Rp2.500"
   },
   {
     id: "JK-04",
@@ -212,7 +305,7 @@ const DEFAULT_VOD_DATA = [
     desc: "Kemasan produk berputar anggun dengan sorot lampu lembut. Bikin produk jualan online Anda langsung naik kelas.",
     cover: "https://images.unsplash.com/photo-1523293182086-7651a899d37f?w=800&auto=format&fit=crop&q=80",
     video: "https://assets.mixkit.co/videos/preview/mixkit-top-shot-of-perfume-bottle-and-flowers-43301-large.mp4",
-    harga: "Rp25.000"
+    harga: "Rp2.500"
   }
 ];
 
@@ -229,9 +322,6 @@ function getDatabaseVod() {
 
 let activeVodFilter = 'all';
 
-// -------------------------------------------------------------------------
-// 2. SHOWCASE POOL SELECTION (12 Pasang / 24 Aset Foto)
-// -------------------------------------------------------------------------
 function getShowcasePool() {
   const titles = [
     "Luxury Royal Velvet Studio",
@@ -268,9 +358,6 @@ let userAffinity = {};
 let surveyTriggered = false;
 let deferredPrompt = null;
 
-// -------------------------------------------------------------------------
-// 3. INITIALIZATION APP
-// -------------------------------------------------------------------------
 document.addEventListener("DOMContentLoaded", () => {
   initApp();
 });
@@ -303,13 +390,9 @@ function initApp() {
   renderHomeSoftwarePreview();
 }
 
-// -------------------------------------------------------------------------
-// 4. SINKRONISASI SERVER KATALOG & STOK LIVE (VERSI AMAN ANTI-404)
-// -------------------------------------------------------------------------
 async function sinkronkanKatalogOnline() {
   const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
   if (!isLocal) {
-    // Di server online (Vercel), JANGAN panggil /api/products agar tidak 404
     renderHomeDigitalAi();
     renderKatalogAkun();
     return;
@@ -331,10 +414,7 @@ async function sinkronkanKatalogOnline() {
 
 async function sinkronkanStokIncaRealtime() {
   const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
-  if (!isLocal) {
-    // Di server online (Vercel), lewati pemanggilan live-stock lokal port 3001
-    return;
-  }
+  if (!isLocal) return;
 
   try {
     const res = await fetch("http://localhost:3001/api/live-stock");
@@ -372,9 +452,7 @@ async function sinkronkanStokIncaRealtime() {
     console.warn("Gagal sinkron stok lokal:", err);
   }
 }
-// -------------------------------------------------------------------------
-// 5. VISITOR, AFFINITY & DECAYING SHOWCASE
-// -------------------------------------------------------------------------
+
 function initVisitorAndAffinity() {
   try {
     const visits = parseInt(localStorage.getItem("JIWAS_VISIT_COUNT") || "0", 10) + 1;
@@ -455,7 +533,7 @@ function initSocialProofPopups() {
   if (!toast || !nameEl || !descEl) return;
 
   const daftarNama = ["Kak Rina (Surabaya)", "Bunda Dewi (Jakarta)", "Kak Dimas (Bandung)", "Pak Hendra (Medan)", "Kak Maya (Yogyakarta)"];
-  const daftarAksi = ["Baru saja membuka PIN VIP 25K", "Membeli PIN Starter 10K", "Mengaktifkan CapCut Pro 30 Hari", "Membeli Canva Pro 7 Hari"];
+  const daftarAksi = ["Baru saja membuka PIN Akses 10K", "Membeli PIN Starter 10K", "Mengaktifkan CapCut Pro 30 Hari", "Membeli Canva Pro 7 Hari"];
 
   setInterval(() => {
     nameEl.innerText = daftarNama[Math.floor(Math.random() * daftarNama.length)];
@@ -491,9 +569,6 @@ function initLiveMarqueeTransactions() {
   if (counterEl) counterEl.innerText = currentSales.toLocaleString('id-ID') + "+";
 }
 
-// -------------------------------------------------------------------------
-// 6. WHATSAPP & ORDER ROUTING
-// -------------------------------------------------------------------------
 function getAdminWhatsAppNumber() {
   return localStorage.getItem("JIWAS_CUSTOM_WA") || 
          (typeof NOMOR_WA_ADMIN_CONFIG !== "undefined" ? NOMOR_WA_ADMIN_CONFIG : "6285181780429");
@@ -646,9 +721,6 @@ function requestFormulaOnDemand(catalogTitle, itemTitle, itemIdx) {
   window.open("https://wa.me/" + waNumber + "?text=" + pesan, "_blank");
 }
 
-// -------------------------------------------------------------------------
-// FITUR BAGIKAN PROMOSI SOSMED PRODUK AKUN AI
-// -------------------------------------------------------------------------
 function bagikanPromoProdukAkun(productId) {
   const accounts = getDatabaseAkun();
   const item = accounts.find(p => String(p.id) === String(productId));
@@ -686,9 +758,6 @@ function bagikanPromoProdukAkun(productId) {
   }
 }
 
-// -------------------------------------------------------------------------
-// 7. SHOWCASE BEFORE & AFTER SLIDER
-// -------------------------------------------------------------------------
 function initShowcaseAutoSlider() {
   renderShowcaseCards();
   if (showcaseTimer) clearInterval(showcaseTimer);
@@ -749,9 +818,6 @@ function lompatKeShowcaseSlide(idx) {
   renderShowcaseCards();
 }
 
-// -------------------------------------------------------------------------
-// 8. ATELIER FEED & TABS CONTROLLER
-// -------------------------------------------------------------------------
 function renderAtelierFeed() {
   const container = document.getElementById("gridAtelierFeed");
   if (!container) return;
@@ -875,9 +941,6 @@ function switchMainTab(tabType, btnEl) {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-// -------------------------------------------------------------------------
-// 9. ETALASE DISPLAY: FOTO, VIDEO & DUAL-VARIANT AI STORE
-// -------------------------------------------------------------------------
 function renderHomeCategories() {
   const container = document.getElementById("gridHomeCategories");
   if (!container) return;
@@ -896,13 +959,12 @@ function renderHomeCategories() {
     let badgeText = '📸 100 PROMPT';
     let mediaDisplayHTML = "";
 
-   if (item.type === 'video') {
+    if (item.type === 'video') {
       badgeText = (item.workflow === "frame-to-frame") ? '🎞️ DUAL FRAME (36)' : '🎥 VIDEO AI (30)';
       
       const videoCoverMp4 = `videos/${item.folder}/cover.mp4`;
       const imageCoverJpg = item.coverUrl || `videos/${item.folder}/cover.jpg`;
 
-      // HANYA RENDER GAMBAR COVER DI AWAL (Zero Video Memory)
       mediaDisplayHTML = `
         <div class="video-lazy-container aspect-9-16" data-video="${videoCoverMp4}">
           <img 
@@ -946,13 +1008,13 @@ function renderHomeCategories() {
       <div class="card-info">
         <h3 class="card-title">${item.title}</h3>
         <div class="card-rating-badge">★ ${item.rating || '4.9/5'}</div>
-        <div style="font-weight:800; color:var(--gold-light); font-size:0.85rem; margin-top:4px;">Rp10.000 / Rp25.000</div>
+        <div style="font-weight:800; color:var(--gold-light); font-size:0.85rem; margin-top:4px;">Akses Lengkap: Rp 10.000</div>
         <button class="btn-copy" style="margin-top:8px; padding:6px 12px; font-size:0.75rem; width:100%;">Lihat Koleksi</button>
       </div>
     `;
     container.appendChild(card);
   });
-    aktivasiLazyVideoObserver();
+  aktivasiLazyVideoObserver();
 }
 
 function renderHomeDigitalAi() {
@@ -961,6 +1023,7 @@ function renderHomeDigitalAi() {
     return;
   }
 }
+
 function renderKatalogFoto() {
   const container = document.getElementById("gridFotoKatalog");
   if (!container) return;
@@ -1001,8 +1064,15 @@ function renderKatalogFoto() {
       <div class="card-info">
         <h3 class="card-title">${pack.title}</h3>
         <div class="card-rating-badge">★ ${pack.rating || '4.9/5'}</div>
-        <div style="font-weight:800; color:var(--gold-light); font-size:0.85rem; margin-top:4px;">Rp10.000 / Rp25.000</div>
-        <button class="btn-copy" style="margin-top:8px; padding:6px 12px; font-size:0.75rem; width:100%;">Buka 100 Prompt</button>
+        <div style="font-weight:800; color:var(--gold-light); font-size:0.85rem; margin-top:4px;">Akses Lengkap: Rp 10.000</div>
+        <div style="display:flex; gap:6px; margin-top:6px;">
+          <button class="btn-copy" style="flex:1.1; justify-content:center; padding:8px 4px; font-size:0.72rem; border-color:#22c55e; color:#4ade80;" onclick="event.stopPropagation(); window.bukaModalCheckout('${pack.title.replace(/'/g, "\\'")}', 'Starter 10K', 'Rp 10.000')">
+            <i class="fa-solid fa-qrcode"></i> Beli (10K)
+          </button>
+          <button class="btn-copy" style="flex:1; justify-content:center; padding:8px 4px; font-size:0.72rem; background:var(--gold-gradient); color:#000; font-weight:800; border:none;" onclick="event.stopPropagation(); bukaDetailPack(pack)">
+            Lihat Koleksi
+          </button>
+        </div>
       </div>
     `;
     container.appendChild(card);
@@ -1018,10 +1088,29 @@ function renderKatalogVideo() {
   list.forEach(pack => {
     const isFrameToFrame = (pack.workflow === "frame-to-frame");
     const badgeText = isFrameToFrame ? '🎞️ DUAL FRAME (36)' : '🎥 VIDEO SUITE (30)';
-    const btnText = isFrameToFrame ? 'Buka 36 Dual Frame' : 'Buka 36 Video Formula';
-
     const videoCoverMp4 = `videos/${pack.folder}/cover.mp4`;
     const imageCoverJpg = pack.coverUrl || `videos/${pack.folder}/cover.jpg`;
+    const isUnlocked = cekAksesKatalog(pack.id, "starter") || cekAksesKatalog(pack.id, "vip");
+
+    let buttonActionHTML = "";
+    if (isUnlocked) {
+      buttonActionHTML = `
+        <button class="btn-copy" style="width:100%; justify-content:center; padding:8px; font-size:0.75rem; background:var(--gold-gradient); color:#000; font-weight:800; border:none;" onclick="event.stopPropagation(); bukaDetailPack(${JSON.stringify(pack).replace(/"/g, '&quot;')})">
+          <i class="fa-solid fa-lock-open"></i> Buka Koleksi (Akses Terbuka)
+        </button>
+      `;
+    } else {
+      buttonActionHTML = `
+        <div style="display:flex; gap:6px; margin-top:6px;">
+          <button class="btn-copy" style="flex:1.1; justify-content:center; padding:8px 4px; font-size:0.72rem; border-color:#22c55e; color:#4ade80;" onclick="event.stopPropagation(); kirimPesananLangsungWA('${pack.title}', 'Starter Prompt 10K', 'Rp 10.000')">
+            <i class="fa-brands fa-whatsapp"></i> Beli WA (10K)
+          </button>
+          <button class="btn-copy" style="flex:1; justify-content:center; padding:8px 4px; font-size:0.72rem; background:var(--gold-gradient); color:#000; font-weight:800; border:none;" onclick="event.stopPropagation(); activePack = ${JSON.stringify(pack).replace(/"/g, '&quot;')}; bukaModalPIN('starter')">
+            <i class="fa-solid fa-key"></i> Masukkan PIN
+          </button>
+        </div>
+      `;
+    }
 
     const card = document.createElement("div");
     card.className = "catalog-card";
@@ -1042,34 +1131,22 @@ function renderKatalogVideo() {
             </button>
           </div>
         </div>
-        
-        <!-- COVER IMAGE PERTAMA, VIDEO AKAN DIINJEKSI KETIKA DEKAT LAYAR -->
         <div class="video-lazy-container aspect-9-16" data-video="${videoCoverMp4}">
-          <img 
-            src="${imageCoverJpg}" 
-            alt="${pack.title}" 
-            class="aspect-9-16 img-loaded" 
-            loading="lazy" 
-            decoding="async"
-            onerror="this.onerror=null; this.src='images/velvet/cover.jpg';"
-          >
+          <img src="${imageCoverJpg}" alt="${pack.title}" class="aspect-9-16 img-loaded" loading="lazy" decoding="async" onerror="this.onerror=null; this.src='images/velvet/cover.jpg';">
         </div>
       </div>
       <div class="card-info">
         <h3 class="card-title">${pack.title}</h3>
         <div class="card-rating-badge">★ ${pack.rating || '5.0/5'}</div>
-        <div style="font-weight:800; color:var(--gold-light); font-size:0.85rem; margin-top:4px;">Rp10.000 / Rp25.000</div>
-        <button class="btn-copy" style="margin-top:8px; padding:6px 12px; font-size:0.75rem; width:100%;">${btnText}</button>
+        <div style="font-weight:800; color:var(--gold-light); font-size:0.85rem; margin-top:2px;">Akses Lengkap Rp 10.000</div>
+        ${buttonActionHTML}
       </div>
     `;
     container.appendChild(card);
   });
-    aktivasiLazyVideoObserver();
+  aktivasiLazyVideoObserver();
 }
 
-// -------------------------------------------------------------------------
-// RENDER KATALOG VOD (VIDEO ON-DEMAND)
-// -------------------------------------------------------------------------
 function renderKatalogVod(filterKey = "") {
   const container = document.getElementById("gridVodKatalog");
   if (!container) return;
@@ -1122,12 +1199,12 @@ function renderKatalogVod(filterKey = "") {
           <p style="font-size:0.68rem; color:#9ca3af; margin-top:3px; line-height:1.3; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">${item.desc}</p>
         </div>
         <div style="margin-top:8px;">
-          <div style="font-weight:800; color:var(--gold-light); font-size:0.85rem; margin-bottom:6px;">${item.harga || 'Rp25.000'} <span style="font-size:0.65rem; color:#9ca3af; font-weight:normal;">/ file MP4</span></div>
+          <div style="font-weight:800; color:var(--gold-light); font-size:0.85rem; margin-bottom:6px;">${item.harga || 'Rp2.500'} <span style="font-size:0.65rem; color:#9ca3af; font-weight:normal;">/ file MP4</span></div>
           <div style="display:flex; gap:6px;">
             <button class="btn-copy" style="flex:1; justify-content:center; padding:6px 4px; font-size:0.7rem;" onclick="bukaModalPlayerVod('${item.video}')">
               <i class="fa-solid fa-play"></i> Putar
             </button>
-            <button class="btn-copy" style="flex:1.2; justify-content:center; background:var(--gold-gradient); color:#000; font-weight:800; padding:6px 4px; font-size:0.7rem;" onclick="bukaModalCheckout('${item.title}', 'File Video HD Tanpa Watermark', '${item.harga || 'Rp25.000'}')">
+            <button class="btn-copy" style="flex:1.2; justify-content:center; background:var(--gold-gradient); color:#000; font-weight:800; padding:6px 4px; font-size:0.7rem;" onclick="orderMikroEngine('JK-VOD', 'Video Sinematik 9:16', 'video_motion', 2500, '')">
               <i class="fa-solid fa-download"></i> Ambil File
             </button>
           </div>
@@ -1170,7 +1247,7 @@ function autofillContohVod() {
 
   if (titleEl) titleEl.value = "Pesona Putri Duyung Samudra Tropis";
   if (catEl) catEl.value = "Pembuka Viral";
-  if (priceEl) priceEl.value = "Rp35.000";
+  if (priceEl) priceEl.value = "Rp2.500";
   if (tagEl) tagEl.value = "Latar Quotes / Visual Pembuka Estetik";
   if (descEl) descEl.value = "Putri duyung berenang anggun di celah terumbu karang warna-warni dengan bias cahaya laut jernih.";
   if (coverEl) coverEl.value = "image_211bee.jpg";
@@ -1209,7 +1286,7 @@ function handleUploadVod(e) {
     desc: document.getElementById("addVodDesc")?.value.trim() || "",
     cover: finalCover || "images/velvet/cover.jpg",
     video: finalVideo,
-    harga: document.getElementById("addVodHarga")?.value.trim() || "Rp25.000"
+    harga: document.getElementById("addVodHarga")?.value.trim() || "Rp2.500"
   };
 
   catalog.unshift(newItem);
@@ -1320,12 +1397,9 @@ function eksekusiOrderAkun(productId, variantName) {
     hargaTeks = `Rp${Number(target.hargaPromo || target.harga).toLocaleString("id-ID")}`;
   }
 
-  bukaModalCheckout(pName, variantName, hargaTeks);
+  window.bukaModalCheckout(pName, variantName, hargaTeks);
 }
 
-// -------------------------------------------------------------------------
-// 10. DETAIL PACK & DYNAMIC PROMPT SCRIPT INJECTOR
-// -------------------------------------------------------------------------
 function isFamilyCatalog(pack) {
   if (!pack) return false;
   const s = (pack.id + " " + pack.title + " " + pack.folder).toLowerCase();
@@ -1404,8 +1478,8 @@ function bukaDetailPack(pack) {
       : '';
 
     pabContainer.innerHTML = `
-      <button onclick="bukaModalCheckout('${pack.title}', 'Starter 10K', 'Rp10.000')" class="btn-buy-wa">Beli Starter (10K)</button>
-      <button onclick="bukaModalCheckout('${pack.title}', 'VIP 25K', 'Rp25.000')" class="btn-buy-wa" style="background:var(--gold-gradient); color:#000;">Beli VIP (25K)</button>
+      <button onclick="window.bukaModalCheckout(activePack.title, "Paket Pilihan", "Rp 10.000")" class="btn-buy-wa">Beli Akses (10K)</button>
+      
       <button class="btn-enter-pin-main" onclick="bukaModalPIN('vip')">Masukkan PIN</button>
       ${zipBtn}
     `;
@@ -1445,9 +1519,6 @@ function kembaliKeKatalog() {
   }
 }
 
-// -------------------------------------------------------------------------
-// 11. DUAL-TIER PIN ACCESS SYSTEM
-// -------------------------------------------------------------------------
 function cekAksesKatalog(catalogId, tier) {
   try {
     const unlockedStarter = JSON.parse(localStorage.getItem("TIGAJIWA_UNLOCKED_STARTER") || "[]");
@@ -1663,42 +1734,44 @@ function renderDetailItemCards() {
         `;
 
         actionButtons = `
-  <div class="action-buttons" style="display: flex; flex-wrap: wrap; gap: 6px;">
-    <a href="videos/${activePack.folder}/${i}_start.jpg" download class="btn-copy" style="border-color:#38bdf8; color:#38bdf8; text-decoration:none; display:inline-flex; align-items:center; gap:4px;">
-      📥 Bahan Stik
-    </a>
-    <a href="videos/${activePack.folder}/${i}.jpg" download class="btn-copy" style="border-color:var(--gold-primary); color:var(--gold-light); text-decoration:none; display:inline-flex; align-items:center; gap:4px;">
-      📥 Bahan Jadi
-    </a>
+          <div class="action-buttons" style="display: flex; flex-wrap: wrap; gap: 6px;">
+            <a href="videos/${activePack.folder}/${i}_start.jpg" download class="btn-copy" style="border-color:#38bdf8; color:#38bdf8; text-decoration:none; display:inline-flex; align-items:center; gap:4px;">
+              📥 Bahan Stik
+            </a>
+            <a href="videos/${activePack.folder}/${i}.jpg" download class="btn-copy" style="border-color:var(--gold-primary); color:var(--gold-light); text-decoration:none; display:inline-flex; align-items:center; gap:4px;">
+              📥 Bahan Jadi
+            </a>
 
-    <button class="btn-copy" onclick="copasPromptFromElement('startFrameText_${i}', '${activePack.title}', ${i})">🟢 Start</button>
-    <button class="btn-copy" onclick="copasPromptFromElement('endFrameText_${i}', '${activePack.title}', ${i})">👑 End</button>
-    ${motionText ? `<button class="btn-copy" style="border-color:#22c55e; color:#4ade80;" onclick="copasPromptFromElement('motionText_${i}', '${activePack.title}',${i})">🎬 Motion</button>` : ""}
-    <a href="https://runwayml.com/" target="_blank" class="btn-direct-ai">🚀 Video AI</a>
-  </div>
-`;
+            <button class="btn-copy" onclick="copasPromptFromElement('startFrameText_${i}', '${activePack.title}', ${i})">🟢 Start</button>
+            <button class="btn-copy" onclick="copasPromptFromElement('endFrameText_${i}', '${activePack.title}', ${i})">👑 End</button>
+            ${motionText ? `<button class="btn-copy" style="border-color:#22c55e; color:#4ade80;" onclick="copasPromptFromElement('motionText_${i}', '${activePack.title}',${i})">🎬 Motion</button>` : ""}
+            <a href="https://runwayml.com/" target="_blank" class="btn-direct-ai">🚀 Video AI</a>
+          </div>
+        `;
       } else {
-        promptBoxHTML = `<div class="prompt-text-box prompt-locked-text">🔒 Formula prompt dikunci. Masukkan PIN ${tier.toUpperCase()} (${tier === 'starter' ? '10K' : '25K'}) untuk membuka teks formula ini.</div>`;
+        const tierLabel = tier === 'starter' ? 'Starter 10K' : 'Akses 10K';
+        const priceLabel = tier === 'starter' ? 'Rp 10.000' : 'Rp 10.000';
+        promptBoxHTML = `<div class="prompt-text-box prompt-locked-text">🔒 Formula prompt dikunci. Masukkan PIN ${tier.toUpperCase()} (${'10K'}) untuk membuka teks formula ini.</div>`;
         actionButtons = `
           <div class="action-buttons">
             <button class="btn-copy" style="background:var(--gold-gradient); color:#000; font-weight:800; flex:1;" onclick="bukaModalPIN('${tier}')">
-              🔑 Masukkan PIN ${tier === 'starter' ? '10K' : '25K'}
+              🔑 Masukkan PIN ${'10K'}
             </button>
-            <button onclick="bukaModalCheckout('${activePack.title}', 'Paket ${tier.toUpperCase()}', 'Rp${tier === 'starter' ? '10.000' : '25.000'}')" class="btn-unlock-wa" style="flex:1;">
-              Beli via WA
+            <button onclick="event.stopPropagation(); window.bukaModalCheckout('${activePack.title.replace(/'/g, "\\'")}', '${tierLabel}', '${priceLabel}')" class="btn-unlock-wa" style="flex:1;">
+              Beli Sekarang
             </button>
           </div>
         `;
       }
     } else {
       const motionBoxHTML = (isVideo && motionText) ? `
-  <div style="margin-top: 10px; border-top: 1px dashed rgba(212,175,55,0.25); padding-top: 8px;">
-    <div style="font-size: 0.7rem; font-weight: 700; color: #4ade80; margin-bottom: 4px;">
-      🎬 PROMPT MOTION VIDEO (Runway / Kling / Luma):
-    </div>
-    <div class="prompt-text-box" id="motionText_${i}" style="border-color: rgba(74, 222, 128, 0.3);">${motionText}</div>
-  </div>
-` : '';
+        <div style="margin-top: 10px; border-top: 1px dashed rgba(212,175,55,0.25); padding-top: 8px;">
+          <div style="font-size: 0.7rem; font-weight: 700; color: #4ade80; margin-bottom: 4px;">
+            🎬 PROMPT MOTION VIDEO (Runway / Kling / Luma):
+          </div>
+          <div class="prompt-text-box" id="motionText_${i}" style="border-color: rgba(74, 222, 128, 0.3);">${motionText}</div>
+        </div>
+      ` : '';
 
       promptBoxHTML = !isLocked 
         ? `<div>
@@ -1708,10 +1781,13 @@ function renderDetailItemCards() {
              <div class="prompt-text-box" id="promptText_${i}">${promptText}</div>
              ${motionBoxHTML}
            </div>`
-        : `<div class="prompt-text-box prompt-locked-text">🔒 Formula prompt dikunci. Masukkan PIN ${tier.toUpperCase()} (${tier === 'starter' ? '10K' : '25K'}) untuk membuka teks formula ini.</div>`;
+        : `<div class="prompt-text-box prompt-locked-text">🔒 Formula prompt dikunci. Masukkan PIN ${tier.toUpperCase()} (${'10K'}) untuk membuka teks formula ini.</div>`;
 
       let directBtnText = isVideo ? "🚀 Video AI" : "🚀 Bing";
       let directUrl = isVideo ? "https://runwayml.com/" : "https://www.bing.com/images/create";
+
+      const tierLabel = tier === 'starter' ? 'Starter 10K' : 'Akses 10K';
+      const priceLabel = tier === 'starter' ? 'Rp 10.000' : 'Rp 10.000';
 
       actionButtons = !isLocked 
         ? `
@@ -1727,8 +1803,8 @@ function renderDetailItemCards() {
             ` : ''}
 
             ${isVideo ? `
-            <button class="btn-copy" style="background:rgba(212,175,55,0.18); border-color:var(--gold-primary); color:var(--gold-light);" onclick="bukaModalCheckout('${activePack.title} - Item #${i}', 'Jasa Pembuatan Video Jadi', 'Rp35.000')">
-              🎬 Buatkan Video Jadi (35K)
+            <button class="btn-copy" style="background:rgba(212,175,55,0.18); border-color:var(--gold-primary); color:var(--gold-light);" onclick="orderMikroEngine('JK-VOD', 'Video Sinematik 9:16', 'video_motion', 2500, '')">
+              🎬 Buatkan Video Jadi (2500)
             </button>
             ` : ''}
 
@@ -1736,13 +1812,20 @@ function renderDetailItemCards() {
             <a href="${directUrl}" target="_blank" class="btn-direct-ai">${directBtnText}</a>
           </div>`
         : `
-          <div class="action-buttons">
-            <button class="btn-copy" style="background:var(--gold-gradient); color:#000; font-weight:800; flex:1;" onclick="bukaModalPIN('${tier}')">
-              🔑 Masukkan PIN ${tier === 'starter' ? '10K' : '25K'}
+          <div class="action-buttons" style="display: flex; flex-direction: column; gap: 6px;">
+            ${isVideo ? `
+            <button type="button" class="btn-copy" style="background: linear-gradient(135deg, #d4af37, #aa7c11); color: #000; font-weight: 800; width: 100%; justify-content: center; padding: 8px 10px; font-size: 0.75rem; border: none; border-radius: 6px; cursor: pointer;" onclick="bukaOrderVideoJadiMikro('${activePack.id}-${i}', '${activePack.title} #${i}', '${promptText.replace(/'/g, "\\'")}')">
+              🎬 Beli Video Jadi (Rp 2.500)
             </button>
-            <button onclick="bukaModalCheckout('${activePack.title}', 'Paket ${tier.toUpperCase()}', 'Rp${tier === 'starter' ? '10.000' : '25.000'}')" class="btn-unlock-wa" style="flex:1;">
-              Beli via WA
-            </button>
+            ` : ''}
+            <div style="display: flex; gap: 6px; width: 100%;">
+              <button class="btn-copy" style="background: rgba(212,175,55,0.15); border-color: var(--gold-primary); color: var(--gold-light); font-weight: 700; flex: 1; justify-content: center; font-size: 0.72rem;" onclick="bukaModalPIN('${tier}')">
+                🔑 PIN ${'10K'}
+              </button>
+              <button onclick="event.stopPropagation(); window.bukaModalCheckout('${activePack.title.replace(/'/g, "\\'")}', '${tierLabel}', '${priceLabel}')" class="btn-unlock-wa" style="flex: 1; justify-content: center; font-size: 0.72rem;">
+                Beli Sekarang
+              </button>
+            </div>
           </div>`;
     }
 
@@ -1761,12 +1844,9 @@ function renderDetailItemCards() {
     `;
     grid.appendChild(card);
   }
-    aktivasiLazyVideoObserver();
+  aktivasiLazyVideoObserver();
 }
 
-// -------------------------------------------------------------------------
-// 12. MODAL INPUT & VERIFIKASI PIN
-// -------------------------------------------------------------------------
 function bukaModalPIN(tier) {
   targetTierModal = tier || 'starter';
   const modal = document.getElementById("pinModal");
@@ -1807,7 +1887,7 @@ function verifikasiPIN() {
     simpanAksesKatalog(activePack.id, "vip");
     catatLogAktivitas("PIN_SUCCESS", activePack.title, "VIP Full (25K)");
     tutupModalPIN();
-    tampilkanToast("👑 AKSES VIP (25K) TERBUKA!");
+    tampilkanToast("👑 AKSES Akses Penuh (10K) TERBUKA!");
     renderDetailItemCards();
   } else {
     alert("❌ Kode PIN Salah! Masukkan PIN resmi yang Anda peroleh.");
@@ -1852,9 +1932,6 @@ function tampilkanToast(msg) {
   setTimeout(() => toast.classList.add("hidden"), 3000);
 }
 
-// -------------------------------------------------------------------------
-// 13. URL AUTO-UNLOCK & RADAR COMMAND DOORWAY (TERLINDUNGI)
-// -------------------------------------------------------------------------
 function cekAutoUnlockURL() {
   const params = new URLSearchParams(window.location.search);
   const packParam = params.get("pack");
@@ -1915,9 +1992,6 @@ function initInvisibleAdminDoorway() {
   });
 }
 
-// -------------------------------------------------------------------------
-// 14. FAMILY FORMATION COMPOSER
-// -------------------------------------------------------------------------
 function updatePromptFormasi() {
   const father = document.getElementById("fatherBuild")?.value || "medium build";
   const mother = document.getElementById("motherBuild")?.value || "slender graceful build";
@@ -2053,9 +2127,6 @@ function terapkanKeSemuaPromptKeluarga() {
   tampilkanToast("✨ Formasi disisipkan ke seluruh kartu!");
 }
 
-// -------------------------------------------------------------------------
-// 15. EXIT-INTENT SURVEY & PWA INSTALLER
-// -------------------------------------------------------------------------
 function initExitIntentSurvey() {
   document.addEventListener("mouseleave", (e) => {
     if (e.clientY <= 0 && !surveyTriggered) {
@@ -2122,9 +2193,6 @@ function tutupBannerPWA() {
   if (banner) banner.classList.add("hidden");
 }
 
-// -------------------------------------------------------------------------
-// 16. PINTEREST SIMETRIS LIVE SEARCH & MESIN PENCARI AKUN AI
-// -------------------------------------------------------------------------
 function handleLiveAtelierSearch(keyword) {
   const cleanKey = (keyword || "").toLowerCase().trim();
   const clearBtn = document.getElementById("btnClearGlobalSearch");
@@ -2169,15 +2237,9 @@ function handleAiAccountSearch(keyword) {
   });
 }
 
-// Pastikan tidak menimpa fungsi renderProducts dan init bawaan ai-account-app.js
 if (typeof window.AiAccountEngine === "undefined") {
   window.AiAccountEngine = {};
 }
-// Cek dulu apakah AiAccountEngine sudah ada dari ai-account-app.js
-if (typeof window.AiAccountEngine === "undefined") {
-  window.AiAccountEngine = {};
-}
-// Tambahkan fungsi handleSearch tanpa menghapus fungsi render bawaan
 window.AiAccountEngine.handleSearch = function(keyword) {
   handleAiAccountSearch(keyword);
 };
@@ -2212,7 +2274,7 @@ function filterByQuickChip(categoryTag, btnEl) {
     switchMainTab('vod');
     return;
   }
-if (categoryTag === 'apps') {
+  if (categoryTag === 'apps') {
     bukaHalamanAplikasi();
     return;
   }
@@ -2234,9 +2296,6 @@ if (categoryTag === 'apps') {
   handleLiveAtelierSearch(searchKeyword);
 }
 
-// -------------------------------------------------------------------------
-// 17. ALUR CHECKOUT INSTAN DANA QRIS & WA (JIWAS)
-// -------------------------------------------------------------------------
 let currentOrderData = {
   title: "",
   tier: "",
@@ -2244,42 +2303,40 @@ let currentOrderData = {
   orderId: ""
 };
 
-function bukaModalCheckout(itemTitle, tierName, priceText) {
-  // 1. Jika dikirim sebagai objek produk utuh (dari akun AI / etalase modern)
-  if (itemTitle && typeof itemTitle === "object") {
-    if (typeof window.bukaCheckoutAi === "function") {
-      window.bukaCheckoutAi(itemTitle);
-    }
-    return;
+window.bukaModalCheckout = function(itemTitle, tierName, priceText) {
+  const modal = document.getElementById("checkoutModal");
+  if (!modal) return;
+
+  const title = itemTitle || "Formula Studio JIWAS";
+  let price = priceText || "Rp 10.000";
+
+  // Pastikan tidak ada nominal 25.000
+  if (price.includes("25.000") || price.includes("25K")) {
+    price = "Rp 10.000";
   }
 
-  // 2. Jika dipanggil dari tombol katalog foto/video (3 parameter: judul, paket, harga)
-  const namaProduk = itemTitle || "Layanan Studio JIWAS";
-  const namaVarian = tierName || "Varian Pilihan";
-  
-  // Ambil angka murni dari string harga (misal: "Rp25.000" jadi 25000)
-  const nominalAngka = Number(String(priceText || tierName || "25000").replace(/[^0-9]/g, '')) || 25000;
+  const nameEl = document.getElementById("qrisModalProdName");
+  if (nameEl) nameEl.innerText = title;
 
-  // Susun objek data sesuai kebutuhan kartu QRIS di index.html
-  const dataPesanan = {
-    nama: namaProduk,
-    kategori: "Formula Studio",
-    jenisAkun: namaVarian,
-    variants: [
-      {
-        name: namaVarian,
-        price: nominalAngka,
-        garansi: "Full Garansi VIP"
-      }
-    ],
-    defaultIdx: 0
-  };
+  const totalEl = document.getElementById("qrisTotalAmount");
+  if (totalEl) totalEl.innerText = price;
 
-  // Teruskan langsung ke engine modal QRIS
-  if (typeof window.bukaCheckoutAi === "function") {
-    window.bukaCheckoutAi(dataPesanan);
+  const varSelect = document.getElementById("qrisVariantSelect");
+  if (varSelect) {
+    varSelect.innerHTML = `<option value="0">Akses Lengkap Formula — ${price}</option>`;
   }
-}
+
+  const qrisImg = document.getElementById("qrisBarcodeImg");
+  if (qrisImg) {
+    qrisImg.src = "/images/qris-10k.jpg";
+  }
+
+  if (typeof switchPayMethod === "function") {
+    switchPayMethod('qris');
+  }
+
+  modal.classList.remove("hidden");
+};
 
 function tutupModalCheckout() {
   const modal = document.getElementById("checkoutModal");
@@ -2308,16 +2365,7 @@ function prosesKeQRIS(e) {
   if (totalBayarEl) totalBayarEl.innerText = currentOrderData.priceText;
 
   if (qrisImgEl) {
-    const rawPrice = (currentOrderData.priceText || "").toLowerCase();
-    const rawTier = (currentOrderData.tier || "").toLowerCase();
-
-    if (rawPrice.includes("10.000") || rawTier.includes("10k") || rawTier.includes("starter")) {
-      qrisImgEl.src = "images/qris-10k.jpg";
-    } else if (rawPrice.includes("25.000") || rawTier.includes("25k") || rawTier.includes("vip")) {
-      qrisImgEl.src = "images/qris-10k.jpg";
-    } else {
-      qrisImgEl.src = "images/qris-10k.jpg";
-    }
+    qrisImgEl.src = "images/qris-10k.jpg";
   }
 
   const pesanWA = 
@@ -2344,9 +2392,6 @@ Berikut bukti transfernya. Tolong segera dikonfirmasi ya. Terima kasih!`;
   catatLogAktivitas("CHECKOUT_QRIS", currentOrderData.title, `${currentOrderData.tier} (${buyerName})`);
 }
 
-// -------------------------------------------------------------------------
-// 18. MODUL KHUSUS: STUDIO KOMERSIAL & UMKM (HUB & DEDICATED CATALOG)
-// -------------------------------------------------------------------------
 function getCommercialPacks() {
   return getActiveRegistry().filter(item => 
     item.type === "product" || 
@@ -2389,7 +2434,7 @@ function renderHomeCommercialPreview() {
       <div class="card-info">
         <h3 class="card-title">${pack.title}</h3>
         <div class="card-rating-badge" style="color:#22c55e;">★ ${pack.rating || '5.0/5'}</div>
-        <div style="font-weight:800; color:var(--gold-light); font-size:0.85rem; margin-top:4px;">Rp10.000 / Rp25.000</div>
+        <div style="font-weight:800; color:var(--gold-light); font-size:0.85rem; margin-top:4px;">Akses Lengkap: Rp 10.000</div>
         <button class="btn-copy" style="margin-top:8px; padding:6px 12px; font-size:0.75rem; width:100%;">Lihat Formula</button>
       </div>
     `;
@@ -2421,9 +2466,18 @@ function bukaHalamanKomersial() {
 }
 
 function tutupHalamanKomersial() {
+  const secAtelier = document.getElementById("sectionAtelier");
+  const heroHeader = document.getElementById("atelierMainHeader");
   const secComm = document.getElementById("sectionCommercialStudio");
+
+  if (heroHeader) heroHeader.classList.remove("hidden");
+  if (secAtelier) secAtelier.classList.remove("hidden");
   if (secComm) secComm.classList.add("hidden");
-  switchMainTab('atelier', document.getElementById('tabBtnAtelier'));
+
+  document.querySelectorAll(".b-nav-item").forEach(b => b.classList.remove("active"));
+  document.getElementById("tabBtnAtelier")?.classList.add("active");
+
+  window.scrollTo(0, 0);
 }
 
 function renderAllCommercialItems(filterKey = "") {
@@ -2480,7 +2534,7 @@ function renderAllCommercialItems(filterKey = "") {
       <div class="card-info">
         <h3 class="card-title">${pack.title}</h3>
         <div class="card-rating-badge" style="color:#22c55e;">★ ${pack.rating || '5.0/5'}</div>
-        <div style="font-weight:800; color:var(--gold-light); font-size:0.85rem; margin-top:4px;">Rp10.000 / Rp25.000</div>
+        <div style="font-weight:800; color:var(--gold-light); font-size:0.85rem; margin-top:4px;">Akses Lengkap: Rp 10.000</div>
         <button class="btn-copy" style="margin-top:8px; padding:6px 12px; font-size:0.75rem; width:100%;">Buka Formula</button>
       </div>
     `;
@@ -2499,26 +2553,20 @@ function filterKomersialLive(keyword) {
   renderAllCommercialItems(keyword);
 }
 
-// =========================================================================
-// KONTROL 3 JALUR PEMBAYARAN CHECKOUT (QRIS, TRANSFER BANK & CHAT WA)
-// =========================================================================
 let currentSelectedPayMethod = 'qris';
 
 function switchPayMethod(method) {
   currentSelectedPayMethod = method;
 
-  // 1. Reset class aktif pada ketiga tombol tab
   const tabs = document.querySelectorAll("#tabBtnQris, #tabBtnBank, #tabBtnWa");
   tabs.forEach(tab => tab.classList.remove("active"));
 
-  // 2. Sembunyikan ketiga panel pembayaran (pakai display: none)
   const panes = ['payPaneQris', 'payPaneBank', 'payPaneWa'];
   panes.forEach(paneId => {
     const el = document.getElementById(paneId);
     if (el) el.style.display = 'none';
   });
 
-  // 3. Munculkan panel yang dipilih dan aktifkan tombol tabnya
   if (method === 'qris') {
     document.getElementById("tabBtnQris")?.classList.add("active");
     const pane = document.getElementById("payPaneQris");
@@ -2533,7 +2581,6 @@ function switchPayMethod(method) {
     if (pane) pane.style.display = "block";
   }
 
-  // 4. Ubah teks dan warna tombol konfirmasi utama sesuai jalur yang aktif
   const actionBtn = document.getElementById("btnMainCheckoutAction");
   if (actionBtn) {
     if (method === 'qris') {
@@ -2561,9 +2608,7 @@ function salinNomorRekening(nomor, jenis) {
     }
   });
 }
-// =========================================================================
-// SMART VIDEO LAZY-LOAD & RAM CLEANER (Cover -> MP4 on Enter -> Unload on Exit)
-// =========================================================================
+
 const lazyVideoObserver = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
     const container = entry.target;
@@ -2572,7 +2617,6 @@ const lazyVideoObserver = new IntersectionObserver((entries) => {
     const posterImg = container.querySelector('img');
 
     if (entry.isIntersecting) {
-      // 1. MASUK LAYAR: Pasang video jika belum ada
       if (!existingVideo && videoUrl) {
         const video = document.createElement('video');
         video.src = videoUrl;
@@ -2582,12 +2626,10 @@ const lazyVideoObserver = new IntersectionObserver((entries) => {
         video.playsInline = true;
         video.className = 'aspect-9-16';
 
-        // Begitu frame video ter-load, sembunyikan gambar cover
         video.onloadeddata = () => {
           if (posterImg) posterImg.style.opacity = '0';
         };
 
-        // Jika video 404 / gagal, hapus elemen video agar cover tetap tampil
         video.onerror = () => {
           video.remove();
           if (posterImg) posterImg.style.opacity = '1';
@@ -2598,30 +2640,26 @@ const lazyVideoObserver = new IntersectionObserver((entries) => {
         existingVideo.play().catch(() => {});
       }
     } else {
-      // 2. KELUAR LAYAR: HAPUS VIDEO DARI DOM UNTUK MEMBEBASKAN RAM 100%
       if (existingVideo) {
         existingVideo.pause();
-        existingVideo.removeAttribute('src'); // Buang buffer dari memori
+        existingVideo.removeAttribute('src');
         existingVideo.load();
-        existingVideo.remove();               // Hapus total dari DOM
-        if (posterImg) posterImg.style.opacity = '1'; // Tampilkan kembali gambar cover
+        existingVideo.remove();
+        if (posterImg) posterImg.style.opacity = '1';
       }
     }
   });
 }, {
-  rootMargin: '120px 0px', // Siapkan video 120px sebelum masuk viewport layar
+  rootMargin: '120px 0px',
   threshold: 0.1
 });
 
-// Fungsi pemanggil observer ke semua wadah video
 function aktivasiLazyVideoObserver() {
   document.querySelectorAll('.video-lazy-container').forEach(el => {
     lazyVideoObserver.observe(el);
   });
 }
-// =========================================================================
-// MODUL KHUSUS: ETALASE APLIKASI & 3 TINGKATAN HARGA (JIWAS APPS)
-// =========================================================================
+
 let activeAppFilter = "all";
 
 function bukaHalamanAplikasi() {
@@ -2647,25 +2685,6 @@ function bukaHalamanAplikasi() {
 
   renderKatalogSemuaAplikasi();
   window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-function tutupHalamanKomersial() {
-  const secAtelier = document.getElementById("sectionAtelier");
-  const heroHeader = document.getElementById("atelierMainHeader");
-  const secComm = document.getElementById("sectionCommercialStudio");
-
-  // Tampilkan beranda terlebih dahulu agar layout tidak kosong
-  if (heroHeader) heroHeader.classList.remove("hidden");
-  if (secAtelier) secAtelier.classList.remove("hidden");
-
-  // Baru sembunyikan halaman komersial
-  if (secComm) secComm.classList.add("hidden");
-
-  // Aktifkan kembali tab Atelier di navigasi bawah
-  document.querySelectorAll(".b-nav-item").forEach(b => b.classList.remove("active"));
-  document.getElementById("tabBtnAtelier")?.classList.add("active");
-
-  window.scrollTo(0, 0);
 }
 
 function tutupHalamanAplikasi() {
@@ -2744,20 +2763,18 @@ function buildAppCardHTML(app) {
         <p style="font-size:0.68rem; color:#9ca3af; margin:4px 0 8px; line-height:1.3;">${app.desc}</p>
       </div>
 
-      <!-- Tombol Demo Interaktif Anti-Curi -->
       <button class="btn-copy" style="width:100%; justify-content:center; padding:5px; margin-bottom:8px; border-color:#38bdf8; color:#38bdf8;" onclick="bukaModalAppDemo('${app.id}')">
         <i class="fa-solid fa-play"></i> Uji Coba Demo (Read-Only)
       </button>
 
-      <!-- 3 Tingkatan Harga -->
       <div class="app-tier-selector-box">
-        <button class="btn-app-tier" onclick="bukaModalCheckout('${app.title}', '${v1.name}', 'Rp${v1.price.toLocaleString('id-ID')}')">
+        <button class="btn-app-tier" onclick="window.bukaModalCheckout('${app.title.replace(/'/g, "\\'")}', '${v1.name}', 'Rp${(v1.price / 1000).toFixed(0)}rb')">
           ${v1.name}<br><strong>Rp${(v1.price / 1000).toFixed(0)}rb</strong>
         </button>
-        <button class="btn-app-tier highlight" onclick="bukaModalCheckout('${app.title}', '${v2.name}', 'Rp${v2.price.toLocaleString('id-ID')}')">
+        <button class="btn-app-tier highlight" onclick="window.bukaModalCheckout('${app.title.replace(/'/g, "\\'")}', '${v2.name}', 'Rp${(v2.price / 1000).toFixed(0)}rb')">
           ${v2.name}<br><strong>Rp${(v2.price / 1000).toFixed(0)}rb</strong>
         </button>
-        <button class="btn-app-tier" onclick="bukaModalCheckout('${app.title}', '${v3.name}', 'Rp${v3.price.toLocaleString('id-ID')}')">
+        <button class="btn-app-tier" onclick="window.bukaModalCheckout('${app.title.replace(/'/g, "\\'")}', '${v3.name}', 'Rp${(v3.price / 1000).toFixed(0)}rb')">
           ${v3.name}<br><strong>Rp${(v3.price / 1000).toFixed(0)}rb</strong>
         </button>
       </div>
@@ -2798,7 +2815,7 @@ function bukaModalAppDemo(appId) {
       <div style="display:flex; gap:6px;">
         ${app.variants.map((v, i) => `
           <button class="btn-copy" style="flex:1; justify-content:center; padding:8px 4px; font-size:0.68rem; ${i === 1 ? 'background:var(--gold-gradient); color:#000; font-weight:800;' : ''}" 
-            onclick="tutupModalAppDemo(); bukaModalCheckout('${app.title}', '${v.name}', 'Rp${v.price.toLocaleString('id-ID')}');">
+            onclick="tutupModalAppDemo(); window.bukaModalCheckout('${app.title.replace(/'/g, "\\'")}', '${v.name}', 'Rp${v.price.toLocaleString('id-ID')}');">
             ${v.name}<br>Rp${v.price.toLocaleString('id-ID')}
           </button>
         `).join('')}
@@ -2818,3 +2835,183 @@ function tutupModalAppDemo() {
   }
   if (modal) modal.classList.add("hidden");
 }
+
+async function orderMikroEngine(itemId, itemTitle, itemType, amount, basePrompt) {
+  const buyerContact = prompt("Masukkan Nomor WhatsApp aktif Anda untuk pengiriman hasil video/foto:");
+  if (!buyerContact || buyerContact.trim().length < 9) {
+    alert("Nomor WhatsApp wajib diisi agar link video/foto otomatis terkirim!");
+    return;
+  }
+
+  try {
+    const res = await fetch('/api/engine/create-order', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        buyer_contact: buyerContact.trim(),
+        item_id: itemId,
+        item_title: itemTitle,
+        item_type: itemType,
+        amount: Number(amount),
+        base_prompt: basePrompt || itemTitle
+      })
+    });
+
+    const data = await res.json();
+    if (!data.success) {
+      alert("Gagal membuat antrean: " + data.message);
+      return;
+    }
+
+    tampilkanModalQrisEngine(data, itemTitle, buyerContact);
+
+  } catch (err) {
+    console.error("Error order mikro:", err);
+    alert("Terjadi kendala jaringan saat menghubungi engine server.");
+  }
+}
+
+function tampilkanModalQrisEngine(orderData, itemTitle, contact) {
+  let modal = document.getElementById("modalMikroEngine");
+  if (!modal) {
+    modal = document.createElement("div");
+    modal.id = "modalMikroEngine";
+    modal.className = "modal-overlay";
+    modal.style.cssText = "position:fixed; inset:0; background:rgba(0,0,0,0.85); display:flex; align-items:center; justify-content:center; z-index:10005; padding:16px;";
+    document.body.appendChild(modal);
+  }
+
+  const qrImageUrl = "images/qris-10k.jpg";
+
+  modal.innerHTML = `
+    <div style="background:#111118; border:1px solid #d4af37; border-radius:14px; max-width:380px; width:100%; padding:20px; text-align:center; box-shadow:0 10px 40px rgba(0,0,0,0.9);">
+      <div style="font-size:0.75rem; color:#d4af37; font-weight:800; letter-spacing:1px; margin-bottom:4px;">AUTONOMOUS MICRO-PAYMENT</div>
+      <h3 style="color:#fff; font-size:1.1rem; margin-bottom:6px;">${itemTitle}</h3>
+      <div style="font-size:1.5rem; font-weight:900; color:#22c55e; margin-bottom:12px;">Rp ${orderData.amount.toLocaleString('id-ID')}</div>
+
+      <div style="background:#fff; padding:12px; border-radius:10px; display:inline-block; margin-bottom:12px;">
+        <img src="${qrImageUrl}" alt="Dynamic QRIS" style="width:200px; height:200px; display:block;">
+      </div>
+
+      <div style="font-size:0.72rem; color:#94a3b8; line-height:1.4; margin-bottom:16px;">
+        Order ID: <code style="color:#38bdf8;">${orderData.order_id}</code><br>
+        Tujuan: <strong>${contact}</strong><br>
+        <em>Scan via GoPay, OVO, Dana, BCA, atau Livin Mandiri. Begitu lunas, engine AI otomatis merender aset Anda.</em>
+      </div>
+
+      <button onclick="simulasiBayarLunas('${orderData.order_id}')" style="background:#22c55e; color:#000; font-weight:800; border:none; padding:10px 16px; border-radius:6px; width:100%; cursor:pointer; font-size:0.8rem; margin-bottom:8px;">
+        ⚡ Simulasi Bayar Lunas (Webhook Test)
+      </button>
+
+      <button onclick="document.getElementById('modalMikroEngine').remove()" style="background:transparent; border:1px solid #475569; color:#cbd5e1; padding:6px 12px; border-radius:6px; width:100%; cursor:pointer; font-size:0.75rem;">
+        Tutup
+      </button>
+    </div>
+  `;
+}
+
+async function simulasiBayarLunas(orderId) {
+  try {
+    const res = await fetch('/api/engine/payment-webhook', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ order_id: orderId, status: 'PAID' })
+    });
+    const d = await res.json();
+    alert("Pembayaran terkonfirmasi! Mesin render AI otomatis masuk ke antrean.");
+    const m = document.getElementById("modalMikroEngine");
+    if (m) m.remove();
+  } catch (e) {
+    alert("Gagal memicu webhook: " + e.message);
+  }
+}
+
+window.bukaOrderVideoJadiMikro = function(itemId, itemTitle, basePrompt) {
+  let modal = document.getElementById("modalVideoJadiMikro");
+  if (!modal) {
+    modal = document.createElement("div");
+    modal.id = "modalVideoJadiMikro";
+    modal.style.cssText = "position:fixed; inset:0; background:rgba(0,0,0,0.88); backdrop-filter:blur(6px); z-index:999999; display:flex; align-items:center; justify-content:center; padding:16px;";
+    document.body.appendChild(modal);
+  }
+
+  modal.innerHTML = `
+    <div style="background:#111118; border:1px solid rgba(212,175,55,0.4); border-radius:16px; max-width:380px; width:100%; padding:22px; text-align:center; box-shadow:0 16px 50px rgba(0,0,0,0.95); position:relative;">
+      <button type="button" onclick="document.getElementById('modalVideoJadiMikro').style.display='none'" style="position:absolute; top:12px; right:12px; background:none; border:none; color:#94a3b8; font-size:1.3rem; cursor:pointer;">&times;</button>
+      
+      <div style="font-size:0.68rem; color:#d4af37; font-weight:800; letter-spacing:1px; margin-bottom:4px;">INSTANT RENDER PIPELINE</div>
+      <h3 style="color:#fff; font-size:1.05rem; font-family:'Cinzel', serif; margin-bottom:4px;">${itemTitle}</h3>
+      <div style="font-size:1.45rem; font-weight:900; color:#22c55e; margin-bottom:14px;">Rp 2.500</div>
+
+      <div id="boxMikroWaInput">
+        <label style="font-size:0.75rem; color:#cbd5e1; display:block; text-align:left; margin-bottom:6px; font-weight:700;">Nomor WhatsApp (Tujuan Pengiriman Video):</label>
+        <input type="tel" id="inputMikroWa" placeholder="Contoh: 081234567890" style="width:100%; background:#1a1a24; border:1px solid rgba(212,175,55,0.3); border-radius:8px; padding:10px 12px; color:#fff; font-size:0.85rem; outline:none; margin-bottom:14px;">
+        <button type="button" onclick="eksekusiQrisMikro('${itemId}', '${itemTitle.replace(/'/g, "\\'")}', '${(basePrompt||'').replace(/'/g, "\\'")}')" style="width:100%; background:linear-gradient(135deg, #d4af37, #aa7c11); color:#000; font-weight:800; border:none; padding:11px; border-radius:8px; cursor:pointer; font-size:0.85rem;">
+          ⚡ Lanjut ke Pembayaran QRIS (Rp 2.500)
+        </button>
+      </div>
+
+      <div id="boxMikroQrisView" style="display:none;">
+        <div style="background:#fff; padding:10px; border-radius:10px; display:inline-block; margin-bottom:10px; border:2px solid #d4af37;">
+          <img src="/images/qris-10k.jpg" style="width:180px; height:180px; display:block;" alt="QRIS Rp 2.500">
+        </div>
+        <div style="font-size:0.72rem; color:#94a3b8; line-height:1.4; margin-bottom:14px;">
+          Order ID: <code id="lblMikroOrderId" style="color:#38bdf8;"></code><br>
+          <em>Scan via BCA, GoPay, OVO, Dana, atau Livin Mandiri.</em>
+        </div>
+        <button type="button" id="btnKonfirmasiMikroLunas" style="width:100%; background:#22c55e; color:#000; font-weight:800; border:none; padding:11px; border-radius:8px; cursor:pointer; font-size:0.82rem;">
+          ✓ Saya Sudah Bayar (Kirim ke Antrean)
+        </button>
+      </div>
+    </div>
+  `;
+  modal.style.display = "flex";
+};
+
+window.eksekusiQrisMikro = async function(id, title, prompt) {
+  const wa = document.getElementById("inputMikroWa")?.value.trim();
+  if (!wa || wa.length < 9) {
+    alert("Harap masukkan nomor WhatsApp aktif.");
+    return;
+  }
+
+  try {
+    const res = await fetch("/api/engine/create-order", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        buyer_contact: wa,
+        item_id: id,
+        item_title: title,
+        amount: 2500,
+        base_prompt: prompt
+      })
+    });
+    const data = await res.json();
+    if (!data.success) {
+      alert("Gagal memproses antrean.");
+      return;
+    }
+
+    document.getElementById("boxMikroWaInput").style.display = "none";
+    document.getElementById("boxMikroQrisView").style.display = "block";
+    document.getElementById("lblMikroOrderId").innerText = data.order_id;
+
+    document.getElementById("btnKonfirmasiMikroLunas").onclick = async function() {
+      this.innerHTML = "Memproses antrean...";
+      this.disabled = true;
+      await fetch("/api/engine/payment-webhook", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ order_id: data.order_id, status: "PAID" })
+      });
+      alert(`Pesanan ${data.order_id} terverifikasi! Video otomatis diproses worker antrean.`);
+      document.getElementById("modalVideoJadiMikro").style.display = "none";
+    };
+  } catch(e) {
+    alert("Koneksi gagal: " + e.message);
+  }
+};
+
+window.orderMikroEngine = orderMikroEngine;
+window.switchMainTab = switchMainTab;

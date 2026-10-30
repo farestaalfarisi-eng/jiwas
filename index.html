@@ -656,7 +656,7 @@ EXACT 1:1 facial likeness of the reference subject in the provided reference pho
             </div>
             <div>
               <label style="font-size:0.75rem; font-weight:700; color:var(--gold-light); display:block; margin-bottom:4px;">Harga (Rp):</label>
-              <input type="text" id="addVodHarga" class="input-growth" style="width:100%;" placeholder="Rp25.000" value="Rp25.000">
+              <input type="text" id="addVodHarga" class="input-growth" style="width:100%;" placeholder="Rp10.000" value="Rp10.000">
             </div>
           </div>
 
@@ -1076,6 +1076,10 @@ EXACT 1:1 facial likeness of the reference subject in the provided reference pho
     let activeQrisProduct = null;
     let currentSelectedPayMethod = 'qris';
 
+    window.tampilkanModalQrisJiwas = function(item, subTier, subPrice) {
+      bukaModalCheckout(item, subTier, subPrice);
+    };
+
     function bukaModalCheckout(item, subTier, subPrice) {
       const modal = document.getElementById("checkoutModal");
       if (!modal) return;
@@ -1111,7 +1115,7 @@ EXACT 1:1 facial likeness of the reference subject in the provided reference pho
             kategori: "Formula Studio",
             jenisAkun: subTier || "Akses PIN",
             variants: [
-              { name: subTier || (isVip ? "Paket VIP (25K)" : "Paket Starter (10K)"), price: nominal, garansi: "Full Garansi VIP" }
+              { name: subTier || (isVip ? "Akses Penuh Formula" : "Akses Penuh Formula"), price: nominal, garansi: "Full Garansi VIP" }
             ],
             defaultIdx: 0
           };
@@ -1122,10 +1126,10 @@ EXACT 1:1 facial likeness of the reference subject in the provided reference pho
             kategori: "Formula Studio",
             jenisAkun: "Akses PIN",
             variants: [
-              { name: "Paket Starter (10K)", price: 10000, garansi: "Full Garansi" },
-              { name: "Paket VIP (25K)", price: 25000, garansi: "Full Garansi VIP" }
+              { name: "Akses Penuh Formula", price: 10000, garansi: "Full Garansi" },
+              { name: "Akses Penuh Formula", price: 10000, garansi: "Full Garansi VIP" }
             ],
-            defaultIdx: isVip ? 1 : 0
+            defaultIdx: 0
           };
         }
       } else if (item && typeof item === "object") {
@@ -1242,7 +1246,8 @@ EXACT 1:1 facial likeness of the reference subject in the provided reference pho
       }
     }
 
-    window.bukaCheckoutAi = function(prodIdOrObj) {
+    window.bukaCheckoutAi = function(prodIdOrObj, tier, prc) {
+      if (typeof window.tampilkanModalQrisJiwas === 'function') { return window.tampilkanModalQrisJiwas(prodIdOrObj, tier, prc); }
       bukaModalCheckout(prodIdOrObj);
     };
     if (typeof AiAccountEngine !== "undefined") {
@@ -1299,3 +1304,4 @@ Mohon detail akun resminya ya Min. Terima kasih! 🙏`;
   </script>
 </body>
 </html>
+
